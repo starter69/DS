@@ -1,0 +1,1255 @@
+﻿@{
+    ViewData["Title"] = "Simulation";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="~/DrawFlow/src/drawflow.css?fileVersion=2" />
+<link rel="stylesheet" type="text/css" href="~/DrawFlow/docs/beautiful.css?fileVersion=1.1" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/css/Accordion.css" rel="stylesheet" />
+<link href="~/css/ContextMenu.css" rel="stylesheet" />
+<link href="~/css/SimualteButton.css" rel="stylesheet" />
+<link href="~/PropertyPanel/css/PropertyStyle.css" rel="stylesheet" />
+<link href="~/css/HierarchyDataSource.css?FileVersion=1" rel="stylesheet" />
+<link href="~/css/Macros.css?FileVersion=1" rel="stylesheet" />
+@*Property Panel*@
+<style>
+    .RefineryLevel, .FleetLevel {
+        display: none;
+    }
+
+    .electricityLB .title-box, .hydrogenLB .title-box {
+        background: #4a8b78 !important;
+    }
+
+    input.form-control.propertyItem {
+        padding: 0 !important;
+        padding-left: 2px !important;
+        color: #4a8b78 !important;
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+
+    .faq details {
+        border: 1px solid #ddd;
+        background: #fff;
+        margin-bottom: 1.5rem;
+        border-radius: 0.35rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    summary {
+        cursor: pointer;
+        padding: 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #properyTable td, #properyTableOutput td {
+        font-size: 13px;
+        font-weight: 900;
+        color: black;
+    }
+
+    .propertyItem {
+        width: 70% !important;
+        margin-right: 2px !important;
+    }
+</style>
+<style>
+    #tblDataSources th {
+        text-align: center;
+        color: black;
+    }
+
+    .context2 {
+        font-size: 1.1em;
+        position: absolute;
+        width: 200px;
+        height: auto;
+        padding: 5px 0px;
+        border-radius: 5px;
+        top: 10;
+        left: 10;
+        background-color: #fff;
+        box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24);
+        color: #333;
+    }
+
+        .context2 .context_item {
+            height: 32px;
+            line-height: 32px;
+            cursor: pointer;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+            .context2 .context_item:hover {
+                background-color: #ddd;
+            }
+
+        .context2 .inner_item {
+            margin: 0px 10px;
+        }
+
+    .inner_item i {
+        margin: 0 5px 0 0;
+        font-weight: bold;
+    }
+
+    .context_hr {
+        height: 1px;
+        border-top: 1px solid #bbb;
+        margin: 3px 10px;
+    }
+</style>
+<style>
+    img.iDesign {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .userChatInfo {
+        font-size: 10px;
+    }
+
+    .componentComment {
+        position: absolute;
+        top: 0;
+        padding: 10px;
+        color: #4a8b78;
+        cursor: pointer !important;
+    }
+
+    .outputTitle {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #838080;
+        line-height: 0.1em;
+        margin: 10px 0 20px;
+        font-size: 16px;
+    }
+
+        .outputTitle span {
+            background: #dbe2e9;
+            padding: 0 10px;
+            color: #768392;
+        }
+
+    .DataSourceIcons img {
+        width: 60px;
+        cursor: pointer;
+        height: 32px;
+    }
+
+    .DataSourceIcons {
+        display: inline-block;
+    }
+
+    .drawflow-delete {
+        display: none !important;
+    }
+
+    .unitSpan {
+        font-weight: 900;
+        padding-right: 2px;
+        padding-left: 2px;
+        display: inline-block;
+    }
+
+    .GeneralObjectIcons img {
+        width: 40px;
+        cursor: pointer;
+    }
+
+    .GeneralObjectIcons {
+        display: inline-block;
+        padding: 3px;
+    }
+
+    .checkASMacro {
+        color: green;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 20px;
+    }
+
+    .backToProject {
+        float: left;
+        color: #4a8b78;
+        cursor: pointer;
+        margin-left: 20px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+        .backToProject:hover {
+            color: black;
+        }
+
+    .greenItem {
+        color: #4a8b78;
+        font-size: 17px;
+    }
+</style>
+<link rel="stylesheet" href="~/assets/examples/css/structure/chat.min599c.css?v4.0.2">
+@{
+    var downloadExportJsonURL = ViewData["subProjectID"] as string;
+    var modelType = ViewData["modelType"] as string;
+}
+<div class="wrapper">
+    <button class="btnSimulate send-btn" id="btnSimulate">
+        <span class="icon icon-anim simIcon"></span>
+        Simulate
+        <div class="sending-animation">
+            <span class="letter">S</span>
+            <span class="letter">i</span>
+            <span class="letter">m</span>
+            <span class="letter">u</span>
+            <span class="letter">l</span>
+            <span class="letter">a</span>
+            <span class="letter">t</span>
+            <span class="letter">e</span>
+        </div>
+    </button>
+    <button class="btnSimulate delivered-btn" style="color:black !important;">
+        <span class="check-icon"><i class="fas fa-check"></i></span>
+        Simulated
+    </button>
+    @*<input type="button" class="btn btn-success" value="Simulate" />*@
+    <div>
+        <button title="Save Design" id="btnSave" style="position:absolute;right: 210px; margin-top:6px;background:#4a8b78;border:1px solid white;border-radius:5px;" type="button" class="btn btn-dark">
+            <i class="far fa-save" aria-hidden="true" style="font-size:25px;"></i>
+        </button>
+        <button title="Clear Design" onclick="editor.clearModuleSelected()" style="position:absolute;right: 265px; margin-top:6px;background:#4a8b78;border:1px solid white;border-radius:5px;" type="button" class="btn btn-dark">
+            <i class="fas fa-trash" aria-hidden="true" style="font-size:25px;"></i>
+        </button>
+        <a title="Export JSON File" href="/Home/downloadExportJSON?id=@downloadExportJsonURL" id="fakeHrefForDownload" class="btn btn-dark" style="position:absolute;right: 320px;color:white; margin-top:6px;background:#4a8b78;border:1px solid white;border-radius:5px;">
+            <i class="fas fa-file-export" aria-hidden="true" style="font-size:25px;"></i>
+        </a>
+        <button data-toggle="modal" data-target="#importJSONModal" id="btnImportJSON" title="Import JSON File" style="position:absolute;right: 382px; margin-top:6px;background:#4a8b78;border:1px solid white;border-radius:5px;" type="button" class="btn btn-dark">
+            <i class="fas fa-file-import" aria-hidden="true" style="font-size:25px;"></i>
+        </button>
+        <button onclick="doApproveSharedProject()" id="btnApproveSharedProject" title="Approve shared project" style="position:absolute;right: 445px; margin-top:6px;background:#4a8b78;border:1px solid white;border-radius:5px;" type="button" class="btn btn-dark">
+            <i class="fas fa-check" aria-hidden="true" style="font-size:25px;"></i>
+        </button>
+    </div>
+    <div style="position:absolute; left:250px; margin-top:10px;color:#4A8B78; font-weight:700;">
+        <a href="#" id="projectNameContainer" class="greenItem" onclick="saveComponentDetailsModel(true,0)">
+        </a>
+        <span id="delimiterTop" class="detailsLevel greenItem"> -> </span>
+        <a href="#" id="detailsLevelContainer" class="detailsLevel greenItem" onclick="saveComponentDetailsModel(true,1)">
+        </a>
+        <span id="delimiterTopLevel2" class="detailsLevel2 greenItem"> -> </span>
+        <a href="#" id="Level2Container" class="detailsLevel2 greenItem">
+        </a>
+    </div>
+    <div class="col">
+        <div class="col-sm-12" style="position:absolute; padding-top:13px;">
+            <span class="backToProject" onclick="backtoProject()">
+                <i class="icon wb-dropleft" aria-hidden="true" title="Back"></i> Back to project
+            </span>
+        </div>
+        <div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"
+                           aria-controls="collapseOne">
+                            Objects
+                        </a>
+                    </h4>
+                </div>
+
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div style="width:100%; margin:5px;">
+                            <select class="form-control" id="ddIconTypes">
+                                <option value="">Select icon type</option>
+                                <option value="Carbon_MitigationLevel1">Carbon Mitigation</option>
+                                <option value="Carbon_MitigationLevel2">Carbon Mitigation Level 2</option>
+                                <option value="Green_HydrogenModel">Green Hydrogen</option>
+                                <option value="realEstateLevel">Real Estate</option>
+                                <option value="FleetLevel">Fleet</option>
+                                <option value="RefineryLevel">Refinery</option>
+                                <option value="GeoThermalLevel">Geo Thermal</option>
+                            </select>
+                        </div>
+                        @*@if (modelType == "Green_Hydrogen")
+        {*@
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="battery" title="Battery">
+                            <img src="~/Images/icons/Battery.png" class="FlowIcons" data-node="battery" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="turbine" title="Turbine">
+                            <img src="~/Images/icons/Turbine.png" class="FlowIcons" data-node="turbine" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="Solar" title="Solar">
+                            <img src="~/Images/icons/solar.png" class="FlowIcons" data-node="Solar" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="Grid" title="Grid">
+                            <img src="~/Images/icons/Grid.png" class="FlowIcons" data-node="Grid" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="cloud" title="Cloud">
+                            <img src="~/Images/icons/cloud.png" class="FlowIcons" data-node="cloud" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="WaterStorage" title="Water Storage">
+                            <img src="~/Images/icons/WaterStorage.png" class="FlowIcons" data-node="WaterStorage" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="GreenH2Storage" title="Hreen H2 Storage">
+                            <img src="~/Images/icons/StorageH2.png" class="FlowIcons" data-node="GreenH2Storage" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="ExternalGraySupplier" title="External Gray Supplier">
+                            <img src="~/Images/icons/GrayStorageH2.png" class="FlowIcons" data-node="ExternalGraySupplier" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="Mobility" title="Mobility">
+                            <img src="~/Images/icons/Mobility.png" class="FlowIcons" data-node="Mobility" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="industriese" title="Industriese">
+                            <img src="~/Images/icons/industriese.png" class="FlowIcons" data-node="industriese" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="electrolyzer" title="Electrolyzer">
+                            <img src="~/Images/icons/electrolyzer.png" class="FlowIcons" data-node="electrolyzer" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="electricityLB" title="Electricity Load Balancer">
+                            <img src="~/Images/icons/loadBalancerElectricity.png" class="FlowIcons" data-node="electricityLB" />
+                        </div>
+                        <div class="drag-drawflow Green_HydrogenModel" draggable="true" ondragstart="drag(event)" data-node="hydrogenLB" title="hydrogen Load Balancer">
+                            <img src="~/Images/icons/loadBalancer.png" class="FlowIcons" data-node="hydrogenLB" />
+                        </div>
+                        @*@if (modelType == "Carbon_Mitigation")
+        {*@
+
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="Fleet" title="Fleet">
+                            <img src="~/Images/Carbon/Level1/fleet.png" class="FlowIcons" data-node="Fleet" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="Operation" title="Operation">
+                            <img src="~/Images/Carbon/Level1/operation.png" class="FlowIcons" data-node="Operation" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="RealState" title="Real Estate">
+                            <img src="~/Images/Carbon/Level1/RealState.png" class="FlowIcons" data-node="RealState" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="EmissionSaving" title="Emission Saving">
+                            <img src="~/Images/Carbon/saving.png" class="FlowIcons" data-node="EmissionSaving" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="Aggregator" title="Aggregator">
+                            <img src="~/Images/Carbon/Aggregator.png" class="FlowIcons" data-node="Aggregator" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="TotalOut" title="Total Emission Out">
+                            <img src="~/Images/Carbon/TotalOutput.png" class="FlowIcons" data-node="TotalOut" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="VendorEmission" title="Vendor Emission Data">
+                            <img src="~/Images/Carbon/Vendor.png" class="FlowIcons" data-node="VendorEmission" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="Capex" title="Capex/Opex">
+                            <img src="~/Images/Carbon/Level1/Capex.png" class="FlowIcons" data-node="Capex" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="Budget" title="Budget">
+                            <img src="~/Images/Carbon/Budget.png" class="FlowIcons" data-node="Budget" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel1" draggable="true" ondragstart="drag(event)" data-node="EmissionReductionTarget" title="Emission Reduction Target">
+                            <img src="~/Images/Carbon/Level1/EmissionReductionTarget.png" class="FlowIcons" data-node="EmissionReductionTarget" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="EmissionData" title="Production Well Emission Data">
+                            <img src="~/Images/Carbon/Emission.png" class="FlowIcons" data-node="EmissionData" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="FootPrint" title="FootPrint">
+                            <img src="~/Images/Carbon/footprint.png" class="FlowIcons" data-node="FootPrint" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="Retrofit" title="Retrofit">
+                            <img src="~/Images/Carbon/retrofit.png" class="FlowIcons" data-node="Retrofit" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="CrProject" title="CR Project2">
+                            <img src="~/Images/Carbon/CrProject.png" class="FlowIcons" data-node="CrProject" />
+                        </div>
+
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="AmmoniaPlant" title="AmmoniaPlant">
+                            <img src="~/Images/Carbon/AmmoniaPlant.png" class="FlowIcons" data-node="AmmoniaPlant" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="AssetReplacement" title="Asset Replacement">
+                            <img src="~/Images/Carbon/AssetReplacement.png" class="FlowIcons" data-node="AssetReplacement" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="Refinery" title="Refinery">
+                            <img src="~/Images/Carbon/Refinery.png" class="FlowIcons" data-node="Refinery" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="UpStream" title="UpStream">
+                            <img src="~/Images/Carbon/UpStream.png" class="FlowIcons" data-node="UpStream" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="turbine" title="Turbine">
+                            <img src="~/Images/icons/Turbine.png" class="FlowIcons" data-node="turbine" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="Solar" title="Solar">
+                            <img src="~/Images/icons/solar.png" class="FlowIcons" data-node="Solar" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="GreenH2" title="Green H2">
+                            <img src="~/Images/Carbon/GreenH2.png" class="FlowIcons" data-node="GreenH2" />
+                        </div>
+                        <div class="drag-drawflow Carbon_MitigationLevel2" draggable="true" ondragstart="drag(event)" data-node="GeoThermal" title="GeoThermal">
+                            <img src="~/Images/Carbon/GeoThermal.png" class="FlowIcons" data-node="GeoThermal" />
+                        </div>
+
+                        @*}*@
+                        @*Real Estate*@
+                        <div class="drag-drawflow realEstateLevel" draggable="true" ondragstart="drag(event)" data-node="Office" title="Office">
+                            <img src="~/Images/RealEstate/House.png" class="FlowIcons" data-node="Office" />
+                        </div>
+                        <div class="drag-drawflow realEstateLevel" draggable="true" ondragstart="drag(event)" data-node="Tower" title="Tower">
+                            <img src="~/Images/RealEstate/Tower.png" class="FlowIcons" data-node="Tower" />
+                        </div>
+                        @*Fleet*@
+                        <div class="drag-drawflow FleetLevel" draggable="true" ondragstart="drag(event)" data-node="EvTruck" title="EV Truck">
+                            <img src="~/Images/Truck/EvTruck.png" class="FlowIcons" data-node="EvTruck" />
+                        </div>
+                        <div class="drag-drawflow FleetLevel" draggable="true" ondragstart="drag(event)" data-node="FuelTrack" title="Fuel Track">
+                            <img src="~/Images/Truck/FuelTrack.png" class="FlowIcons" data-node="FuelTrack" />
+                        </div>
+                        <div class="drag-drawflow FleetLevel" draggable="true" ondragstart="drag(event)" data-node="H2Truck" title="H2 Truck">
+                            <img src="~/Images/Truck/H2Truck.png" class="FlowIcons" data-node="H2Truck" />
+                        </div>
+                        @*Refinery*@
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Boiler" title="Boiler">
+                            <img src="~/Images/Refinery/Boiler.png" class="FlowIcons" data-node="Boiler" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="CatalyticCracker" title="Catalytic Cracker">
+                            <img src="~/Images/Refinery/CatalyticCracker.png" class="FlowIcons" data-node="CatalyticCracker" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="CHPGeneration" title="CHP Generation">
+                            <img src="~/Images/Refinery/CHPGeneration.png" class="FlowIcons" data-node="CHPGeneration" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Compressor" title="Compressor">
+                            <img src="~/Images/Refinery/Compressor.png" class="FlowIcons" data-node="Compressor" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Cooling" title="Cooling">
+                            <img src="~/Images/Refinery/Cooling.png" class="FlowIcons" data-node="Cooling" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="DistillationFurnace" title="Distillation Furnace">
+                            <img src="~/Images/Refinery/DistillationFurnace.png" class="FlowIcons" data-node="DistillationFurnace" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Fan" title="Fan">
+                            <img src="~/Images/Refinery/Fan.png" class="FlowIcons" data-node="Fan" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="HydroTreater" title="HydroTreater">
+                            <img src="~/Images/Refinery/HydroTreater.png" class="FlowIcons" data-node="HydroTreater" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Isomerization" title="Isomerization">
+                            <img src="~/Images/Refinery/Isomerization.png" class="FlowIcons" data-node="Isomerization" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="MeroxTreater" title="MeroxTreater">
+                            <img src="~/Images/Refinery/MeroxTreater.png" class="FlowIcons" data-node="MeroxTreater" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Pump" title="Pump">
+                            <img src="~/Images/Refinery/Pump.png" class="FlowIcons" data-node="Pump" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Machine" title="Machine">
+                            <img src="~/Images/Refinery/machine.png" class="FlowIcons" data-node="Machine" />
+                        </div>
+                        <div class="drag-drawflow RefineryLevel" draggable="true" ondragstart="drag(event)" data-node="Process" title="Process">
+                            <img src="~/Images/Refinery/process.png" class="FlowIcons" data-node="Process" />
+                        </div>
+                        @*GeoThermal*@
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="Desalinization" title="Desalinization">
+                            <img src="~/Images/GeoThermal/Desalinization.png" class="FlowIcons" data-node="Desalinization" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="Aquaculture" title="Aquaculture">
+                            <img src="~/Images/GeoThermal/Aquaculture.png" class="FlowIcons" data-node="Aquaculture" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="Chiller" title="Absorption Chiller">
+                            <img src="~/Images/GeoThermal/Chiller.png" class="FlowIcons" data-node="Chiller" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="GASTurbine" title="Gas Turbine">
+                            <img src="~/Images/GeoThermal/GASTurbine.png" class="FlowIcons" data-node="GASTurbine" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="GreenHouse" title="GreenHouse">
+                            <img src="~/Images/GeoThermal/GreenHouse.png" class="FlowIcons" data-node="GreenHouse" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="OrcPowerPlant" title="Orc Power Plant">
+                            <img src="~/Images/GeoThermal/OrcPowerPlant.png" class="FlowIcons" data-node="OrcPowerPlant" />
+                        </div>
+                        <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="WasteHeat" title="Waste Heat Recovery">
+                            <img src="~/Images/GeoThermal/WasteHeat.png" class="FlowIcons" data-node="WasteHeat" />
+                        </div>
+                        <hr />
+                        <h5 style="margin-bottom:10px;">User Defined Objects</h5>
+                        <div id="userDeefinedObjectContainer" style="display:inline;">
+
+                        </div>
+                        <div class="GeneralObjectIcons" style="display:inline; margin-left:5px;">
+                            <img src="~/Images/GeneralObjects/AddNew.png" title="Add New Object" onclick="addNewUserDefinedObject()" />
+                        </div>
+                        <hr />
+                        <h5 style="margin-bottom:10px;">Macro Objects</h5>
+                        <div id="userMacrosContainer" style="display:inline;">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @*<div class="panel">
+                    <div class="panel-heading" role="tab" id="headingFour">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                User Defined Objects
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                        <div class="panel-body">
+
+                        </div>
+                    </div>
+                </div>*@
+            <!-- end of panel -->
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                           aria-controls="collapseTwo">
+                            General Objects
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/textFile.png" title="Text File" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/Computation.png" title="Computation" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/Container.png" title="Container" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/DataJoins.png" title="Data Joins" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/Libraries.png" title="Libraries" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/Process.png" title="Process" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/Workflow.png" title="WorkFlow" />
+                        </div>
+
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/AddNew.png" title="Add New Object" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of panel -->
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                           aria-controls="collapseThree">
+                            Data Source
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body">
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/oracle.png" title="Oracle" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/SAP.png" title="SAP" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/csv.png" id="btnAddNewDataSources" title="CSV File" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/hadoop.png" id="btnAddNewDataSources" title="Hadoop" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/SQL.png" id="btnAddNewDataSources" title="SQl Server" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/kafa.png" id="btnAddNewDataSources" title="Kafa Apache" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/icons/trino.png" id="btnAddNewDataSources" title="Trino" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/GeneralObjects/AddNew.png" title="Add New Data Source" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of panel -->
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="headingLibraries">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseLibraries" aria-expanded="false" aria-controls="collapseLibraries">
+                            Libraries
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseLibraries" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLibraries">
+                    <div class="panel-body">
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/Libraries/lib1.png" title="Moonte Carlo" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/Libraries/LCOE.png" title="Levelized cost of electricity (LCOE)" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/Libraries/LCOH.png" title="Levelised Cost of Hydrogen" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/Libraries/NPVIRR.png" title="NPV IRR" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/Libraries/optimized.png" title="Optimized" />
+                        </div>
+                        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="Optimization">
+                            <img src="~/Images/icons/optimization.png" class="FlowIcons" data-node="Optimization" />
+                        </div>
+                        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="Prob">
+                            <img src="~/Images/icons/Trace-icon-3.png" class="FlowIcons" data-node="Prob" />
+                        </div>
+                        <div class="GeneralObjectIcons" style="display:inline; margin-left:5px;">
+                            <img src="~/Images/GeneralObjects/AddNew.png" title="Add New Library" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="headingDashbboard">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDashbboard" aria-expanded="false" aria-controls="collapseDashbboard">
+                            Dashboard
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseDashbboard" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingDashbboard">
+                    <div class="panel-body">
+                        <div class="GeneralObjectIcons">
+                            <a href="/Home/Dashboard">
+                                <img src="~/Images/DSiderLOGO.png" title="DSider" />
+                            </a>
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/DashboardIcons/Tableau.png" title="Tableau" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/DashboardIcons/PowerBi.png" title="Power Bi" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/DashboardIcons/Superest.png" title="Superset" />
+                        </div>
+                        <div class="GeneralObjectIcons">
+                            <img src="~/Images/DashboardIcons/spotfire.jpg" title="SpotFire" />
+                        </div>
+                        <div class="GeneralObjectIcons" style="display:inline; margin-left:5px;">
+                            <img src="~/Images/GeneralObjects/AddNew.png" title="Add New Library" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <img src="~/Images/planet.png" style="width:75px; cursor:pointer; position:absolute; top:85%; left:5%;" title="showMap" id="sowAllComponentsOnMap" />
+            </div>
+            <!-- end of panel -->
+        </div>
+        <!-- end of wrap -->
+        <!-- end of container -->
+    </div>
+    <div class="col-right">
+        <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+            @*<div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>*@
+            @*<a href="@downloadExportJsonURL" id="fakeHrefForDownload">
+                    <div class="btn-export" id="btnExportJSONFile">Export</div>
+                </a>*@
+            @*<div class="btn-Save" id="btnSave">Save</div>*@
+            <div class="btn-lock">
+                <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
+                <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
+            </div>
+            <div class="bar-zoom">
+                <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+                <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+                <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+            </div>
+
+        </div>
+    </div>
+    <ul id="navs">
+        <li id="closeMenu" title="Close menu">
+            <a href="#">
+                <i class="fas fa-times"></i>
+            </a>
+        </li>
+        <li id="deleteMenu" title="Delete component">
+            <a href="#">
+                <i class="far fa-trash-alt"></i>
+            </a>
+        </li>
+        <li id="propertyMenu" title="Show property of component">
+            <a href="#">
+                <i class="fas fa-th-list"></i>
+            </a>
+        </li>
+        <li id="duplicateComponent" title="Duplicate component">
+            <a href="#">
+                <i class="fas fa-copy"></i>
+            </a>
+        </li>
+        <li id="commentComponent" title="Add comment">
+            <a href="#">
+                <i class="fas fa-comments"></i>
+            </a>
+        </li>
+        <li id="connectionCount" title="Change input/output nodes">
+            <a href="#">
+                <i class="fas fa-code-branch fa-fw"></i>
+            </a>
+        </li>
+    </ul>
+    <div id="MacroList">
+        <section class="swing">
+            <ul id="list">
+            </ul>
+        </section>
+        <div style="text-align:center;margin-bottom:10px;">
+            <input type="button" value="Save" class="btn btn-info" style="display:inline" id="btnReadyForSaveMacro" />
+            <input type="button" value="Cancel" class="btn btn-danger" style="display:inline;margin-left:5px;" id="btnCancelMacro" />
+        </div>
+    </div>
+</div>
+<div class="context2" hidden>
+    <div class="context_item">
+        <div class="inner_item deleteContextMenu">
+            Delete
+        </div>
+    </div>
+    <div class="context_hr"></div>
+    <div class="context_item">
+        <div class="inner_item">
+            Close
+        </div>
+    </div>
+
+</div>
+<a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main" style="position:absolute;visibility:hidden" id="triggerPropertyMenu"></a>
+<div class="cd-panel cd-panel--from-right js-cd-panel-main" id="mPropertyPanel">
+    <header class="cd-panel__header">
+        <h3 style="text-align:center; margin-top:10px;">Properties</h3>
+        <a href="#0" class="cd-panel__close js-cd-close">Close</a>
+    </header>
+    <div class="cd-panel__container">
+        <div class="cd-panel__content">
+            <table class="table tab-content table-bordered" id="properyTable">
+                <tr>
+                    <th style="width:60%;text-align:left;" class="font-weight-bold">
+                        Property
+                    </th>
+                    <th style="text-align:left;" class="font-weight-bold">
+                        Value
+                    </th>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">
+                        Name
+                    </td>
+                    <td>
+                        <input type="text" class="form-control propertyItem" property="Name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">
+                        Location
+                    </td>
+                    <td>
+                        <input type="text" class="form-control propertyItem" property="location" disabled style="width:85%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" />
+                        <i class="fas fa-map-marker" style="cursor:pointer; color:#d50404; font-size:25px;" id="locationIcon" title="Component Location"></i>
+                    </td>
+                </tr>
+
+            </table>
+            <h2 class="outputTitle"><span>Output Properties</span></h2>
+            <table class="table tab-content table-bordered" id="properyTableOutput">
+            </table>
+            <div class="faq">
+                <details>
+                    <summary>Script</summary>
+                    <div style="padding:5px;">
+                        <h4 style="padding:5px;color:#72717159">Script code</h4>
+                        <textarea class="form-control" id="txtScript" rows="10" value="Amin" placeholder="This program calculates the Lowest Common multiple
+for excessively long input values
+
+function lcmNaive(Argument one, Argument two){
+
+	Calculate the lowest common variable of Argument
+	1 and Argument 2 by dividing their product by their
+	Greatest common divisor product
+
+	return lowest common multiple
+end
+}
+function greatestCommonDivisor(Argument one, Argument two){
+	if Argument two is equal to zero
+		then return Argument one
+
+	return the greatest common divisor
+
+end
+}
+
+{
+In the main function
+
+Take the first number from the user
+Take the second number from the user
+
+Send the first number and second number
+to the lcmNaive function and print
+the result to the user
+}
+" style="border: 1px solid #726f6f59;"></textarea>
+                    </div>
+                </details>
+
+            </div>
+        </div> <!-- cd-panel__content -->
+    </div> <!-- cd-panel__container -->
+    <div class="modal fade modal-slide-from-bottom" id="locationModal"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Add location</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="map_canvas" style="width: 100%; height: 250px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="modal fade modal-slide-from-bottom" id="selectDataSourceForPropertyModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Select Data Source</h4>
+            </div>
+            <div class="modal-body">
+                <nav class="nav navHierrchy" role="navigation">
+                    <ul class="nav__list" id="dataSourceList">
+                        <li>
+                            <input id="group-99" type="checkbox" hidden />
+                            <label for="group-99"><span class="fa fa-angle-right"></span> First level</label>
+                            <ul class="group-list">
+                                <li><a href="#">1st level item</a></li>
+                                <li><a href="#">1st level item</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input id="group-9" type="checkbox" hidden />
+                            <label for="group-9"><span class="fa fa-angle-right"></span> First level</label>
+                            <ul class="group-list">
+                                <li><a href="#">1st level item</a></li>
+                                <li><a href="#">1st level item</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="dataSourceModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Data Sources</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <label class="col-sm-2">Name:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="txtDataSourceName" />
+                        </div>
+                        <label class="col-sm-2">Description:</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" id="txtDataSourceDescription" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <div class="form-group">
+                            <input id="files" type="file" name="files" class="form-control-file" accept=".csv, text/csv" onchange="getFileName()" />
+                        </div>
+                    </div>
+                    <div id="divloader" style="display:none">
+                        <img src="~/Images/uploading.gif" />
+                    </div>
+                </div>
+                <div class="col-lg-12" style="margin-top:10px;">
+                    <table class="table table-striped" id="tblDataSources">
+                        <tr>
+                            <th style="width:90%;">Name</th>
+                            <th>
+                                @*<i class="fa fa-plus-circle" style="color:green; cursor:pointer;"  title="Add new Data Source"></i>*@
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Upload" onclick="UploadFile()" class="btn btn-success">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="allMarkersMapModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple" style="max-width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Map</h4>
+            </div>
+            <div class="modal-body">
+                <div id="map_canvasAllMarkers" style="width: 100%; height: 450px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="addNewUserDefinedObjectModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple" style="max-width:70%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Add New Object</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <label class="col-sm-2">Name:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="txtUserDefinedObjectName" />
+                        </div>
+                        @*<label class="col-sm-2">Unit Name:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="txtUserDefinedObjectUnitName" />
+                            </div>*@
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <label class="col-sm-2">Default Value:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="txtUserDefinedObjectDefaultValue" style="width:45%; display:inline-block" value="0" />
+                        </div>
+                        <label class="col-sm-2">Input/Output:</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="txtUserDefinedObjectInput" style="width:45%; display:inline-block" value="0" /> /
+                            <input type="number" class="form-control" id="txtUserDefinedObjectOutput" style="width:45%; display:inline-block" value="1" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <label class="col-sm-2">Script:</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" id="txtUserDefinedObjectScript" rows="5"></textarea>
+                        </div>
+                        <label class="col-sm-2">Icon:</label>
+                        <div class="form-group">
+                            <input id="filesUserObjectIcon" type="file" name="files" class="form-control-file" accept="image/png, image/gif, image/jpeg" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Save Object" id="btnSaveObject" onclick="saveUserDefinedObject()" class="btn btn-success">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="MacroModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Add New Macro</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label class="col-sm-2">Name:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="txtMacroName" />
+                    </div>
+                    @*<label class="col-sm-2">Unit Name:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="txtUserDefinedObjectUnitName" />
+                        </div>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Save Macro" id="btnSaveMacro" onclick="saveMacro()" class="btn btn-success">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="ComponentCommentModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Add Comment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label class="col-sm-2">Comment:</label>
+                    <div class="col-sm-10">
+                        <textarea cols="5" rows="3" maxlength="100" id="txtComponentComment" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Save Comment" id="btnSaveMacro" onclick="saveComponentComment()" class="btn btn-success">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="showCommentsModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Comments</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="chat-box">
+                            <div class="chats" id="chatContent">
+                                <div class="chat">
+                                    <div class="chat-avatar">
+                                        <a class="avatar" data-toggle="tooltip" href="#" data-placement="right" title="June Lane">
+                                            <img src="/Images/avatar.png" alt="June Lane">
+                                        </a>
+                                    </div>
+                                    <div class="chat-body">
+                                        <div class="chat-content">
+                                            <p>
+                                                Hello. What can I do for you?
+                                            </p>
+                                            <time class="chat-time" datetime="2017-06-01T08:30">8:30 am</time>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat chat-left">
+                                    <div class="chat-avatar">
+                                        <a class="avatar" data-toggle="tooltip" href="#" data-placement="left" title="Edward Fletcher">
+                                            <img src="../../global/portraits/5.jpg" alt="Edward Fletcher">
+                                        </a>
+                                    </div>
+                                    <div class="chat-body">
+                                        <div class="chat-content">
+                                            <p>
+                                                I'm just looking around.
+                                            </p>
+                                            <p>Will you tell me something about yourself? </p>
+                                            <time class="chat-time" datetime="2017-06-01T08:35">8:35 am</time>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat">
+                                    <div class="chat-avatar">
+                                        <a class="avatar" data-toggle="tooltip" href="#" data-placement="right" title="June Lane">
+                                            <img src="~/Images/avatar.png" alt="June Lane">
+                                        </a>
+                                    </div>
+                                    <div class="chat-body">
+                                        <div class="chat-content">
+                                            <p>
+                                                Hello. What can I do for you?
+                                            </p>
+                                            <time class="chat-time" datetime="2017-06-01T08:30">8:30 am</time>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="inputOutputModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Connection Managments</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" style="text-align:center;">Input Nodes</h3>
+                                <div class="panel-actions panel-actions-keep">
+                                    <a class="panel-action icon wb-expand" data-toggle="panel-fullscreen" aria-hidden="true"></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <section class="swing">
+                                    <ul id="inputList">
+                                        <li class="show"><span>input<span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
+                                        <li>
+                                    </ul>
+                                </section>
+                                <div style="text-align:center;margin-bottom:10px;">
+                                    <input type="button" value="Add new" class="btn btn-info" style="display:inline" id="btnAddNewInputNodeConnection" onclick="addNewConnectin('input')" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" style="border-left:2px solid gray;">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" style="text-align:center;">Output Nodes</h3>
+                                <div class="panel-actions panel-actions-keep">
+                                    <a class="panel-action icon wb-expand" data-toggle="panel-fullscreen" aria-hidden="true"></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <section class="swing">
+                                    <ul id="outputList">
+                                        <li class="show"><span>output<span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
+                                        <li>
+                                    </ul>
+                                </section>
+                                <div style="text-align:center;margin-bottom:10px;">
+                                    <input type="button" value="Add new" class="btn btn-info" style="display:inline" id="btnAddNewOutputNodeConnection" onclick="addNewConnectin('output')" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-slide-from-bottom" id="importJSONModal"
+     aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeImportModal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Import JSON File</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="row" style="margin-top:5px;">
+                        <div class="form-group">
+                            <input id="jSONFiles" type="file" name="files" class="form-control-file" accept="application/JSON" />
+                        </div>
+                    </div>
+                    <div id="divloader" style="display:none">
+                        <img src="~/Images/uploading.gif" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Import JSON" onclick="importJSON()" class="btn btn-success" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTPfnjsCiPyWOyyYqOsoPnqEUh8sc9OZY"></script>
+<script src="~/DrawFlow/dist/drawflow.min.js?FileVersion=1"></script>
+<script src="~/js/Accordion.js"></script>
+<script src="~/App/Controller/SimulationController.js?FileVersion=5.1"></script>
+<script src="~/PropertyPanel/js/PropertiesePanel.js"></script>
+<script>
+    $(function () {
+        $(".send-btn").click(function () {
+            $(".body").addClass("active");
+            $(".btn").addClass("active");
+            $('.icon').addClass("active");
+            $('.sending-animation').addClass("active");
+            $('.delivered-btn').removeClass("active").delay(6000).queue(function (next) {
+                $(this).addClass('active');
+                $(".body").removeClass("active");
+                $('.icon').removeClass("active");
+                $('.check-icon').addClass("active");
+                next();
+            });
+        });
+    });
+</script>

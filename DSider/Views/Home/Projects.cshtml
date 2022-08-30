@@ -1,0 +1,495 @@
+﻿@{
+    ViewData["Title"] = "Projects";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+<style>
+    .card {
+        display: inline-block !important;
+        height: 250px !important;
+        width: 24% !important;
+        margin: 5px;
+        cursor: pointer;
+        user-select: none; /* standard syntax */
+        -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+        -moz-user-select: none; /* mozilla browsers */
+        -khtml-user-select: none; /* webkit (konqueror) browsers */
+        -ms-user-select: none; /* IE10+ */
+        border-radius: 30px !important;
+    }
+
+        .card:hover {
+            border: 1px solid #4ea9ff;
+            -webkit-box-shadow: 0 2px 20px 2px #4ea9ff;
+            box-shadow: 0 2px 20px 2px #4ea9ff;
+        }
+
+    .card-title {
+        margin-bottom: 5px !important;
+    }
+
+    p.card-text {
+        margin-bottom: 5px !important;
+    }
+
+    .card-block {
+        padding: 10px;
+    }
+
+    .iconProject {
+        border: 1px solid #d1cdcdab;
+        border-radius: 50%;
+        color: #0a0a0aab;
+        display: inline-block;
+        padding: 5px;
+        margin-right: 2px;
+        cursor: pointer;
+    }
+
+        .iconProject:hover {
+            border: 1px solid blue;
+        }
+
+    .backToProject {
+        float: left;
+        color: #898989;
+        cursor: pointer;
+        margin-left: 20px;
+        font-size: 14px;
+    }
+
+        .backToProject:hover {
+            color: #4A8B78;
+        }
+
+    .leftIconsSub {
+        position: absolute;
+        padding: 5px;
+        font-size: 20px;
+    }
+</style>
+<style>
+    .form-check-label {
+        padding-left: 10px !important;
+    }
+
+    @@font-face {
+        font-family: 'Open Sans';
+        font-style: italic;
+        font-weight: 400;
+        font-stretch: normal;
+        src: url(https://fonts.gstatic.com/s/opensans/v27/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkWVAexQ.ttf) format('truetype');
+    }
+
+    @@font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-stretch: normal;
+        src: url(https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf) format('truetype');
+    }
+
+    @@font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-stretch: normal;
+        src: url(https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4gaVc.ttf) format('truetype');
+    }
+
+    body {
+        font-size: 1em;
+        font-family: "Open Sans", sans-serif;
+    }
+
+    .item {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        text-align: center;
+        overflow: hidden;
+        transition: all 1s ease-in-out;
+    }
+
+        .item .wrap {
+            width: 100vw;
+        }
+
+            .item .wrap .content {
+                padding: 50px;
+                color: #fff;
+                text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+                font-size: 1.3em;
+            }
+
+    input,
+    label {
+        position: relative;
+        z-index: 5000;
+        background: #fff;
+        display: inline-block;
+    }
+
+    label {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        label:hover {
+            background: #eee;
+        }
+
+    input {
+        display: none;
+    }
+
+    #sharePermissionContainer input:checked + label {
+        background: #4a8b78 !important;
+        color: white;
+    }
+
+    input:checked + label + .item {
+        width: 100%;
+        transition: all 1s ease-in-out;
+        z-index: 1000;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .notShow {
+        display: none;
+    }
+</style>
+<script src="~/js/jquery-1.10.2.min.js"></script>
+<script src="~/js/angular.min.js"></script>
+<script src="~/App/Controller/ProjectsController.js?FileVersion=2"></script>
+@*<script>
+        // Purely for automatically demoing in the CodePen preview :)
+        setTimeout(function () {
+            $('#two').prop('checked', true);
+
+            setTimeout(function () {
+                $('#three').prop('checked', true);
+
+                setTimeout(function () {
+                    $('#one').prop('checked', true);
+                    // Go back to the begining.
+                }, 3000)
+            }, 2000)
+        }, 1000)
+    </script>*@
+<div class="wrapper" ng-app="Tariana" ng-controller="ProjectsController">
+    <input id="projectTab" type="radio" name="nav" value="one" checked="checked" class="notShow" />
+    <label for="one" class="notShow">Item one</label>
+    <div class="item one">
+        <div id="projectsContainer">
+            <div class="row" style="margin-top:5px; background-color:white;padding:5px;">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-success" ng-click="addNewProjects()" style="float:right;margin-right:10px;background:#4A8B78;border-color:#4A8B78"><i class="icon wb-plus" aria-hidden="true"></i> Add New Project</button>
+                </div>
+            </div>
+            <div style="padding:20px;">
+                <div class="col-sm-12" style="margin-top:10px;text-align:left;">
+                    <div class="card" style="text-align:center;" ng-repeat="item in projectsList" ng-dblclick="showSubProject(item.projectID)">
+                        <img class="card-img-top" src="~/Images/folderIcon.png" style="width:100px; margin:0 auto; padding-top:10px; margin-bottom:15px;" alt="Project">
+                        <div class="card-block">
+                            <h4 class="card-title">
+                                {{item.name}}
+                            </h4>
+                            <p class="card-text">{{item.descrption}}</p>
+                            <p class="card-text">
+                                <small class="text-muted">{{item.createDate}}</small>
+                            </p>
+                            <p class="card-text">
+                                <i class="icon wb-pencil iconProject editProject" ng-click="editProject(item.projectID)" aria-hidden="true" title="Edit"></i>
+                                <i class="icon wb-trash iconProject deleteProject" ng-click="deleteProject(item.projectID)" aria-hidden="true" title="Delete"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <input id="SubProjectTab" type="radio" name="nav" value="two" class="notShow" />
+    <label for="two" class="notShow">Item two</label>
+    <div class="item two">
+        <div id="subProjectsContainer">
+            <div class="row" style="margin-top:5px; background-color:white;padding:5px;">
+                <div class="col-sm-12">
+                    <span class="backToProject" ng-click="backToProject()">
+                        <i class="icon wb-dropleft" aria-hidden="true" title="Back"></i> Back to Project
+                    </span>
+                    <button type="button" class="btn btn-success" ng-click="addNewSubProjects()" style="float:right;margin-right:10px;background:#4A8B78;border-color:#4A8B78"><i class="icon wb-plus" aria-hidden="true"></i> Add New Model</button>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12" style="margin-top:10px;text-align:left;">
+                        <div class="card" style="text-align:center;" ng-repeat="item in subProjectsList" ng-dblclick="goToSimulation(item.id, item.name, item.projectID, item.subProject_Type)">
+                            <div class="leftIconsSub">
+                                <i title="Approved" class="fas fa-check-circle" aria-hidden="true" style="color:#4A8B78" ng-show="checkApprovedStatus(item.workFlowStatus)"></i>
+                            </div>
+                            <img class="card-img-top" src="~/Images/subproject.png" style="width:80px; margin:0 auto; padding-top:10px;" alt="Project">
+                            <div class="card-block">
+                                <h4 class="card-title">
+                                    {{item.name}}
+                                </h4>
+                                <p class="card-text">{{item.description}}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">{{item.createDate}}</small>
+                                </p>
+                                <p class="card-text">
+                                    <i class="icon wb-pencil iconProject editSubProject" ng-click="editSubProject(item.id)" aria-hidden="true" title="Edit"></i>
+                                    <i class="icon wb-trash iconProject deleteSubProject" ng-click="deleteSubProject(item.id)" aria-hidden="true" title="Delete"></i>
+                                    <i class="icon wb-share iconProject shareSubProject" ng-show="isShowSharedProjects()" ng-click="shareSubProject(item.id, item.name)" aria-hidden="true" title="Share"></i>
+                                    <i class="icon wb-upload iconProject shareSubProject" ng-click="uploadJSONFile(item.id, item.name)" aria-hidden="true" title="Upload JSON file"></i>
+                                    <i class="icon wb-copy iconProject shareSubProject" ng-click="copySubProject(item.id, item.name)" aria-hidden="true" title="Duplicate Sub Project"></i>
+                                    <i class="icon wb-reply iconProject shareSubProject" ng-click="prepareFoTransferSubProject(item)" aria-hidden="true" title="Transfer to another Project"></i>
+                                    <a ng-click="createDynamicUrl(item.id,item.name,item.projectID,item.subProject_Type)">
+                                        <i class="icon wb-dashboard iconProject shareSubProject" aria-hidden="true" title="Go to Dashboard"></i>
+                                    </a>
+                                    @*<a ng-href="createDynamicUrl(item.id,item.name,item.subProject_Type)" href="/Home/Dashboard/{{item.id}}/{{item.name}}/{{item.projectID}}/{{item.subProject_Type}}">
+                                            <i class="icon wb-dashboard iconProject shareSubProject" aria-hidden="true" title="Go to Dashboard"></i>
+                                        </a>*@
+                                    <a href="/Home/downloadExportJSON?id={{item.id}}">
+                                        <i class="fas fa-file-export iconProject shareSubProject" aria-hidden="true" title="Export JSON File"></i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-slide-from-bottom" id="addNewProject"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Add New Project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-sm-2" style="text-align:right;">Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtProjectName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <label class="col-sm-2" style="text-align:right;">Description:</label>
+                        <div class="col-sm-8">
+                            <textarea id="txtDescription" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" ng-click="saveProject()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-slide-from-bottom" id="addNewSubProject"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Add new model</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-sm-2" style="text-align:right;">Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="txtSubProjectName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <label class="col-sm-2" style="text-align:right;">Description:</label>
+                        <div class="col-sm-8">
+                            <textarea id="txtSubProjectDescription" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <label class="col-sm-2" style="text-align:right;">Type:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="ddSubProject_Type">
+                                <option value="Carbon_Mitigation">Carbon Mitigation</option>
+                                <option value="Green_Hydrogen">Green Hydrogen</option>
+                                <option value="GeoThermal">GeoThermal</option>
+                                <option value="CCUS">CCUS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" ng-click="saveSubProject()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-slide-from-bottom" id="shareSubProject"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="shareSubPorjectTitle">Share</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="nav-tabs-horizontal" data-plugin="tabs">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" data-toggle="tab" href="#exampleTabsOne"
+                                   aria-controls="exampleTabsOne" role="tab">Share</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-toggle="tab" href="#exampleTabsTwo"
+                                   aria-controls="exampleTabsTwo" role="tab">Active shares</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-20">
+                            <div class="tab-pane active" id="exampleTabsOne" role="tabpanel">
+                                <div class="row">
+                                    <label class="col-sm-3" style="text-align:right;">Username:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="txtShareUserName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3" style="text-align:right;">Permission:</label>
+                                    <div class="col-sm-9" id="sharePermissionContainer">
+                                        <input type="radio" name="sharePermissionRadio" id="radioView" value="View" checked title="User can view your model.">
+                                        <label class="form-check-label" for="radioView" title="User can view your model.">
+                                            View
+                                        </label>
+                                        <input c type="radio" name="sharePermissionRadio" id="radioEdit" value="Edit" title="User can edit and view your model.">
+                                        <label class="form-check-label" for="radioEdit" title="User can edit and view your model.">
+                                            Edit
+                                        </label>
+                                        <input type="radio" name="sharePermissionRadio" id="radioApprove" value="Approve" title="User can edit, save and approve your model.">
+                                        <label class="form-check-label" for="radioApprove" title="User can edit, save and approve your model.">
+                                            Approve
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding:10px;">
+                                    <input type="checkbox" id="chbDuplicateShare" style="display:inline !important;margin-top:5px; margin-right:5px;" /> Duplicate & share
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="exampleTabsTwo" role="tabpanel">
+                                <table id="tableditWithDeleteButtonOnly" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>To</th>
+                                            <th>Create Date</th>
+                                            <th>Permission</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in sharedProjectsHistory">
+                                            <td>
+                                                {{$index + 1}}
+                                            </td>
+                                            <td>
+                                                {{item.sharedToUserName}}
+                                            </td>
+                                            <td>
+                                                {{item.createDate}}
+                                            </td>
+                                            <td>
+                                                {{item.permission}}
+                                            </td>
+                                            <td>
+                                                <i class="icon wb-trash" style="cursor:pointer;" title="Delete" ng-click="deleteShare(item.id)"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" ng-click="saveShareSubProject()">Share</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-slide-from-bottom" id="uploadJSONModal"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Upload JSON File</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="row" style="margin-top:5px;">
+                            <div class="form-group">
+                                <input id="files" type="file" name="files" class="form-control-file" accept="application/JSON" />
+                            </div>
+                        </div>
+                        <div id="divloader" style="display:none">
+                            <img src="~/Images/uploading.gif" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" value="Import JSON" onclick="UploadFile()" class="btn btn-success">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-slide-from-bottom" id="transferSubProjectModal"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Transfer <span id="subProjectNameForTransfer"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-sm-2" style="text-align:right;">Project:</label>
+                        <div class="col-sm-10">
+                            <select id="ddProjectsForTransfer" class="js-states form-control" style="width:70%;">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" ng-click="saveTransferProject()">Transfer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

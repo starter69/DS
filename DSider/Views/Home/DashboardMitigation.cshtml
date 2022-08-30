@@ -1,0 +1,350 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<style>
+    td {
+        padding: 10px !important;
+        font-weight: 900;
+        font-size: 18px;
+    }
+
+    .green {
+        color: #14e514;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .tblTitle {
+        font-weight: 500;
+        text-align: center;
+    }
+
+    td.tblTitleMain {
+        background-color: grey;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    td.firstTD {
+        background: #1d8e80;
+        color: white;
+    }
+
+    .borderleft-green {
+        border-left: 3px solid #1c8f7c !important;
+    }
+</style>
+<style>
+    .plotControl {
+        width: 70px;
+        display: inline-block;
+        background-color: grey;
+        border: 1px solid black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .activeplotControl {
+        background: #4a8b78;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .scrollContainer {
+        margin-top: -10px;
+    }
+
+    #tblDash3 {
+        margin-top: 15px;
+    }
+
+        #tblDash3 th {
+            font-weight: 700;
+        }
+
+        #tblDash3 th {
+            font-weight: 500;
+        }
+
+        #tblDash3 th, #tblDash3 td {
+            padding: 5px;
+        }
+
+            #tblDash3 td:first-child {
+                background-color: #0bb2d4;
+                color: white;
+                font-weight: 500;
+            }
+
+    .panel-title {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .backToProject {
+        float: left;
+        color: #898989;
+        cursor: pointer;
+        margin-left: 20px;
+        font-size: 14px;
+    }
+
+        .backToProject:hover {
+            color: #4A8B78;
+        }
+
+    .projectNameContainer {
+        font-weight: 900;
+        color: #1d9075;
+        font-size: 18px;
+    }
+
+    .playControlIcon {
+        cursor: pointer;
+    }
+</style>
+<link href="~/css/Range.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+<!-- Plugins For This Page -->
+<link rel="stylesheet" href="~/global/vendor/c3/c3.min599c.css?v4.0.2">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<div class="page-content container-fluid" ng-app="Tariana" ng-controller="DashboardMitigationController">
+    <div class="row" style="margin-bottom:10px; background-color:white;padding:8px;">
+        <div class="col-sm-12" style="text-align:center;">
+            <span class="backToProject" ng-click="backToSimulation()">
+                <i class="icon wb-dropleft" aria-hidden="true" title="Back"></i> Back to design page
+            </span>
+            <span class="projectNameContainer">
+
+            </span>
+        </div>
+    </div>
+    <div class="col-sm-12" data-plugin="matchHeight" data-by-row="true">
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="containerPlotDash1"></div>
+            </div>
+            <div class="col-sm-6">
+                <div id="containerPlotDash4"></div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+            <div class="col-xxl-12 col-lg-12">
+                <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+                    <div class="card-block p-0">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-content table-bordered" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="3" style="text-align:center" class="mainTile">Specific Period</td>
+                                        <td colspan="3" style="text-align:center" class="mainTile borderleft-green">Cumulative</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tblTitleMain" style="width:20%;" id="tdYearTitle">Year</td>
+                                        <td class="tblTitleMain">tCO2 Reduced</td>
+                                        <td class="tblTitleMain">% Target</td>
+                                        <td class="tblTitleMain">% Base</td>
+
+                                        <td class="tblTitleMain borderleft-green">tCO2 Reduced</td>
+                                        <td class="tblTitleMain">% Target</td>
+                                        <td class="tblTitleMain">% Base</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="firstTD">Scope 1</td>
+                                        <td class="tblTitle" id="tCo2Reduce_Scope1">0</td>
+                                        <td class="tblTitle" id="TargetScope1">0%</td>
+                                        <td class="tblTitle" id="BaseScope1">0%</td>
+
+                                        <td class="tblTitle borderleft-green" id="tCo2Reduce_Scope1_Cum">0</td>
+                                        <td class="tblTitle" id="TargetCumScope1">0%</td>
+                                        <td class="tblTitle" id="BaseCumScope1">0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="firstTD">Scope 2</td>
+                                        <td class="tblTitle" id="tCo2Reduce_Scope2">0</td>
+                                        <td class="tblTitle" id="TargetScope2">0%</td>
+                                        <td class="tblTitle" id="BaseScope2">0%</td>
+
+                                        <td class="tblTitle borderleft-green" id="tCo2Reduce_Scope2_Cum">0</td>
+                                        <td class="tblTitle" id="TargetCumScope2">0%</td>
+                                        <td class="tblTitle" id="BaseCumScope2">0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="firstTD">Scope 3</td>
+                                        <td class="tblTitle" id="tCo2Reduce_Scope3">0</td>
+                                        <td class="tblTitle" id="TargetScope3">0%</td>
+                                        <td class="tblTitle" id="BaseScope3">0%</td>
+
+                                        <td class="tblTitle borderleft-green" id="tCo2Reduce_Scope3_Cum">0</td>
+                                        <td class="tblTitle" id="TargetCumScope3">0%</td>
+                                        <td class="tblTitle" id="BaseCumScope3">0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="firstTD">Total</td>
+                                        <td class="tblTitle" id="tCo2Reduce_Total">0</td>
+                                        <td class="tblTitle" id="totalTargetLeftTable">0%</td>
+                                        <td class="tblTitle" id="totalBaseLeftTable">0%</td>
+
+                                        <td class="tblTitle borderleft-green" id="tCo2Reduce_Total_Cum">0</td>
+                                        <td class="tblTitle" id="TargetCumScopeTotal">0%</td>
+                                        <td class="tblTitle" id="BaseCumScopeTotal">0%</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            @*<div class="col-sm-6">
+                                <table class="table table-content table-bordered" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="3" style="text-align:center" class="mainTile">Specific Period</td>
+                                        <td colspan="3" style="text-align:center" class="mainTile borderleft-green">Cumulative</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tblTitleMain" style="width:20%;"></td>
+                                        <td class="tblTitleMain">tCO2 Reduce</td>
+                                        <td class="tblTitleMain">% Target</td>
+                                        <td class="tblTitleMain">% Base</td>
+
+                                        <td class="tblTitleMain borderleft-green">tCO2 Reduce</td>
+                                        <td class="tblTitleMain">% Target</td>
+                                        <td class="tblTitleMain">% Base</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="firstTD">Capex</td>
+                                        <td class="tblTitle">800</td>
+                                        <td class="tblTitle">10%</td>
+                                        <td class="tblTitle">15%</td>
+
+                                        <td class="tblTitle borderleft-green">720</td>
+                                        <td class="tblTitle">25%</td>
+                                        <td class="tblTitle">30%</td>
+                                    </tr>
+                                    <tr>
+                                </table>
+                            </div>*@
+                            @*<div class="col-sm-5">
+                                    <table class="table table-content table-bordered" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="3" style="text-align:center" class="mainTile">Project Implementation</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitleMain">Name</td>
+                                            <td class="tblTitleMain">ΣCO2</td>
+                                            <td class="tblTitleMain">$</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitle">Project 1</td>
+                                            <td class="tblTitle">150</td>
+                                            <td class="tblTitle">100$</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitle">Project 2</td>
+                                            <td class="tblTitle">150</td>
+                                            <td class="tblTitle">100$</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitle">Project 3</td>
+                                            <td class="tblTitle">150</td>
+                                            <td class="tblTitle">100$</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitle">Project 4</td>
+                                            <td class="tblTitle">150</td>
+                                            <td class="tblTitle">100$</td>
+                                        </tr>
+                                    </table>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="row" style="margin-top:15px;">
+                <div class="col-xxl-12 col-lg-12">
+                    <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+                        <div class="card-block p-0">
+                            <div class="row">
+                                <div class="col-sm-7">
+                                    <table class="table table-content table-bordered" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="3" style="text-align:center" class="mainTile">Specific Period</td>
+                                            <td colspan="3" style="text-align:center" class="mainTile borderleft-green">Cumulative</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tblTitleMain" style="width:20%;"></td>
+                                            <td class="tblTitleMain">tCO2 Reduce</td>
+                                            <td class="tblTitleMain">% Target</td>
+                                            <td class="tblTitleMain">% Base</td>
+
+                                            <td class="tblTitleMain borderleft-green">tCO2 Reduce</td>
+                                            <td class="tblTitleMain">% Target</td>
+                                            <td class="tblTitleMain">% Base</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="firstTD">Capex</td>
+                                            <td class="tblTitle">800</td>
+                                            <td class="tblTitle">10%</td>
+                                            <td class="tblTitle">15%</td>
+
+                                            <td class="tblTitle borderleft-green">720</td>
+                                            <td class="tblTitle">25%</td>
+                                            <td class="tblTitle">30%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="firstTD">CO2 tax credit</td>
+                                            <td class="tblTitle">800</td>
+                                            <td class="tblTitle">10%</td>
+                                            <td class="tblTitle">15%</td>
+
+                                            <td class="tblTitle borderleft-green">720</td>
+                                            <td class="tblTitle">25%</td>
+                                            <td class="tblTitle">30%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="firstTD">IRR</td>
+                                            <td class="tblTitle">800</td>
+                                            <td class="tblTitle">10%</td>
+                                            <td class="tblTitle">15%</td>
+
+                                            <td class="tblTitle borderleft-green">720</td>
+                                            <td class="tblTitle">25%</td>
+                                            <td class="tblTitle">30%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="firstTD">NPV</td>
+                                            <td class="tblTitle">800</td>
+                                            <td class="tblTitle">10%</td>
+                                            <td class="tblTitle">15%</td>
+
+                                            <td class="tblTitle borderleft-green">720</td>
+                                            <td class="tblTitle">25%</td>
+                                            <td class="tblTitle">30%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+</div>
+<script src="~/js/jquery-1.10.2.min.js"></script>
+<script src="~/js/angular.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="https://blacklabel.github.io/multicolor_series/js/multicolor_series.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="~/App/Controller/DashboardMitigationController.js?fileVersion=1.1"></script>

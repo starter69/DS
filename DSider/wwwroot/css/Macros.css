@@ -1,0 +1,83 @@
+﻿#MacroList {
+    position: absolute;
+    top: 15%;
+    right: 10px;
+    z-index: 9999;
+    background: #4A8B78;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding-top: 5px;
+}
+
+#inputList li, #outputList li {
+    list-style: none;
+    background: #4A8B78;
+    color: white;
+    height: 0;
+    line-height: 2em;
+    margin: 0;
+    padding: 0 0.5em;
+    overflow: hidden;
+    width: 10em;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#list li {
+    list-style: none;
+    background: white;
+    color: #000;
+    height: 0;
+    line-height: 2em;
+    margin: 0;
+    padding: 0 0.5em;
+    overflow: hidden;
+    width: 10em;
+    cursor: pointer;
+}
+
+    /*#list li:nth-child(even), #inputList li:nth-child(even), #outputList li:nth-child(even) {
+        background: white;
+    }*/
+
+    #list li.show, #inputList li.show, #outputList li.show {
+        height: 2em;
+        margin: 2px 0;
+        margin-right: 20px;
+        border-radius: 2px;
+        font-weight: 700;
+    }
+
+        #list li.show:hover {
+            background: #4ea9ff;
+        }
+
+        #inputList li.show:hover, #outputList li.show:hover {
+            background: #6c6c6c;
+        }
+
+#list .fade li, #inputList .fade li, #outputList .fade li {
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+}
+
+    #list .fade li.show, #inputList .fade li.show, #outputList .fade li.show {
+        opacity: 1;
+    }
+
+.swing {
+    perspective: 100px;
+}
+
+    .swing li {
+        opacity: 0;
+        transform: rotateX(-90deg);
+        transition: all 0.5s cubic-bezier(0.36, -0.64, 0.34, 1.76);
+    }
+
+        .swing li.show {
+            opacity: 1;
+            transform: none;
+            transition: all 0.5s cubic-bezier(0.36, -0.64, 0.34, 1.76);
+        }

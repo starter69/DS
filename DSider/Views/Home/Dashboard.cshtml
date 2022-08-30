@@ -1,0 +1,647 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<style>
+    
+
+    .plotControl {
+        width: 70px;
+        display: inline-block;
+        background-color: grey;
+        border: 1px solid black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .activeplotControl {
+        background: #4a8b78;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .scrollContainer {
+        margin-top: -10px;
+    }
+
+    #tblDash3 {
+        margin-top: 15px;
+    }
+
+        #tblDash3 th {
+            font-weight: 700;
+        }
+
+        #tblDash3 th {
+            font-weight: 500;
+        }
+
+        #tblDash3 th, #tblDash3 td {
+            padding: 5px;
+        }
+
+            #tblDash3 td:first-child {
+                background-color: #0bb2d4;
+                color: white;
+                font-weight: 500;
+            }
+
+    .panel-title {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .backToProject {
+        float: left;
+        color: #898989;
+        cursor: pointer;
+        margin-left: 20px;
+        font-size: 14px;
+    }
+
+        .backToProject:hover {
+            color: #4A8B78;
+        }
+
+    .projectNameContainer {
+        font-weight: 900;
+        color: #1d9075;
+        font-size: 18px;
+    }
+
+    .playControlIcon {
+        cursor: pointer;
+    }
+</style>
+<link href="~/css/Range.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+<!-- Plugins For This Page -->
+<link rel="stylesheet" href="~/global/vendor/c3/c3.min599c.css?v4.0.2">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<div class="page-content container-fluid" ng-app="Tariana" ng-controller="DashboardController">
+    <div class="row" style="margin-bottom:10px; background-color:white;padding:8px;">
+        <div class="col-sm-12" style="text-align:center;">
+            <span class="backToProject" ng-click="backToSimulation()">
+                <i class="icon wb-dropleft" aria-hidden="true" title="Back"></i> Back to design page
+            </span>
+            <span class="projectNameContainer">
+
+            </span>
+        </div>
+    </div>
+    <div class="nav-tabs-horizontal" data-plugin="tabs">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-toggle="tab" href="#exampleTabsOne"
+                   aria-controls="exampleTabsOne" role="tab">Overview</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-toggle="tab" href="#exampleTabsTwo"
+                   aria-controls="exampleTabsTwo" role="tab">Plotting</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-toggle="tab" href="#exampleTabs3"
+                   aria-controls="exampleTabs3" role="tab">Statistics</a>
+            </li>
+        </ul>
+        <div class="tab-content pt-20">
+            <div class="tab-pane active" id="exampleTabsOne" role="tabpanel">
+                <div class="row" data-plugin="matchHeight" data-by-row="true">
+                    <div class="col-xxl-9 col-lg-9">
+                        <!-- Widget Linearea Color -->
+                        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+                            <div class="card-block p-0">
+                                <div class="example-wrap">
+                                    <div class="example">
+                                        @*<div id="exampleC3Spline"></div>*@
+                                        <div class="row" style="margin-top:5px; text-align:center">
+                                            <div class="col-lg-12 col-md-12" style="text-align:center;margin-top:10px;">
+                                                <input type="radio" name="chartTypeDash1" id="radioLine2" value="line" onchange="PlottingDash1()" /> Line Chart
+                                                <input type="radio" name="chartTypeDash1" id="radioArea2" value="area" checked onchange="PlottingDash1()" /> Stacked area Chart
+                                            </div>
+                                        </div>
+                                        <div id="containerPlotDash2" style="height: 10px"></div>
+                                        <figure class="highcharts-figure">
+                                            <div id="containerPlotDash1" style="height:630px;"></div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Widget Linearea Color -->
+                    </div>
+                    <div class="col-xxl-3 col-lg-3">
+                        <div class="example" style="margin-top:0; margin-bottom:0;">
+                            <div class="panel-group" id="exampleAccordionDefault" aria-multiselectable="true"
+                                 role="tablist">
+                                <div class="panel">
+                                    <div class="panel-heading" id="exampleHeadingDefaultOne" role="tab">
+                                        <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefaultOne"
+                                           data-parent="#exampleAccordionDefault" aria-expanded="false"
+                                           aria-controls="exampleCollapseDefaultOne">
+                                            Green Energey Capacity
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse" id="exampleCollapseDefaultOne" aria-labelledby="exampleHeadingDefaultOne"
+                                         role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="scrollContainer" style="display:none;">
+                                                <label class="rangeTitle">Turbine1</label>
+                                                <label class="rangeTitleMin">5x</label>
+                                                <div class="container">
+                                                    <form class="range">
+                                                        <div class="form-group range__slider" style="width:42.5%;">
+                                                            <input type="range" step="100" id="turbine1">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Loan Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Turbine</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="range2">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="100" id="turbine2">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Loan Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Solar Panel</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="range4">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="100" id="Solar1">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Loan Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <div class="panel-heading" id="exampleHeadingDefaultTwo" role="tab">
+                                        <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefaultTwo"
+                                           data-parent="#exampleAccordionDefault" aria-expanded="false"
+                                           aria-controls="exampleCollapseDefaultTwo">
+                                            Battery Capacity
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse" id="exampleCollapseDefaultTwo" aria-labelledby="exampleHeadingDefaultTwo"
+                                         role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Battery</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="rangeBat">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="100" id="Battery1">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Bat Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <div class="panel-heading" id="exampleHeadingDefaultThree" role="tab">
+                                        <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefaultThree"
+                                           data-parent="#exampleAccordionDefault" aria-expanded="false"
+                                           aria-controls="exampleCollapseDefaultThree">
+                                            Electrolyzer Capacity
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse" id="exampleCollapseDefaultThree" aria-labelledby="exampleHeadingDefaultThree"
+                                         role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Electrolyzer</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="rangeElec">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="50" id="Electrolyzer1">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Elec Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <div class="panel-heading" id="exampleHeadingDefaultThree" role="tab">
+                                        <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefault4"
+                                           data-parent="#exampleAccordionDefault" aria-expanded="false"
+                                           aria-controls="exampleCollapseDefaultThree">
+                                            Green H2 Storage Capacity
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse" id="exampleCollapseDefault4" aria-labelledby="exampleHeadingDefaultThree"
+                                         role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Green H2</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="rangeGreenH2">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="1000" id="GreenH2">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Green Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <div class="panel-heading" id="exampleHeadingDefaultThree" role="tab">
+                                        <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefault5"
+                                           data-parent="#exampleAccordionDefault" aria-expanded="false"
+                                           aria-controls="exampleCollapseDefaultThree">
+                                            Demand
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse" id="exampleCollapseDefault5" aria-labelledby="exampleHeadingDefaultThree"
+                                         role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Industry</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="rangeMob1">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="10" id="Mobility1">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Mob Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="scrollContainer">
+                                                <label class="rangeTitle">Mobility</label>
+                                                <label class="rangeTitleMin">500</label>
+                                                <div class="container">
+                                                    <form class="rangeMob2">
+                                                        <div class="form-group range__slider" style="width:100%;">
+                                                            <input type="range" step="100" id="Mobility2">
+                                                        </div>
+                                                        <div class="form-group range__value" style="visibility:hidden; position:absolute;">
+                                                            <label>Mob Amount</label>
+                                                            <span></span>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-9 col-lg-9">
+                        <!-- Widget Statistic -->
+                        <div class="card card-shadow" id="widgetStatistic">
+                            <div class="card-block p-0">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="four col-md-3">
+                                            <div class="counter-box colored">
+                                                <i class="fa fa-arrow-up"></i><span class="counter">{{statisticsList[0].capex}}</span>
+                                                <p>capex</p>
+                                            </div>
+                                        </div>
+                                        <div class="four col-md-3">
+                                            <div class="counter-box">
+                                                <i class="fa fa-line-chart"></i><span class="counter">{{statisticsList[0].taxCredit}}</span>
+                                                <p>Local Tax Credits</p>
+                                            </div>
+                                        </div>
+                                        <div class="four col-md-3">
+                                            <div class="counter-box">
+                                                <i class="fa fa-bar-chart"></i> <span class="counter">{{statisticsList[0].carbonTax}}</span>
+                                                <p>Carbon Tax</p>
+                                            </div>
+                                        </div>
+                                        <div class="four col-md-3">
+                                            <div class="counter-box">
+                                                <i class="fa fa-usd"></i><span class="counter">{{statisticsList[0].emissionMitgated}}</span>
+                                                <p>Emissions mitigated</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Widget Statistic -->
+                    </div>
+                    <div class="col-xxl-3 col-lg-3">
+                        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+                            <div class="card-block p-0">
+                                <div class="container">
+                                    <div class="row" style="padding:15px;">
+                                        <label class="col-sm-5 label" style="display:inline-block;font-weight:900;font-size:20px;">
+                                            NPV
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" value="{{statisticsList[0].npv}}" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding:15px;">
+                                        <label class="col-sm-5 label" style="display:inline-block;font-weight:900;font-size:20px;">
+                                            IRR
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" value="{{statisticsList[0].irr}}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-5 col-lg-5">
+                        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+                            <div class="card-block p-0">
+                                <div class="container" style="padding:15px;">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h4>Supply Reliability</h4>
+                                            <div class="mTitle">Maximum H2 shortfall</div>
+                                            <div class="mTitle">Annual cumulative H2 shortfall</div>
+                                            <div class="mTitle">Maximum Outage period</div>
+                                            <div class="mTitle">Power LF</div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div style="text-align:center;">
+                                                <i class="fa fa-line-chart" style="font-size:65px;color:#ecc384"></i>
+                                            </div>
+                                            <div style="text-align:center;color:black;">
+                                                $ {{statisticsList[0].supplyReliability}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card card-shadow card-responsive">
+                            <div class="card-block p-0">
+                                <div class="container" style="padding:15px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card card-shadow card-responsive">
+                            <div class="card-block p-0">
+                                <div class="container" style="padding:15px;">
+                                    <h4>Cost</h4>
+                                    <div class="row mRow">
+                                        <div class="col-sm-4">
+                                            LCOH
+                                        </div>
+                                        <div class="col-sm-8">
+                                            ${{statisticsList[0].lcoh}}
+                                        </div>
+                                    </div>
+                                    <div class="row mRow">
+                                        <div class="col-sm-4">
+                                            Variable
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {{statisticsList[0].variable}}%
+                                        </div>
+                                    </div>
+                                    <div class="row mRow">
+                                        <div class="col-sm-4">
+                                            Period
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {{statisticsList[0].period}}%
+                                        </div>
+                                    </div>
+                                    <div class="row mRow">
+                                        <div class="col-sm-4">
+                                            Other
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {{statisticsList[0].other}}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="exampleTabsTwo" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class="label">Sub Projects:</label>
+                        <select id="ddSubProjects" class="js-states form-control" multiple style="width:80%;">
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="label">Property:</label>
+                        <select id="ddProperties" class="js-states form-control" multiple style="width:80%;">
+                            <option value="Turbine Green Electricity (MWH)">Turbine Green Electricity</option>
+                            <option value="Solar Green Electricity (MWH)">Solar Green Electricity</option>
+                            @*<option value="gray_electricity">Gray Electricity</option>*@
+                            <option value="Battery Electricity (MWH)">Battery Electricity</option>
+                            <option value="Residual Electricity (MWH)">Residual Electricity</option>
+                            <option value="Electrolyzer Electricity Input (MWH)">Electrolyzer Electricity Input</option>
+                            <option value="Electrolyzer Hydrogen Output (kg/h)">Electrolyzer Hydrogen Output</option>
+                            <option value="Battery Storage (MWH)">Battery Storage</option>
+                            <option value="Battery Power Capacity (MWH)">Battery Power Capacity</option>
+                            <option value="Electrolyzer Power Capacity (MWH)">Electrolyzer Power Capacity</option>
+                            <option value="Hydrogen Load Balancer Residual (kg/h)">Hydrogen Load Balancer Residual</option>
+                            @*<option value="H2_demand">H2 Demand</option>*@
+                            <option value="H2 Industry (kg/h)">H2 Industry</option>
+                            <option value="H2 Mobility (kg/h)">H2 Mobility</option>
+                            <option value="H2 External Store Output (kg/h)">H2 External Store Output</option>
+                            <option value="H2 Green Store Output (kg/h)">H2 Green Store Output</option>
+
+                            <option value="H2 Direct RE (kg/h)">
+                                H2 Direct (RE)
+                            </option>
+                            <option value="H2 Battery (kg/h)">
+                                H2 Battery
+                            </option>
+                            <option value="H2 Gray Power (kg/h)">
+                                H2 Gray Power
+                            </option>
+                            <option value="H2 Green Storage (kg/h)">
+                                H2 Green Storage
+                            </option>
+                            <option value="H2 External (kg/h)">
+                                H2 External
+                            </option>
+                            @*<option value="H2_greenstore_deltastore">H2 Green Store Delta Store</option>*@
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" class="btn btn-info" value="Plotting" style="display:inline" onclick="Plotting()" />
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12" style="text-align:center;margin-top:10px;">
+                    <input type="radio" name="chartType" id="radioLine" value="line" checked /> Line Chart
+                    <input type="radio" name="chartType" id="radioArea" value="area" /> Stacked area Chart
+                </div>
+                <div class="col-lg-12 col-md-12" style="text-align:center;margin-top:10px;">
+                    <input type="hidden" id="hiddenMonthesCountPlotting" value="0" />
+                    <input type="hidden" id="hiddenYearsCountPlotting" value="0" />
+                    <input type="hidden" id="hiddenDaysCountPlotting" value="0" />
+                    <input type="hidden" id="hiddenCurrentDatePlotting" />
+                    <div style="margin:0 auto;">
+                        <div class="plotControl" style="border-bottom-left-radius:10px;border-top-left-radius:10px;" title="Show all data in plot" data="All">
+                            All
+                        </div>
+                        <div class="plotControl activeplotControl" title="Show yearly data in plot" data="Yearly">
+                            Yearly
+                        </div>
+                        <div class="plotControl" title="Show monthly data in plot" data="Monthly">
+                            Monthly
+                        </div>
+                        <div class="plotControl" style="border-bottom-right-radius:10px;border-top-right-radius:10px;" title="Show daily data in plot" data="Daily">
+                            Daily
+                        </div>
+                    </div>
+                    <div class="row" style="text-align:center;padding:5px;" id="controlContiner">
+                        <div style="margin:0 auto;width:100%;">
+                            <input type="text" id="txtInterval" value="5" class="form-control" style="width:30px; padding:3px !important;display:inline-block;" />
+                            <img src="~/Images/Plotting/previousPlay.png" onclick="previousPlot()" class="playControlIcon" style="width:40px;" title="Previous Date" />
+                            <img src="~/Images/Plotting/iconsPlay.png" class="playControlIcon" title="Play Automatically" id="playIcon" onclick="autoPlay()" />
+                            <img src="~/Images/Plotting/iconStop.png" class="playControlIcon" title="Stop" id="stopIcon" onclick="stopPlot()" />
+                            <img src="~/Images/Plotting/nextPlay.png" onclick="nextPlot()" class="playControlIcon" style="width:40px;" title="Next Date" />
+                        </div>
+                        <div style="margin:0 auto;width:100%; font-weight:900;">
+                            <span id="spanCurrentCount">0</span>/<span id="spanTotalCount">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="row" style="margin-top:5px; text-align:center">
+                    </div>
+                    <div id="container" style="height: 10px"></div>
+                    <figure class="highcharts-figure">
+                        <div id="container2" style="height:800px;"></div>
+                    </figure>
+                </div>
+            </div>
+            <div class="tab-pane" id="exampleTabs3" role="tabpanel">
+                <div class="card card-shadow" id="widgetStatistic">
+                    <div class="card-block p-0">
+                        <div class="container">
+                            <div class="row">
+                                <div style="width:100%;padding:20px;">
+                                    <label class="label">Sub Projects:</label>
+                                    <select id="ddSubProjectsDash3" multiple class="js-states form-control" style="width:70%;">
+                                    </select>
+                                    <input type="button" class="btn btn-info" value="Refresh" style="display:inline;" ng-click="getStatistics(3)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" data-plugin="matchHeight" data-by-row="true">
+                    <div class="col-xxl-12 col-lg-12">
+                        <!-- Widget Statistic -->
+                        <div class="card card-shadow" id="widgetStatistic">
+                            <div class="card-block p-0">
+                                <div class="container">
+                                    <table class="table-bordered table-hover" style="width:99%;" id="tblDash3" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Capex</th>
+                                                <th>Local Tax Credits</th>
+                                                <th>
+                                                    Carbon Tax
+                                                </th>
+                                                <th>Emissions mitigated</th>
+                                                <th>NPV</th>
+                                                <th>IRR</th>
+                                                <th>Supply Reliability $</th>
+                                                <th>LCOH $</th>
+                                                <th>Variable %</th>
+                                                <th>Period %</th>
+                                                <th>Other %</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in statisticsList">
+                                                <td>{{item.subProject}}</td>
+                                                <td>{{item.capex}}</td>
+                                                <td>{{item.taxCredit}}</td>
+                                                <td>
+                                                    {{item.carbonTax}}
+                                                </td>
+                                                <td>{{item.emissionMitgated}}</td>
+                                                <td>{{item.npv}}</td>
+                                                <td>{{item.irr}}</td>
+                                                <td>{{item.supplyReliability}}</td>
+                                                <td>{{item.lcoh}}</td>
+                                                <td>{{item.variable}}</td>
+                                                <td>{{item.period}}</td>
+                                                <td>{{item.other}}</td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Widget Statistic -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-1.10.2.min.js"></script>
+<script src="~/js/angular.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="https://blacklabel.github.io/multicolor_series/js/multicolor_series.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="~/App/Controller/Dashboard.js?FileVersion=2.1"></script>
