@@ -702,11 +702,9 @@ function showPlotDash1(dataToPlot) {
         })
     }
 
-    if (chartType === 'hydration') {
-        console.log('hydration');
-
+    if (chartType === 'hydrogen') {
         seriesData.push({
-            name: 'Total Hydration',
+            name: 'Total Hydrogen',
             data: response.map(a => {
                 var total = 0;
 
