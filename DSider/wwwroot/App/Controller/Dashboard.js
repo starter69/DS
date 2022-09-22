@@ -599,6 +599,7 @@ function showPlotDash2ByType(dataToPlot) {
             title: {
                 text: 'Time step (Hours)'
             },
+            tickInterval: 100,
             categories: xAxis,
             labels: {
                 rotation: 90,
@@ -664,127 +665,71 @@ function Plotting() {
 function showPlotDash1(dataToPlot) {
     var response = dataToPlot;
     var seriesData = [];
-    var yAxis = [];
-    var fake_Y_AxisMin = [];
-    var fake_Y_AxisMax = [];
-    for (var i = 0; i < 5; i++) {
+
+    var chartType = jQuery("input[name='chartTypeDash1']:checked").val();
+
+    if (chartType === 'line')
+        for (var i = 0; i < 5; i++) {
         var Val = '';
         var data = [];
         switch (i) {
             case 0:
-                data = response.map(a => a.h2_electrolyzer_out_re);
-                Val = 'Direct (RE) (Kg/h)';
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_turbine_out])
+                Val = 'PWR Turbine Out';
                 break;
             case 1:
-                data = response.map(a => a.h2_electrolyzer_out_bat);
-                Val = 'Battery (Kg/h)';
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_elec_loadbalancer_to_electrolyzer])
+                Val = 'PWR Elec Load Balancer To Electrolyzer';
                 break;
             case 2:
-                data = response.map(a => a.h2_electrolyzer_out_grid);
-                Val = 'Gray Power (Kg/h)';
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_battery_storage])
+                Val = 'PWR Battery Storage';
                 break;
             case 3:
-                data = response.map(a => a.h2_greenstore_out);
-                Val = 'Storage (Kg/h)';
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_battery_cap])
+                Val = 'PWR Battery Capacity';
                 break;
             case 4:
-                data = response.map(a => a.h2_externalsupply_out);
-                Val = 'External (Kg/h)';
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.h2_electrolyzer_out])
+                Val = 'H2 Electrolyzer Out';
                 break;
         }
-        fake_Y_AxisMin.push(findMin(data));
-        fake_Y_AxisMax.push(findMax(data));
-        //yAxis.push({
-        //    attrName: Val,
-        //    'title': {
-        //        text: Val,
-        //        style: {
-        //            fontSize: '14px'
-        //        }
-        //    },
-        //    opposite: (i == 0 ? false : true),
-        //    min: findMin(data),
-        //    max: findMax(data),
-        //    height: '100%',
-        //    'lineWidth': 2,
-        //    labels: {
-        //        formatter: function () {
-        //            return this.value;
-        //        },
-        //        style: { fontSize: "14px" }
-        //    },
-        //});
-        seriesData.push({
-            'label': {
-                'enabled': false
-            },
-            lineWidth: 2,
-            zoneAxis: 'x',
-            'yAxis': 0,//i,
-            'name': Val,
-            'keys': ['y', 'id'],
-            'data': data,
-            'lineWidth': 2,
-            'marker': {
-                'enabled': false
-            },
-        });
-    }
-    yAxis.push({
-        attrName: Val,
-        'title': {
-            text: 'Hydrogen Produced (Kg/h)',//Val,
-            style: {
-                fontSize: '14px'
-            }
-        },
-        opposite: false,// (i == 0 ? false : true),
-        min: findMin(fake_Y_AxisMin),
-        max: findMax(fake_Y_AxisMax),
-        height: '100%',
-        'lineWidth': 2,
-        labels: {
-            formatter: function () {
-                return this.value;
-            },
-            style: { fontSize: "14px" }
-        },
-    });
-    var xAxis = response.map(a => a.timestep);
-    var chartType = jQuery("input[name='chartTypeDash1']:checked").val();
 
-    var chart = new Highcharts.Chart({
-        chart: {
-            type: chartType,
-            renderTo: 'containerPlotDash1',
-            zoomType: 'xy',
+        seriesData.push({
+            name: Val,
+            data: data,
+            type: 'spline'
+        })
+    }
+
+    if (chartType === 'hydration') {
+        console.log('hydration');
+
+        seriesData.push({
+            name: 'Total Hydration',
+            data: response.map(a => {
+                var total = 0;
+
+                Object.keys(a).filter(key => key.includes('h2_')).forEach(h2Key => {
+                    total += a[h2Key] * 1.0;
+                })
+
+                return [new Date(a.timeUTC).getTime(), total];
+            })
+        })
+    }
+
+    var chart = Highcharts.stockChart('containerPlotDash1', {
+        rangeSelector: {
+            selected: 1
         },
-        xAxis: {
-            title: {
-                text: 'Time step (Hours)'
-            },
-            categories: xAxis,
-            labels: {
-                rotation: 90,
-                style: { fontSize: "14px" }
-            },
-        },
+
         title: {
-            text: '',
-            align: 'center',
+            text: ''
         },
-        series: seriesData,
-        yAxis: yAxis,
-        plotOptions: {
-            series: {
-                turboThreshold: 10000000,
-                connectNulls: false,
-                cursor: "pointer",
-                pointInterval: undefined,
-                pointStart: undefined,
-            }
-        },
-    });
+
+        series: seriesData
+    })
 }
 //Get plotting data for dashboard1
 function PlottingDash1() {

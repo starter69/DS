@@ -6,16 +6,17 @@
 <style>
     .card {
         display: inline-block !important;
-        height: 250px !important;
-        width: 24% !important;
-        margin: 5px;
         cursor: pointer;
         user-select: none; /* standard syntax */
         -webkit-user-select: none; /* webkit (safari, chrome) browsers */
         -moz-user-select: none; /* mozilla browsers */
         -khtml-user-select: none; /* webkit (konqueror) browsers */
         -ms-user-select: none; /* IE10+ */
-        border-radius: 30px !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 20px 2px rgba(200, 200, 200);
+        width: 100%;
+        padding: 20px 10px;
+        text-align: center;
     }
 
         .card:hover {
@@ -54,7 +55,7 @@
         float: left;
         color: #898989;
         cursor: pointer;
-        margin-left: 20px;
+        margin-left: 20px;6
         font-size: 14px;
     }
 
@@ -166,21 +167,6 @@
 <script src="~/js/jquery-1.10.2.min.js"></script>
 <script src="~/js/angular.min.js"></script>
 <script src="~/App/Controller/ProjectsController.js?FileVersion=2"></script>
-@*<script>
-        // Purely for automatically demoing in the CodePen preview :)
-        setTimeout(function () {
-            $('#two').prop('checked', true);
-
-            setTimeout(function () {
-                $('#three').prop('checked', true);
-
-                setTimeout(function () {
-                    $('#one').prop('checked', true);
-                    // Go back to the begining.
-                }, 3000)
-            }, 2000)
-        }, 1000)
-    </script>*@
 <div class="wrapper" ng-app="Tariana" ng-controller="ProjectsController">
     <input id="projectTab" type="radio" name="nav" value="one" checked="checked" class="notShow" />
     <label for="one" class="notShow">Item one</label>
@@ -192,21 +178,23 @@
                 </div>
             </div>
             <div style="padding:20px;">
-                <div class="col-sm-12" style="margin-top:10px;text-align:left;">
-                    <div class="card" style="text-align:center;" ng-repeat="item in projectsList" ng-dblclick="showSubProject(item.projectID)">
-                        <img class="card-img-top" src="~/Images/folderIcon.png" style="width:100px; margin:0 auto; padding-top:10px; margin-bottom:15px;" alt="Project">
-                        <div class="card-block">
-                            <h4 class="card-title">
-                                {{item.name}}
-                            </h4>
-                            <p class="card-text">{{item.descrption}}</p>
-                            <p class="card-text">
-                                <small class="text-muted">{{item.createDate}}</small>
-                            </p>
-                            <p class="card-text">
-                                <i class="icon wb-pencil iconProject editProject" ng-click="editProject(item.projectID)" aria-hidden="true" title="Edit"></i>
-                                <i class="icon wb-trash iconProject deleteProject" ng-click="deleteProject(item.projectID)" aria-hidden="true" title="Delete"></i>
-                            </p>
+                <div class="row" style="margin-top:10px;text-align:left;">
+                    <div class="col-sm-3 padding-3" style="text-align:center;" ng-repeat="item in projectsList" ng-dblclick="showSubProject(item.projectID)">
+                        <div class="card">
+                            <img class="card-img-top" src="~/Images/folderIcon.png" style="width:125px; margin:0 auto; padding-top:10px; margin-bottom:15px;" alt="Project">
+                            <div class="card-block">
+                                <h4 class="card-title">
+                                    {{item.name}}
+                                </h4>
+                                <p class="card-text">{{item.descrption}}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">{{item.createDate}}</small>
+                                </p>
+                                <p class="card-text">
+                                    <i class="icon wb-pencil iconProject editProject" ng-click="editProject(item.projectID)" aria-hidden="true" title="Edit"></i>
+                                    <i class="icon wb-trash iconProject deleteProject" ng-click="deleteProject(item.projectID)" aria-hidden="true" title="Delete"></i>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -228,8 +216,8 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12" style="margin-top:10px;text-align:left;">
-                        <div class="card" style="text-align:center;" ng-repeat="item in subProjectsList" ng-dblclick="goToSimulation(item.id, item.name, item.projectID, item.subProject_Type)">
+                    <div class="col-sm-3" style="margin-top:10px;text-align:left;" ng-repeat="item in subProjectsList" ng-dblclick="goToSimulation(item.id, item.name, item.projectID, item.subProject_Type)">
+                        <div class="card" style="text-align:center;">
                             <div class="leftIconsSub">
                                 <i title="Approved" class="fas fa-check-circle" aria-hidden="true" style="color:#4A8B78" ng-show="checkApprovedStatus(item.workFlowStatus)"></i>
                             </div>
