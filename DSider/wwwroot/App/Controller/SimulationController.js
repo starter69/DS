@@ -95,6 +95,25 @@ jQuery(document).ready(function () {
         jQuery('#mPropertyPanel').addClass('cd-panel--is-visible');
         closeContextMenu();
     });
+    //When click on fullscreen button on property panel
+    let screenMode = 'default';
+    jQuery(document).on('click', '#fullscreen', function (e) {
+        e.preventDefault();
+        if (screenMode == 'default') {
+            jQuery('.cd-panel__container').css("width", "100%");
+            jQuery('.cd-panel__header').css("width", "100%");
+            jQuery('#fullscreen').css('margin-top', '-10px');
+            screenMode = 'full';
+            jQuery('#fullscreen').html('<i class="fa fa-window-minimize" aria-hidden="true" style="font-size:25px;"></i>');
+        } else {
+            jQuery('.cd-panel__container').css("width", "50%");
+            jQuery('.cd-panel__header').css("width", "50%");
+            jQuery('#fullscreen').css('margin-top', '0px');
+            screenMode = 'default';
+            jQuery('#fullscreen').html('<i class="fa fa-window-maximize" aria-hidden="true" style="font-size:25px;"></i>');
+
+        }
+    });
     //When click on delete on context menu
     jQuery(document).on('click', '#deleteMenu', function () {
         var curerrentComponentID = $selectedNodeForContext.attr('id');

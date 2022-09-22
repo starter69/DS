@@ -120,18 +120,6 @@ Slide In Panel - by CodyHouse.co
     background: #0000003b;
 }
 
-@media only screen and (min-width: 768px) {
-    .cd-panel__header {
-        width: 25%;
-    }
-}
-
-@media only screen and (min-width: 1170px) {
-    .cd-panel__header {
-        width: 25%;
-    }
-}
-
 .cd-panel__close {
     position: absolute;
     top: 0;
@@ -285,16 +273,12 @@ Slide In Panel - by CodyHouse.co
     transition-delay: 0s;
 }
 
-@media only screen and (min-width: 768px) {
-    .cd-panel__container {
-        width: 25%;
-    }
+.cd-panel__container {
+    width: 50%;
 }
 
-@media only screen and (min-width: 1170px) {
-    .cd-panel__container {
-        width: 25%;
-    }
+.cd-panel__header {
+    width: 50%;
 }
 
 .cd-panel__content {

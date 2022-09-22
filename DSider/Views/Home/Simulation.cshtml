@@ -655,9 +655,6 @@
                     </div>
                 </div>
             </div>
-            <div style="text-align:center;">
-                <img src="~/Images/planet.png" style="width:75px; cursor:pointer; position:absolute; top:85%; left:5%;" title="showMap" id="sowAllComponentsOnMap" />
-            </div>
             <!-- end of panel -->
         </div>
         <!-- end of wrap -->
@@ -741,8 +738,11 @@
 </div>
 <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main" style="position:absolute;visibility:hidden" id="triggerPropertyMenu"></a>
 <div class="cd-panel cd-panel--from-right js-cd-panel-main" id="mPropertyPanel">
-    <header class="cd-panel__header">
-        <h3 style="text-align:center; margin-top:10px;">Properties</h3>
+    <header class="cd-panel__header d-flex">
+        <h3 style="text-align:center; margin-top:10px;" class="mr-auto">Properties</h3>
+        <button id="fullscreen" style="background: transparent; color: #37474f; margin-right: 70px; border: transparent" class="pt-1">
+            <i class="fa fa-window-maximize" aria-hidden="true" style="font-size:25px;"></i>
+        </button>
         <a href="#0" class="cd-panel__close js-cd-close">Close</a>
     </header>
     <div class="cd-panel__container">
