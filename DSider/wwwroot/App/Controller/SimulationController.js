@@ -308,6 +308,24 @@ jQuery(document).ready(function () {
             }
         })
     });
+    // Longitude validation
+    jQuery('#longitudeInput').change(function () {
+        var longitude = jQuery('#longitudeInput').val();
+        if (Math.abs(longitude) <= 180) {
+            jQuery('#longitudeFeedback').css('display', 'none');
+        } else {
+            jQuery('#longitudeFeedback').css('display', 'block');
+        }
+    });
+    // Latitude Validation
+    jQuery('#latitudeInput').change(function () {
+        var latitude = jQuery('#latitudeInput').val();
+        if (Math.abs(latitude) <= 90) {
+            jQuery('#latitudeFeedback').css('display', 'none');
+        } else {
+            jQuery('#latitudeFeedback').css('display', 'block');
+        }
+    });
     //When click on delete icon in context menu to remove selected component
     jQuery(document).on('click', '.deleteContextMenu', function () {
         alertify.confirm("Are you sure to delete?", function (e) {

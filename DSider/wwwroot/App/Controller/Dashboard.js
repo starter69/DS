@@ -583,17 +583,15 @@ function showPlotDash2ByType(dataToPlot) {
     Highcharts.setOptions({
         global: {
             useUTC: true,
-
         }
     });
-    //
+
     var chartType = jQuery("input[name='chartType']:checked").val();
     //
     var chart = new Highcharts.Chart({
         chart: {
             type: chartType,
             renderTo: 'container2',
-            zoomType: 'xy',
         },
         xAxis: {
             title: {
@@ -718,13 +716,48 @@ function showPlotDash1(dataToPlot) {
     }
 
     var chart = Highcharts.stockChart('containerPlotDash1', {
+        tooltip: {
+            pointFormat: "{series.name}: {point.y:.2f}"
+        },
         rangeSelector: {
-            selected: 1
+            allButtonsEnabled: true,
+            buttons: [{
+                type: 'hour',
+                count: 1,
+                text: 'Hourly'
+            }, {
+                type: 'day',
+                count: 1,
+                text: 'Daily'
+            },{
+                type: 'week',
+                count: 1,
+                text: 'Weekly'
+            }, {
+                type: 'month',
+                count: 1,
+                text: 'Monthly'
+            }, {
+                type: 'month',
+                count: 3,
+                text: 'Quarterly'
+            }, {
+                type: 'year',
+                count: 1,
+                text: 'Yearly'
+            }, {
+                type: 'all',
+                text: 'All'
+            }, {
+                type: 'ytd',
+                text: 'YTD'
+            }],
+            buttonTheme: {
+                width: 60
+            },
+            selected: 5
         },
 
-        title: {
-            text: ''
-        },
 
         series: seriesData
     })
