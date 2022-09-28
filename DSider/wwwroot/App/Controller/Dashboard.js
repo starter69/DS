@@ -717,7 +717,7 @@ function showPlotDash1(dataToPlot) {
 
     var chart = Highcharts.stockChart('containerPlotDash1', {
         tooltip: {
-            pointFormat: "Value: {point.y:.2f}"
+            pointFormat: "{series.name}: {point.y:.2f}"
         },
         rangeSelector: {
             allButtonsEnabled: true,
