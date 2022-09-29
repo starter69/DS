@@ -165,6 +165,7 @@ namespace DSider.Controllers
                 string subProjectID = Request.Cookies["subProjectID"];
                 string userName = Request.Cookies["userName"];
                 string path = userName + "/" + DataSourceName + "/";
+                // get from environment
                 using (var client = new AmazonS3Client("AKIA2NWMPB72LIDOX4RP", "/gBcBBxIFA8ExrhHPIlo1SGSu0jwxoj3xTmFT1un", RegionEndpoint.USEast1))
                 {
                     MemoryStream newMemoryStream = new MemoryStream();

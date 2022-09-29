@@ -1,0 +1,36 @@
+name: Deploy develop on merge
+on:
+  pull_request:
+    branches:
+    - develop
+    types: [closed] # check pr is closed
+
+jobs:
+  build_zip_deploy:
+    if: ${{ github.event.pull_request.merged }}  # check PR is merged
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3 # fetch latest commit
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Zip # zip up the latest build
+      run: zip -r deploy.zip . -x '*.git*'
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v20 # marketplace plugin
+      with:
+        aws_access_key: AKIA2NWMPB72LIDOX4RP
+        aws_secret_key: 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
+        application_name: DSiderInc
+        environment_name: DSiderInc-dev
+        version_label: 1.${{ github.event.number }}
+        region: us-east-1
+        deployment_package: deploy.zip
