@@ -16,24 +16,24 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-        run: dotnet restore
+      run: dotnet restore
     - name: Build
-        run: dotnet build --no-restore
+      run: dotnet build --no-restore
     - name: Test
-        run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
     - name: Zip # zip up the latest build
-        run: zip -r deploy.zip . -x '*.git*'
+      run: zip -r deploy.zip . -x '*.git*'
     - name: deploy
-        env:
-          AWS_ACCESS_KEY_ID: AKIA2NWMPB72LIDOX4RP
-          AWS_SECRET_ACCESS_KEY: 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
-          AWS_DEFAULT_REGION: us-east-1
-        - run: aws S3 cp deploy.zip s3://elasticbeanstalk-us-east-1-716614602740/deploy.zip
-        - run: aws elasticbeanstalk create-application-version --application-name DSiderInc \
-               --version-label 1.${{ github.event.number }} \
-               --source-bundle S3Bucket="elasticbeanstalk-us-east-1-716614602740",S3Key="deploy.zip"
-        - run: aws elasticbeanstalk update-environment --application-name DSiderInc\
-               --environment-name DSiderInc-dev --version-label 1.${{ github.event.number }}
+      env:
+        AWS_ACCESS_KEY_ID: AKIA2NWMPB72LIDOX4RP
+        AWS_SECRET_ACCESS_KEY: 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
+        AWS_DEFAULT_REGION: us-east-1
+      run: aws S3 cp deploy.zip s3://elasticbeanstalk-us-east-1-716614602740/deploy.zip
+      run: aws elasticbeanstalk create-application-version --application-name DSiderInc \
+            --version-label 1.${{ github.event.number }} \
+            --source-bundle S3Bucket="elasticbeanstalk-us-east-1-716614602740",S3Key="deploy.zip"
+      run: aws elasticbeanstalk update-environment --application-name DSiderInc\
+            --environment-name DSiderInc-dev --version-label 1.${{ github.event.number }}
 
 
 
