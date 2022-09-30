@@ -32,5 +32,3 @@ jobs:
         application_name: DSiderInc
         environment_name: DSiderInc-dev
         version_label: 1.${{ github.event.number }}
-        region: us-east-1
-        deployment_package: deploy.zip
