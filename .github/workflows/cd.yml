@@ -30,6 +30,7 @@ jobs:
         AWS_DEFAULT_REGION: us-east-1
         AWS_S3_BUCKET: elasticbeanstalk-us-east-1-716614602740
         AWS_S3_PATH: '/elasticbeanstalk-us-east-1-716614602740/deploy.zip'
+        AWS_REGION: 'us-east-1'
         FILE: 'deploy.zip'
     - name: deploy
       env:
