@@ -28,12 +28,10 @@ jobs:
         AWS_ACCESS_KEY_ID: AKIA2NWMPB72LIDOX4RP
         AWS_SECRET_ACCESS_KEY: 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
         AWS_DEFAULT_REGION: us-east-1
-      run: aws S3 cp deploy.zip s3://elasticbeanstalk-us-east-1-716614602740/deploy.zip
-      run: aws elasticbeanstalk create-application-version --application-name DSiderInc \
-            --version-label 1.${{ github.event.number }} \
-            --source-bundle S3Bucket="elasticbeanstalk-us-east-1-716614602740",S3Key="deploy.zip"
-      run: aws elasticbeanstalk update-environment --application-name DSiderInc\
-            --environment-name DSiderInc-dev --version-label 1.${{ github.event.number }}
+      run: |
+           aws S3 cp deploy.zip s3://elasticbeanstalk-us-east-1-716614602740/deploy.zip
+           aws elasticbeanstalk create-application-version --application-name DSiderInc --version-label 1.${{ github.event.number }} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-716614602740",S3Key="deploy.zip"
+           aws elasticbeanstalk update-environment --application-name DSiderInc --environment-name DSiderInc-dev --version-label 1.${{ github.event.number }}
 
 
 
