@@ -51,7 +51,7 @@ jQuery(document).ready(function () {
             mDash = 'DashboardMitigation';
         redirectURL = '/Home/' + mDash + '/' + subProjectID + '/' + getParameterByName('name') + '/' + getParameterByName('folder') + '/' + getParameterByName('type');
         $.ajax({
-            url: 'http://middle-app.com/' + subProjectID,
+            url: 'http://localhost:5000/' + subProjectID,
             type: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
