@@ -21,35 +21,17 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish --configuration Release --output .\bin\publish 
     - name: Zip # zip up the latest build
       run: zip -r deploy.zip . -x '*.git*'
-    - uses: hkusu/s3-upload-action@v2
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v20 # marketplace plugin
       with:
-        aws-access-key-id: AKIA2NWMPB72LIDOX4RP
-        aws-secret-access-key: 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
-        aws-region: 'us-east-1'
-        aws-bucket: applicationsfromgithub
-        file-path: 'deploy.zip'
-        destination-dir: /
-        bucket-root: /
-    - name: deploy
-      env:
-        AWS_ACCESS_KEY_ID: AKIA2NWMPB72LIDOX4RP
-        AWS_SECRET_ACCESS_KEY: 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
-        AWS_DEFAULT_REGION: us-east-1
-      run: |
-           aws elasticbeanstalk create-application-version --application-name DSiderInc --version-label 1.${{ github.event.number }} --source-bundle S3Bucket="applicationsfromgithub",S3Key="deploy.zip"
-           aws elasticbeanstalk update-environment --application-name DSiderInc --environment-name DSiderInc-dev --version-label 1.${{ github.event.number }}
-
-
-
-    # - name: Deploy to EB
-    #   uses: einaregilsson/beanstalk-deploy@v20 # marketplace plugin
-    #   with:
-    #     aws_access_key: AKIA2NWMPB72LIDOX4RP
-    #     aws_secret_key: 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
-    #     application_name: DSiderInc
-    #     environment_name: DSiderInc-dev
-    #     version_label: 1.${{ github.event.number }}
-    #     region: us-east-1
-    #     deployment_package: deploy.zip
+        aws_access_key: AKIA2NWMPB72LIDOX4RP
+        aws_secret_key: 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
+        application_name: DSiderLinux
+        environment_name: DSiderLinux-dev
+        version_label: 1.${{ github.event.number }}
+        region: us-east-1
+        deployment_package: deploy.zip
