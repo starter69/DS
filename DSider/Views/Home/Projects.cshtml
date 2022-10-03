@@ -6,16 +6,16 @@
 <style>
     .card {
         display: inline-block !important;
+        height: 250px !important;
+        width: 100%;
+        margin: 5px;
         cursor: pointer;
         user-select: none; /* standard syntax */
         -webkit-user-select: none; /* webkit (safari, chrome) browsers */
         -moz-user-select: none; /* mozilla browsers */
         -khtml-user-select: none; /* webkit (konqueror) browsers */
         -ms-user-select: none; /* IE10+ */
-        border-radius: 10px !important;
-        box-shadow: 0 2px 20px 2px rgba(200, 200, 200);
-        width: 100%;
-        padding: 20px 10px;
+        border-radius: 30px !important;
         text-align: center;
     }
 
@@ -55,7 +55,7 @@
         float: left;
         color: #898989;
         cursor: pointer;
-        margin-left: 20px;6
+        margin-left: 20px;
         font-size: 14px;
     }
 
@@ -181,7 +181,7 @@
                 <div class="row" style="margin-top:10px;text-align:left;">
                     <div class="col-sm-3 padding-3" style="text-align:center;" ng-repeat="item in projectsList" ng-dblclick="showSubProject(item.projectID)">
                         <div class="card">
-                            <img class="card-img-top" src="~/Images/folderIcon.png" style="width:125px; margin:0 auto; padding-top:10px; margin-bottom:15px;" alt="Project">
+                            <img class="card-img-top" src="~/Images/folderIcon.png" style="width:100px; margin:0 auto; padding-top:10px; margin-bottom:15px;" alt="Project">
                             <div class="card-block">
                                 <h4 class="card-title">
                                     {{item.name}}

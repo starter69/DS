@@ -44,13 +44,35 @@ jQuery(document).ready(function () {
     var ul = $("#navs"), li = $("#navs li"), i = li.length, n = i - 1, r = 120;
     //When click on simulatuin button
     jQuery(document).on('click', '#btnSimulate', function () {
-        setTimeout(function () {
-            var mDash = 'Dashboard';
-            if (getParameterByName('type') == 'Carbon_Mitigation')
-                mDash = 'DashboardMitigation';
-            document.location.href = '/Home/' + mDash + '/' + subProjectID + '/' + getParameterByName('name') + '/' + getParameterByName('folder') + '/' + getParameterByName('type');
-        }, 12000);
-        doSimulate();
+        var modelInfo = saveModel(1);
+        var redirectURL = '';
+        var mDash = 'Dashboard';
+        if (getParameterByName('type') == 'Carbon_Mitigation')
+            mDash = 'DashboardMitigation';
+        redirectURL = '/Home/' + mDash + '/' + subProjectID + '/' + getParameterByName('name') + '/' + getParameterByName('folder') + '/' + getParameterByName('type');
+        $.ajax({
+            url: 'http://localhost:5000/' + subProjectID,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(modelInfo),
+            success: function (response) {
+                alertify.success('Simulation succeed.');
+                setTimeout(function () {
+                    location.href = redirectURL;
+                }, 12000);
+            },
+            error: function (response) {
+                alertify.error('Simulation failed.');
+                setTimeout(function () {
+                    location.href = redirectURL;
+                }, 4000);
+            },
+            failure: function (response) {
+                alertify.error('Simulation failed.');
+            }
+        })
+        
     });
     //When right click on node in drawflow
     jQuery(document).on('contextmenu', '.drawflow-node', function (e) {
@@ -851,6 +873,8 @@ function saveModel(statusType) {
             saveSbProjectExportDataFlow(subProjectID, JSON.stringify(editor.export(), null, 4), statusType)
         }
     })
+
+    return mInfo;
 }
 //Sent json template and zoom level to web api
 function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
@@ -869,7 +893,7 @@ function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
         dataType: "json",
         success: function (response) {
             if (statusType == 1)
-                alertify.success('Saved succeed');
+                alertify.success('Model saved successfully');
             else {
                 editor.clearModuleSelected();
                 getComponentDetails(false, null);
@@ -877,8 +901,9 @@ function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
             jQuery('#btnSave').attr('disabled', false);
         },
         error: function (response) {
+            console.log(response)
             if (statusType == 1)
-                alertify.success('Saved succeed');
+                alertify.success('Model saved successfully');
             else {
                 getComponentDetails(false, null);
             }
@@ -913,7 +938,7 @@ function getexportData(levelNumber) {
             changeZoomLevel();
             //
             if (response.workFlowStatus == 'Approved')
-                jQuery('#btnSave').hide();
+               jQuery('#btnSave').hide();
             getComponentComments();
         },
         error: function (response) {
@@ -1532,24 +1557,7 @@ function getFileName() {
     }
 
 }
-//Connect to web api to compute summation when click on simulation button
-function doSimulate() {
-    $.ajax({
-        url: '/api/WebAPI_Simulation/computeSummation/' + subProjectID,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            alertify.success('Simulate Done');
-        },
-        error: function (response) {
 
-        },
-        failure: function (response) {
-
-        }
-    })
-}
 //Import json file to drawflow model
 function importJSON() {
     var file = document.getElementById("jSONFiles").files[0];
