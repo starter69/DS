@@ -143,6 +143,33 @@ namespace DSider.Controllers
             }
             return resultList;
         }
+
+        [Route("createComponentsProperties")]
+        [HttpPost]
+        public bool createComponentsProperties([FromBody] ComponentProperties data)
+        {
+            try
+            {
+                string userName = Request.Cookies["userName"];
+                userName = userName.ToLower();
+                //
+                mongoDatabase = GetMongoDatabase();
+                var filter = Builders<ComponentProperties>.Filter.Where(p => p.component == data.component && p.propertyName == data.propertyName);
+                List<ComponentProperties> mList = mongoDatabase.GetCollection<ComponentProperties>("ComponentProperties").Find(filter).ToList();
+                if (mList.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return true;
+        }
         //Save model levels in ComponentDetailsModel collection MongoDB.
         //Each level has own zoom level and json data.
         [Route("saveComponentDetailsModel")]
