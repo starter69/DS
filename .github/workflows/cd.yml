@@ -7,8 +7,8 @@ on:
 
 jobs:
   build_zip_deploy:
-    # if: ${{ github.event.pull_request.merged }}  # check PR is merged
-    runs-on: ubuntu-latest
+    # if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3 # fetch latest commit
     - name: Setup .NET
@@ -17,21 +17,28 @@ jobs:
         dotnet-version: 3.1.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Publish
+      run: dotnet publish --configuration Release --output .\bin\publish
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Publish
-      run: dotnet publish --configuration Release --output .\bin\publish 
-    - name: Zip # zip up the latest build
-      run: zip -r deploy.zip . -x '*.git*'
+    - name: Zip Site
+      uses: vimtor/action-zip@v1 #zip -r deploy.zip . -x '*.git*'
+      with:
+        files: .\bin\publish\bin\ aws-windows-deployment-manifest.json
+        recursive: false
+        dest: 'deploy.zip'
+    - name: download zip
+      uses: actions/upload-artifact@v1
+      with:
+        name: my-artifact
+        path: ${{ github.workspace }}/deploy.zip
     - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v20 # marketplace plugin
+      uses: einaregilsson/beanstalk-deploy@v20
       with:
         aws_access_key: AKIA2NWMPB72LIDOX4RP
         aws_secret_key: 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
-        application_name: DSiderLinux
-        environment_name: DSiderLinux-dev
+        application_name: DSiderInc
+        environment_name: DSiderInc-dev
         version_label: 1.${{ github.event.number }}
         region: us-east-1
         deployment_package: deploy.zip
