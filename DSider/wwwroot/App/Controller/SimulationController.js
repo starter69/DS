@@ -224,7 +224,6 @@ jQuery(document).ready(function () {
             if (jQuery('.propertyItem[property="location"]').val() != '') {
                 var lat = parseFloat(jQuery('.propertyItem[property="location"]').val().split(',')[0]);
                 var lng = parseFloat(jQuery('.propertyItem[property="location"]').val().split(',')[1]);
-                var parsedPosition = new google.maps.LatLng(lat, lng);
                 marker.setPosition(parsedPosition);
             }
 
@@ -1372,14 +1371,17 @@ function Upload_UserDefinedObject(ID) {
 function addNewUserDefinedObject() {
     jQuery('#addNewUserDefinedObjectModal').modal('show');
 }
+
 //Get all propertiese from web api
 function getComponentsProperties() {
+    console.log('here')
     $.ajax({
         url: '/api/WebAPI_Design/getComponentsProperties',
         type: "GET",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
+            console.log('component properties', response);
             componentProperties = response;
         },
         error: function (response) {
@@ -1454,6 +1456,10 @@ function showPropertyValuesByNodeID(nodeID) {
         componentType = 'Hydrogen Demand Mobility';
     else if ($selectedNodeForContext.hasClass('industriese'))
         componentType = 'Hydrogen Demand Refinery';
+    else if ($selectedNodeForContext.hasClass('Injection'))
+        componentType = 'Injection field';
+    else if ($selectedNodeForContext.hasClass('Gas'))
+        componentType = 'Gas Field 1';
     //
     var customProperties = componentProperties.filter(function (el) {
         return el.component === componentType && el.paramType == 'input';
@@ -1470,7 +1476,7 @@ function showPropertyValuesByNodeID(nodeID) {
                 htmlCode += '<input type="button" class="btn btn-primary btnBrowseDataSource" property="' + Val.formulaTitle + '" style="display: inline-block;width: 10%;text-align: center;padding-left: 10px;background: #8080805c;" value="..."/>';
             }
             htmlCode += '</td></tr> ';
-            jQuery('#properyTable').append(htmlCode);
+            jQuery('#propertyTable').append(htmlCode);
         });
     //
     var curerrentComponentID = nodeID;
@@ -2276,120 +2282,3 @@ function changeMode(option) {
 }
 
 //#endregion DraFlow
-
-//#region Map
-function initialize() {
-    var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
-    var myOptions = {
-        zoom: 14,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    marker = new google.maps.Marker({
-        draggable: true,
-        //position: myLatlng,
-        map: map,
-        title: "Component Location"
-    });
-    google.maps.event.addListener(marker, 'dragend', function (event) {
-        jQuery('.propertyItem[property="location"]').val(event.latLng.lat() + ', ' + event.latLng.lng());
-    });
-    google.maps.event.addListener(map, 'click', function (event) {
-        jQuery('.propertyItem[property="location"]').val(event.latLng.lat() + ', ' + event.latLng.lng());
-        marker.setPosition(event.latLng);
-    });
-}
-google.maps.event.addDomListener(window, "load", initialize());
-//#endregion Map
-
-//#region Map All Components
-function initializeAllComponentsMap() {
-    var locations = [];
-    var myLatlng;
-    jQuery('.drawflow-node').each(function (Index, Val) {
-        var mID = jQuery(this).attr('id');
-        mID = mID.replace('node-', '');
-        var mComponent = editor.getNodeFromId(mID);
-        var icon = '';
-        if (mComponent.name == 'battery')
-            icon = 'Battery.png';
-        else if (mComponent.name == 'battery')
-            icon = 'Battery.png';
-        else if (mComponent.name == 'turbine')
-            icon = 'Turbine.png';
-        else if (mComponent.name == 'Solar')
-            icon = 'solar.png';
-        else if (mComponent.name == 'Grid')
-            icon = 'Grid.png';
-        else if (mComponent.name == 'cloud')
-            icon = 'cloud.png';
-        else if (mComponent.name == 'WaterStorage')
-            icon = 'WaterStorage.png';
-        else if (mComponent.name == 'GreenH2Storage')
-            icon = 'StorageH2.png';
-        else if (mComponent.name == 'GrayH2Storage')
-            icon = 'GrayStorageH2.png';
-        else if (mComponent.name == 'Mobility')
-            icon = 'Mobility.png';
-        else if (mComponent.name == 'industriese')
-            icon = 'industriese.png';
-        else if (mComponent.name == 'electrolyzer')
-            icon = 'electrolyzer.png';
-        else if (mComponent.name == 'electricityLB')
-            icon = 'loadBalancerElectricity.png';
-        else if (mComponent.name == 'hydrogenLB')
-            icon = 'loadBalancer.png';
-        //#region Properties
-        var mProperties = {};
-        if (typeof mComponent.data.length != 'undefined') {
-            mProperties = JSON.parse(mComponent.data);
-        }
-        var counter = 1;
-        var componentName = '';
-        for (var key in mProperties) {
-            if (key == 'Name') {
-                componentName = mProperties[key];
-            }
-            if (key == 'location') {
-                lat = mProperties[key].split(',')[0];
-                lng = mProperties[key].split(',')[1];
-                myLatlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                var valueToPush = new Array();
-                valueToPush[0] = componentName;
-                valueToPush[1] = myLatlng;
-                valueToPush[2] = counter;
-                valueToPush[3] = icon;
-                locations.push(valueToPush);
-                //
-                counter += 1;
-            }
-        }
-        //#endregion Properties
-    });
-    var map = new google.maps.Map(document.getElementById('map_canvasAllMarkers'), {
-        zoom: 13,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-    var infowindow = new google.maps.InfoWindow();
-    var marker, i;
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map,
-            icon: {
-                url: 'https://datamapping-idgimap.s3.amazonaws.com/dsidericons/' + locations[i][3],
-                scaledSize: { width: 50, height: 50 }
-            },
-        });
-
-        google.maps.event.addListener(marker, 'click', (function (marker, i) {
-            return function () {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-            }
-        })(marker, i));
-    }
-}
-//#endregion Map
