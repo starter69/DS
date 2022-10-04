@@ -21,10 +21,10 @@ jobs:
       run: dotnet publish --configuration Release --output .\bin\publish
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Zip Site # zip up the latest build
+    - name: Zip Site
       uses: vimtor/action-zip@v1 #zip -r deploy.zip . -x '*.git*'
       with:
-        files: .\bin\publish\ aws-windows-deployment-manifest.json
+        files: .\bin\publish\bin\ aws-windows-deployment-manifest.json
         recursive: false
         dest: 'deploy.zip'
     - name: download zip
