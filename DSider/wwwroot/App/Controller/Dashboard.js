@@ -5,6 +5,10 @@ Tariana.controller("DashboardController", function ($scope) {
     var splittedUrl = window.location.href.split("/");
     jQuery('.projectNameContainer').text('"' + splittedUrl[splittedUrl.length - 3].replace('%20', ' ') + '"')
     PlottingDash1();
+
+    checkSource();
+    checkSink()
+
     $scope.statisticsList = [];
     //Get staistics data from web api
     $scope.getStatistics = function (dashboardTypeStatic) {
@@ -160,8 +164,6 @@ $(document).ready(function () {
         placeholder: "Select items",
         allowClear: true
     });
-
-
 });
 var splittedUrl = window.location.href.split("/");
 var queryStringSubProjetID = splittedUrl[splittedUrl.length - 4]
@@ -452,6 +454,7 @@ function findMax(num) {
 function findMin(num) {
     return Math.min.apply(null, num);
 }
+
 //Show plotting data to dashboard1
 function showPlotDash2ByType(dataToPlot) {
     var response = dataToPlot;
@@ -771,6 +774,125 @@ function PlottingDash1() {
         contentType: 'application/json',
         success: function (response) {
             showPlotDash1(response);
+        },
+        error: function (response) {
+
+        },
+        failure: function (response) {
+
+        }
+    });
+}
+function showoCo2RandomChart(type) {
+    let data1 = []
+    let data2 = []
+    const MIN = -100
+    const MAX = 100
+    const PLACES = 1
+    for (let i = 0; i< 10; i++) {
+        data1.push(Number.parseFloat(generateRandomDecimalInRangeFormatted(MIN, MAX, PLACES)))
+        data2.push(Number.parseFloat(generateRandomDecimalInRangeFormatted(MIN, MAX, PLACES)))
+    }
+    const dataObject = {
+        chart: {
+            renderTo: type,
+        },
+        title: {
+            text: type === 'containerRates1' ? 'Rates' : 'Volumes'
+        },
+
+        plotOptions: {
+            series: {
+                cumulative: true,
+                pointStart: Date.UTC(2022, 9, 1),
+                pointIntervalUnit: 'day'
+            }
+        },
+
+        rangeSelector: {
+            enabled: false
+        },
+
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.cumulativeSum})<br/>',
+            changeDecimals: 2,
+            valueDecimals: 2
+        },
+
+        xAxis: {
+            minRange: 3 * 24 * 36e5,
+            max: Date.UTC(2022, 9, 6)
+        },
+
+        series: [{
+            data: [...data1]
+        }, {
+            data: [...data2]
+        }]
+    }
+    var newChart = new Highcharts.StockChart(dataObject)
+}
+function showCostChart(type) {
+    let data1 = []
+    const MIN = -100
+    const MAX = 100
+    const PLACES = 1
+    for (let i = 0; i < 10; i++) {
+        data1.push(Number.parseFloat(generateRandomDecimalInRangeFormatted(MIN, MAX, PLACES)))
+    }
+    const dataObject = {
+        chart: {
+            renderTo: type,
+        },
+        title: {
+            text: type === 'containerCost1' ? 'Operating Cost[Num]' : 'Total Storage Cost[Num]'
+        },
+
+        plotOptions: {
+            series: {
+                cumulative: true,
+                pointStart: Date.UTC(2022, 9, 1),
+                pointIntervalUnit: 'day'
+            }
+        },
+
+        rangeSelector: {
+            enabled: false
+        },
+
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.cumulativeSum})<br/>',
+            changeDecimals: 2,
+            valueDecimals: 2
+        },
+
+        xAxis: {
+            minRange: 3 * 24 * 36e5,
+            max: Date.UTC(2022, 9, 6)
+        },
+
+        series: [{
+            data: [...data1]
+        }]
+    }
+    var newChart = new Highcharts.StockChart(dataObject)
+}
+function checkSource() {
+    showoCo2RandomChart('containerRates1')
+    showoCo2RandomChart('containerVolumes1')
+}
+function checkSink() {
+    showCostChart('containerCost1')
+    showCostChart('containerCost2')
+}
+function GettingCo2Rate1() {
+    var splittedUrl = window.location.href.split("/");
+    $.ajax({
+        url: '/api/WebAPI_PlottingData/getPlottingDataForDash1/' + splittedUrl[splittedUrl.length - 4],
+        type: "GET",
+        contentType: 'application/json',
+        success: function (response) {
+            showCo2Rate1(response);
         },
         error: function (response) {
 
