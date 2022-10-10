@@ -3,11 +3,11 @@ on:
   pull_request:
     branches:
     - develop
-    types: [closed] # check pr is closed
+    #types: [closed] # check pr is closed
 
 jobs:
   build_zip_deploy:
-    if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
+    #if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3 # fetch latest commit
@@ -18,16 +18,19 @@ jobs:
     - name: Restore dependencies
       run: |
         cd ./DSider
+        echo $pwd
         dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release -o site
+      run: |
+        cd ./DSider
+        echo $pwd
+        dotnet publish --configuration Release -o site
     - name: Zip Site
       run: |
-        cd ./site
+        cd ./DSider/site
         echo $pwd
         Compress-Archive -Path ./* -DestinationPath ../site.zip
         cd ..
-        echo $pwd
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
