@@ -909,13 +909,14 @@ function saveModel(statusType) {
   jQuery(".drawflow-node").each(function (Index, Val) {
     var priority = jQuery(this).find(".innerDiv").attr("priority");
     var mID = jQuery(this).attr("id");
-    mID = mID.replace("node-", "");
+      mID = mID.replace("node-", "");
     var mComponent = editor.getNodeFromId(mID);
     var nodePropertiese = [];
     var lat;
     var lng;
     //#region Properties
-    var mProperties = {};
+      var mProperties = {};
+      console.log('>>>>>>', mComponent.data)
     if (typeof mComponent.data.length != "undefined") {
       mProperties = JSON.parse(mComponent.data);
     }
@@ -989,7 +990,8 @@ function saveModel(statusType) {
     });
   });
   jQuery("#btnSave").attr("disabled", "disabled");
-  //
+    //
+    console.log("<<<<<<<<<<<<", mInfo);
   $.ajax({
     url: "/api/WebAPI_Design/saveTemplateDesign",
     type: "POST",
@@ -1019,6 +1021,7 @@ function saveModel(statusType) {
     },
   });
 
+    console.log(mInfo, 'save function');
   return mInfo;
 }
 //Sent json template and zoom level to web api
@@ -1085,7 +1088,7 @@ function getexportData(levelNumber) {
       }
       changeZoomLevel();
       //
-      if (response.workFlowStatus == "Approved") jQuery("#btnSave").hide();
+      // if (response.workFlowStatus == "Approved") jQuery("#btnSave").hide();
       getComponentComments();
     },
     error: function (response) {},
@@ -1190,11 +1193,11 @@ function doApproveSharedProject() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-          jQuery("#btnApproveSharedProject,#btnSave").hide();
+          // jQuery("#btnApproveSharedProject,#btnSave").hide();
           alertify.log("Project approved.");
         },
         error: function (response) {
-          jQuery("#btnApproveSharedProject,#btnSave").hide();
+          // jQuery("#btnApproveSharedProject,#btnSave").hide();
           alertify.log("Project approved.");
         },
         failure: function (response) {},
@@ -1221,7 +1224,8 @@ function checkPermissionSharedProject() {
           response[0].permission == "Approve" &&
           response[0].sharedProjectStatus == "Approved"
         )
-          jQuery("#btnApproveSharedProject,#btnSave").hide();
+          // jQuery("#btnApproveSharedProject,#btnSave").hide();
+          jQuery("#btnApproveSharedProject").hide();
         else if (response[0].permission == "View") jQuery("#btnSave").hide();
       }
     },
@@ -1588,14 +1592,12 @@ function addNewUserDefinedObject() {
 
 //Get all propertiese from web api
 function getComponentsProperties() {
-  console.log("here");
   $.ajax({
     url: "/api/WebAPI_Design/getComponentsProperties",
     type: "GET",
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function (response) {
-      console.log("component properties", response);
       componentProperties = response;
     },
     error: function (response) {},
@@ -1652,7 +1654,7 @@ function getDataSources() {
 function showPropertyValuesByNodeID(nodeID) {
   jQuery(".dynamicProperties").remove();
   jQuery(".propertyItem").val("");
-  var componentType = $selectedNodeForContext[0].className.split(" ")[1];
+    var componentType = $selectedNodeForContext[0].className.split(" ")[1];
   if ($selectedNodeForContext.hasClass("battery")) componentType = "battery";
   else if (
     $selectedNodeForContext.hasClass("turbine") ||
@@ -1851,7 +1853,6 @@ editor.start();
 editor.on("contextmenu", function (clickInfo) {
   var clientX = clickInfo.clientX;
   var clientY = clickInfo.clientY;
-  console.log(clickInfo);
   jQuery("#navs").css({
     top: clientY + clickInfo.offsetY + "px",
     left: clientX + "px",
@@ -3240,7 +3241,6 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
         var mMacro = userMacrosList.filter(function (el) {
           return el.id === mID;
         });
-        console.log(mMacro);
         jQuery(mMacro[0].components).each(function (Index, Val) {
           var mProperties = {};
           //

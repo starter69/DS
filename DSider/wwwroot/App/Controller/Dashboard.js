@@ -6,8 +6,8 @@ Tariana.controller("DashboardController", function ($scope) {
     jQuery('.projectNameContainer').text('"' + splittedUrl[splittedUrl.length - 3].replace('%20', ' ') + '"')
     PlottingDash1();
 
-    checkSource();
-    checkSink()
+    //checkSource();
+    //checkSink()
 
     $scope.statisticsList = [];
     //Get staistics data from web api
