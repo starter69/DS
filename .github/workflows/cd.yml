@@ -39,6 +39,6 @@ jobs:
         aws_secret_key: /gBcBBxIFA8ExrhHPIlo1SGSu0jwxoj3xTmFT1un
         application_name: DSiderInc
         environment_name: DSiderInc-dev
-        version_label: 1.${{ github.event.id }}
+        version_label: 1.55
         region: us-east-1
         deployment_package: DSider/deploy.zip
