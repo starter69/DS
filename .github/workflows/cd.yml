@@ -3,23 +3,22 @@ on:
   pull_request:
     branches:
     - develop
-    # types: [closed] # check pr is closed
+    types: [closed] # check pr is closed
 
 jobs:
   build_zip_deploy:
-    # if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
+    if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
-    - name: Checkout branch
-      uses: actions/checkout@v3 # fetch latest commit
-      with:
-        repository: dsider-frontend/sjoshidv-patch-1
+    - uses: actions/checkout@v3 # fetch latest commit
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        cd ./DSider
+        dotnet restore
     - name: Publish
       run: dotnet publish --configuration Release -o site
     - name: Zip Site
@@ -29,7 +28,6 @@ jobs:
         Compress-Archive -Path ./* -DestinationPath ../site.zip
         cd ..
         echo $pwd
-        ls 
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
