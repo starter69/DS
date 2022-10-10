@@ -10,7 +10,10 @@ jobs:
     # if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3 # fetch latest commit
+    - name: Checkout branch
+      uses: actions/checkout@v3 # fetch latest commit
+      with:
+        repository: dsider-frontend/sjoshidv-patch-1
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -18,20 +21,16 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release --output .\bin\publish
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet publish --configuration Release -o site
     - name: Zip Site
-      uses: vimtor/action-zip@v1 #zip -r deploy.zip . -x '*.git*'
-      with:
-        files: .\bin\publish\bin\ aws-windows-deployment-manifest.json
-        recursive: false
-        dest: 'deploy.zip'
-    - name: download zip
-      uses: actions/upload-artifact@v1
-      with:
-        name: my-artifact
-        path: ${{ github.workspace }}/deploy.zip
+      run: |
+        cd ./site
+        echo $pwd
+        Compress-Archive -Path ./* -DestinationPath ../site.zip
+        cd ..
+        echo $pwd
+        ls 
+        Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
@@ -39,6 +38,6 @@ jobs:
         aws_secret_key: /gBcBBxIFA8ExrhHPIlo1SGSu0jwxoj3xTmFT1un
         application_name: DSiderInc
         environment_name: DSiderInc-dev
-        version_label: 1.${{ github.event.number }}
+        version_label: 1.${{ github.event.id }}
         region: us-east-1
         deployment_package: deploy.zip
