@@ -10,10 +10,7 @@ jobs:
     # if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
-    - name: Checkout branch
-      uses: actions/checkout@v3 # fetch latest commit
-      with:
-        repository: dsider-frontend/sjoshidv-patch-1
+    - uses: actions/checkout@v3 # fetch latest commit
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
