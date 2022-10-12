@@ -56,6 +56,7 @@ jQuery(document).ready(function () {
   //When click on simulatuin button
   jQuery(document).on("click", "#btnSimulate", function () {
     var modelInfo = saveModel(1);
+    console.log("Posting data:", modelInfo);
     var redirectURL = "";
     var mDash = "Dashboard";
     if (getParameterByName("type") == "Carbon_Mitigation")
@@ -901,6 +902,7 @@ function saveComponentDetailsModel(isBackPressed, gotoLevel) {
     error: function (response) {},
   });
 }
+
 //Save all components and propertiese of them
 function saveModel(statusType) {
   var mInfo = [];
@@ -1016,7 +1018,6 @@ function saveModel(statusType) {
       );
     },
   });
-
   return mInfo;
 }
 //Sent json template and zoom level to web api
