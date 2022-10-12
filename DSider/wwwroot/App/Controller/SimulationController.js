@@ -376,7 +376,6 @@ jQuery(document).ready(function () {
         alertify.success("File has been downloaded.");
         fs.writeFile("test2.zip", data, { encoding: "base64" }, (err) => {
           if (err) throw err;
-          console.log("The file has been saved!");
         });
       },
       error: function (response) {},
@@ -510,7 +509,6 @@ jQuery(document).ready(function () {
     var filteredCommets = allCompnentsComments.filter(function (el) {
       return el.nodeID === mNodeID;
     });
-    console.log(filteredCommets);
     var lastUser = "";
     var chatStatus = "";
     jQuery("#chatContent").empty();
@@ -909,14 +907,13 @@ function saveModel(statusType) {
   jQuery(".drawflow-node").each(function (Index, Val) {
     var priority = jQuery(this).find(".innerDiv").attr("priority");
     var mID = jQuery(this).attr("id");
-      mID = mID.replace("node-", "");
+    mID = mID.replace("node-", "");
     var mComponent = editor.getNodeFromId(mID);
     var nodePropertiese = [];
     var lat;
     var lng;
     //#region Properties
-      var mProperties = {};
-      console.log('>>>>>>', mComponent.data)
+    var mProperties = {};
     if (typeof mComponent.data.length != "undefined") {
       mProperties = JSON.parse(mComponent.data);
     }
@@ -990,8 +987,7 @@ function saveModel(statusType) {
     });
   });
   jQuery("#btnSave").attr("disabled", "disabled");
-    //
-    console.log("<<<<<<<<<<<<", mInfo);
+  //
   $.ajax({
     url: "/api/WebAPI_Design/saveTemplateDesign",
     type: "POST",
@@ -1021,7 +1017,6 @@ function saveModel(statusType) {
     },
   });
 
-    console.log(mInfo, 'save function');
   return mInfo;
 }
 //Sent json template and zoom level to web api
@@ -1048,7 +1043,6 @@ function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
       jQuery("#btnSave").attr("disabled", false);
     },
     error: function (response) {
-      console.log(response);
       if (statusType == 1) alertify.success("Model saved successfully");
       else {
         getComponentDetails(false, null);
@@ -1213,7 +1207,6 @@ function checkPermissionSharedProject() {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function (response) {
-      console.log(response);
       if (response.length > 0) {
         if (
           response[0].permission == "Approve" &&
@@ -1654,7 +1647,7 @@ function getDataSources() {
 function showPropertyValuesByNodeID(nodeID) {
   jQuery(".dynamicProperties").remove();
   jQuery(".propertyItem").val("");
-    var componentType = $selectedNodeForContext[0].className.split(" ")[1];
+  var componentType = $selectedNodeForContext[0].className.split(" ")[1];
   if ($selectedNodeForContext.hasClass("battery")) componentType = "battery";
   else if (
     $selectedNodeForContext.hasClass("turbine") ||
@@ -3294,7 +3287,6 @@ function showpopup(e) {
   editor.precanvas.style.transform = "";
   editor.precanvas.style.left = editor.canvas_x + "px";
   editor.precanvas.style.top = editor.canvas_y + "px";
-  console.log(transform);
   //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
   //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
   editor.editor_mode = "fixed";
