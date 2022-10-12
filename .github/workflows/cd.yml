@@ -3,11 +3,11 @@ on:
   pull_request:
     branches:
     - develop
-    # types: [closed] # check pr is closed
+    types: [closed] # check pr is closed
 
 jobs:
   build_zip_deploy:
-    # if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
+    if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3 # fetch latest commit
@@ -16,22 +16,19 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        cd ./DSider
+        dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release --output .\bin\publish
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet publish --configuration Release -o site
     - name: Zip Site
-      uses: vimtor/action-zip@v1 #zip -r deploy.zip . -x '*.git*'
-      with:
-        files: .\bin\publish\bin\ aws-windows-deployment-manifest.json
-        recursive: false
-        dest: 'deploy.zip'
-    - name: download zip
-      uses: actions/upload-artifact@v1
-      with:
-        name: my-artifact
-        path: ${{ github.workspace }}/deploy.zip
+      run: |
+        cd ./site
+        echo $pwd
+        Compress-Archive -Path ./* -DestinationPath ../site.zip
+        cd ..
+        echo $pwd
+        Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
@@ -39,6 +36,6 @@ jobs:
         aws_secret_key: /gBcBBxIFA8ExrhHPIlo1SGSu0jwxoj3xTmFT1un
         application_name: DSiderInc
         environment_name: DSiderInc-dev
-        version_label: 1.${{ github.event.number }}
+        version_label: 1.${{ github.event.id }}
         region: us-east-1
         deployment_package: deploy.zip

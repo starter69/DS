@@ -3,7 +3,9 @@
     "deployments": {
         "aspNetCoreWeb": [
         {
-            "name": "test-dotnet-core",
+            
+            "name": "Dsider",
+            
             "parameters": {
                 "appBundle": "site.zip",
                 "iisPath": "/",
