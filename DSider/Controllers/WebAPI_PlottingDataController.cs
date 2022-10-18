@@ -105,7 +105,8 @@ namespace DSider.Controllers
                             {
                                 mData = mList[0],
                                 subProjectID = item,
-                                subProjectName = collectionSub[0].name
+                                subProjectName = collectionSub[0].name,
+                                subProjectType = collectionSub[0].subProject_Type
                             });
                     }
                 }
@@ -244,11 +245,13 @@ namespace DSider.Controllers
         public DashboardStatistics mData { get; set; }
         public string subProjectID { get; set; }
         public string subProjectName { get; set; }
+        public string subProjectType { get; set; }
     }
     public class PlottingDataClass
     {
         public List<PlottingData> mData { get; set; }
         public string subProjectID { get; set; }
         public string subProjectName { get; set; }
+        public string subProjectType { get; set; }
     }
 }

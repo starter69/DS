@@ -56,7 +56,6 @@ jQuery(document).ready(function () {
   //When click on simulatuin button
   jQuery(document).on("click", "#btnSimulate", function () {
     var modelInfo = saveModel(1);
-    console.log("Posting data:", modelInfo);
     var redirectURL = "";
     var mDash = "Dashboard";
     if (getParameterByName("type") == "Carbon_Mitigation")
@@ -82,7 +81,7 @@ jQuery(document).ready(function () {
         alertify.success("Simulation succeed.");
         setTimeout(function () {
           location.href = redirectURL;
-        }, 12000);
+        }, 4000);
       },
       error: function (response) {
         alertify.error("Simulation failed.");
@@ -1036,16 +1035,14 @@ function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function (response) {
-      if (statusType == 1) alertify.success("Model saved successfully");
-      else {
+      if (statusType != 1) {
         editor.clearModuleSelected();
         getComponentDetails(false, null);
       }
       jQuery("#btnSave").attr("disabled", false);
     },
     error: function (response) {
-      if (statusType == 1) alertify.success("Model saved successfully");
-      else {
+      if (statusType != 1) {
         getComponentDetails(false, null);
       }
       jQuery("#btnSave").attr("disabled", false);

@@ -904,8 +904,11 @@ function GettingCo2Rate1() {
 }
 //Get all sub projects
 function getAllSubProjects() {
+    var splittedUrl = window.location.href.split("/");
+    var subProjectId = splittedUrl[splittedUrl.length - 4];
+
     $.ajax({
-        url: '/api/WebAPI_Projects/getAllSubProjects',
+        url: '/api/WebAPI_Projects/getAllSubProjects?subProjectId=' + subProjectId,
         type: "GET",
         contentType: 'application/json',
         success: function (response) {
