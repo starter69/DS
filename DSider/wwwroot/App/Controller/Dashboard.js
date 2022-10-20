@@ -160,13 +160,189 @@ Tariana.controller("DashboardController", function ($scope) {
 });
 $(document).ready(function () {
     getAllSubProjects();
+    getCurrentSubProject();
     jQuery("#ddProperties").select2({
         placeholder: "Select items",
         allowClear: true
     });
 });
 var splittedUrl = window.location.href.split("/");
-var queryStringSubProjetID = splittedUrl[splittedUrl.length - 4]
+var queryStringSubProjetID = splittedUrl[splittedUrl.length - 4];
+var currentSubProjectProperties = [];
+
+
+class Slider {
+    constructor(rangeElement, valueElement, options) {
+        this.rangeElement = rangeElement
+        this.valueElement = valueElement
+        this.options = options
+
+        // Attach a listener to "change" event
+        if (this.rangeElement != null)
+            this.rangeElement.addEventListener('input', this.updateSlider.bind(this))
+    }
+    init() {
+        this.rangeElement.setAttribute('min', this.options.min)
+        this.rangeElement.setAttribute('max', this.options.max)
+        this.rangeElement.value = this.options.cur
+
+        this.updateSlider()
+    }
+    asMoney(value) {
+        return '$' + parseFloat(value)
+            .toLocaleString('en-US', { maximumFractionDigits: 2 })
+    }
+    generateBackground(rangeElement) {
+        if (this.rangeElement.value === this.options.min) {
+            return
+        }
+
+        let percentage = (this.rangeElement.value - this.options.min) / (this.options.max - this.options.min) * 100
+        return 'background: linear-gradient(to right, #1d9075, #1d9075 ' + percentage + '%, #d3edff ' + percentage + '%, #dee1e2 100%)'
+    }
+    updateSlider(newValue) {
+        var mID = this.rangeElement.id;
+        jQuery('#' + mID).parent().parent().parent().parent().find('.rangeTitleMin').text(addComma(this.rangeElement.value));
+        this.rangeElement.style = this.generateBackground(this.rangeElement.value)
+    }
+}
+
+let rangeElement = document.querySelector('.range [type="range"]');
+let valueElement = document.querySelector('.range .range__value span');
+//
+let rangeElementTurbine = document.querySelector('.range2 [type="range"]');
+let valueElementTurbine = document.querySelector('.range2 .range__value span');
+//
+let rangeElementSolar = document.querySelector('.range4 [type="range"]');
+let valueElementSolar = document.querySelector('.range4 .range__value span');
+//
+let rangeElementBat = document.querySelector('.rangeBat [type="range"]');
+let valueElementBat = document.querySelector('.rangeBat .range__value span');
+
+let rangeElementElec = document.querySelector('.rangeElec [type="range"]');
+let valueElementElec = document.querySelector('.rangeElec .range__value span');
+
+let rangeElementGreenH2 = document.querySelector('.rangeGreenH2 [type="range"]');
+let valueElementGreenH2 = document.querySelector('.rangeGreenH2 .range__value span');
+
+let rangeElementMob1 = document.querySelector('.rangeMob1 [type="range"]');
+let valueElementMob1 = document.querySelector('.rangeMob1 .range__value span');
+
+
+let rangeElementMob2 = document.querySelector('.rangeMob2 [type="range"]');
+let valueElementMob2 = document.querySelector('.rangeMob2 .range__value span');
+
+function getCurrentSubProject() {
+    $.ajax({
+        url: '/api/WebAPI_Projects/getCurrentSubProject?subProjectId=' + queryStringSubProjetID,
+        type: "GET",
+        contentType: 'application/json',
+        success: function (response) {
+            let currentSubProjectProperties = JSON.parse(response.exportJSON)['drawflow']['Home']['data'];
+            initSlider(currentSubProjectProperties);
+        },
+        error: function (response) {
+
+        },
+        failure: function (response) {
+
+        }
+    });
+}
+
+function getPropertyValue(properties, propertyName) {
+    for (let [key, property] of Object.entries(properties)) {
+        let propertyData = JSON.parse(property.data);
+            console.log(propertyData);
+        if (propertyData.Name === propertyName) {
+            return propertyData;
+        }
+    }
+}
+
+function initSlider(properties) {
+    var options = {
+        min: 200,
+        max: 2000,
+        cur: 1000
+    }
+
+    let property = getPropertyValue(properties, 'Turbines');
+    var optionsTurbine = {
+        min: 0,
+        max: 10000,
+        cur: property.Power_Capacity
+    }
+
+    property = getPropertyValue(properties, 'Solar Panel');
+    var optionsSolar = {
+        min: 0,
+        max: 10000,
+        cur: property.Power_Capacity
+    }
+
+    property = getPropertyValue(properties, 'Battery');
+    var optionsBat = {
+        min: 0,
+        max: 10000,
+        cur: property.BatCapStart
+    }
+
+    property = getPropertyValue(properties, 'Electrolyser');
+    var optionsElec = {
+        min: 0,
+        max: 10000,
+        cur: property.ElCapStart
+    }
+
+    property = getPropertyValue(properties, 'Green H2 Storage');
+    var optionsGreenH2 = {
+        min: 0,
+        max: 10000,
+        cur: property.Green_H2_Storage_Capacity
+    }
+
+    property = getPropertyValue(properties, 'Industries');
+    var optionsIndustry = {
+        min: 0,
+        max: 10000,
+        cur: property.Industry_H2_Demand_Capacity
+    }
+
+    property = getPropertyValue(properties, 'Mobility');
+    var optionsMobility = {
+        min: 0,
+        max: 10000,
+        cur: property.Mobility_H2_Demand_Capacity
+    }
+
+    if (rangeElement) {
+        let slider = new Slider(rangeElement, valueElement, options)
+        slider.init();
+        //
+        let slider2 = new Slider(rangeElementTurbine, valueElementTurbine, optionsTurbine)
+        slider2.init();
+        //
+        let slider4 = new Slider(rangeElementSolar, valueElementSolar, optionsSolar)
+        slider4.init();
+        //
+        let sliderBat = new Slider(rangeElementBat, valueElementBat, optionsBat)
+        sliderBat.init();
+        //
+        let sliderElec = new Slider(rangeElementElec, valueElementElec, optionsElec)
+        sliderElec.init();
+        //
+        let sliderGreenH2 = new Slider(rangeElementGreenH2, valueElementGreenH2, optionsGreenH2)
+        sliderGreenH2.init();
+        //
+        let sliderMob1 = new Slider(rangeElementMob1, valueElementMob1, optionsIndustry)
+        sliderMob1.init();
+        //
+        let sliderMob2 = new Slider(rangeElementMob2, valueElementMob2, optionsMobility)
+        sliderMob2.init();
+    }
+}
+
 var autoPlayDash2TimeOut;
 var timeAutoPlayInterval = parseInt(jQuery('#txtInterval').val());
 //When click on play to plotting automatically
@@ -931,137 +1107,4 @@ function getAllSubProjects() {
 //Add comma sign to numbers1
 function addComma(number) {
     return number.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-class Slider {
-    constructor(rangeElement, valueElement, options) {
-        this.rangeElement = rangeElement
-        this.valueElement = valueElement
-        this.options = options
-
-        // Attach a listener to "change" event
-        if (this.rangeElement != null)
-            this.rangeElement.addEventListener('input', this.updateSlider.bind(this))
-    }
-    init() {
-        console.log(this.rangeElement)
-        console.log(this.options)
-        this.rangeElement.setAttribute('min', this.options.min)
-        this.rangeElement.setAttribute('max', this.options.max)
-        this.rangeElement.value = this.options.cur
-
-        this.updateSlider()
-    }
-    asMoney(value) {
-        return '$' + parseFloat(value)
-            .toLocaleString('en-US', { maximumFractionDigits: 2 })
-    }
-    generateBackground(rangeElement) {
-        if (this.rangeElement.value === this.options.min) {
-            return
-        }
-
-        let percentage = (this.rangeElement.value - this.options.min) / (this.options.max - this.options.min) * 100
-        return 'background: linear-gradient(to right, #1d9075, #1d9075 ' + percentage + '%, #d3edff ' + percentage + '%, #dee1e2 100%)'
-        //'background: #1d9075';//
-    }
-    updateSlider(newValue) {
-        var mID = this.rangeElement.id;
-        jQuery('#' + mID).parent().parent().parent().parent().find('.rangeTitleMin').text(addComma(this.rangeElement.value));
-        //if (typeof newValue != 'undefined')
-        //    PlottingDash1();
-        //this.valueElement.innerHTML = this.asMoney(this.rangeElement.value)
-        this.rangeElement.style = this.generateBackground(this.rangeElement.value)
-    }
-}
-
-let rangeElement = document.querySelector('.range [type="range"]');
-let valueElement = document.querySelector('.range .range__value span');
-//
-let rangeElement2 = document.querySelector('.range2 [type="range"]');
-let valueElement2 = document.querySelector('.range2 .range__value span');
-//
-let rangeElement4 = document.querySelector('.range4 [type="range"]');
-let valueElement4 = document.querySelector('.range4 .range__value span');
-//
-let rangeElementBat = document.querySelector('.rangeBat [type="range"]');
-let valueElementBat = document.querySelector('.rangeBat .range__value span');
-
-let rangeElementElec = document.querySelector('.rangeElec [type="range"]');
-let valueElementElec = document.querySelector('.rangeElec .range__value span');
-
-let rangeElementGreenH2 = document.querySelector('.rangeGreenH2 [type="range"]');
-let valueElementGreenH2 = document.querySelector('.rangeGreenH2 .range__value span');
-
-let rangeElementMob1 = document.querySelector('.rangeMob1 [type="range"]');
-let valueElementMob1 = document.querySelector('.rangeMob1 .range__value span');
-
-
-let rangeElementMob2 = document.querySelector('.rangeMob2 [type="range"]');
-let valueElementMob2 = document.querySelector('.rangeMob2 .range__value span');
-var options = {
-    min: 200,
-    max: 2000,
-    cur: 1000
-}
-var options2 = {
-    min: 200,
-    max: 2000,
-    cur: 1000
-}
-
-var options4 = {
-    min: 200,
-    max: 2000,
-    cur: 1200
-}
-
-var optionsBat = {
-    min: 300,
-    max: 1500,
-    cur: (queryStringSubProjetID == '61e17ca2875fedde75c053f0' ? 500 : 1000)
-}
-var optionsElec = {
-    min: 50,
-    max: 400,
-    cur: 100
-}
-var optionsGreenH2 = {
-    min: 10000,
-    max: 30000,
-    cur: 20000
-}
-var optionsIndustry = {
-    min: 100,
-    max: 1500,
-    cur: 300
-}
-var optionsMobility = {
-    min: 100,
-    max: 1500,
-    cur: 600
-}
-if (rangeElement) {
-    let slider = new Slider(rangeElement, valueElement, options)
-    slider.init()
-    //
-    let slider2 = new Slider(rangeElement2, valueElement2, options2)
-    slider2.init();
-    //
-    let slider4 = new Slider(rangeElement4, valueElement4, options4)
-    slider4.init();
-    //
-    let sliderBat = new Slider(rangeElementBat, valueElementBat, optionsBat)
-    sliderBat.init();
-    //
-    let sliderElec = new Slider(rangeElementElec, valueElementElec, optionsElec)
-    sliderElec.init();
-    //
-    let sliderGreenH2 = new Slider(rangeElementGreenH2, valueElementGreenH2, optionsGreenH2)
-    sliderGreenH2.init();
-    //
-    let sliderMob1 = new Slider(rangeElementMob1, valueElementMob1, optionsMobility)
-    sliderMob1.init();
-    //
-    let sliderMob2 = new Slider(rangeElementMob2, valueElementMob2, optionsIndustry)
-    sliderMob2.init();
 }

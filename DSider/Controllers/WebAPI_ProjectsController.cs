@@ -245,6 +245,17 @@ namespace DSider.Controllers
             }
             return resultList;
         }
+
+        [Route("getCurrentSubProject")]
+        [HttpGet]
+        public SubProjects getCurrentSubProject(string subProjectId)
+        {
+            mongoDatabase = GetMongoDatabase();
+            var filterSubProject = Builders<SubProjects>.Filter.Where(p => p.id == subProjectId);
+            var subProject = mongoDatabase.GetCollection<SubProjects>("SubProjects").Find(filterSubProject).First();
+            
+            return subProject;
+        }
         //Get projects and sub projects together
         [Route("getProjectAndSubProjectHierarchy")]
         [HttpGet]

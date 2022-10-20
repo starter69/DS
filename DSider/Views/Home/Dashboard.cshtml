@@ -2,8 +2,6 @@
     ViewData["Title"] = "Dashboard";
 }
 <style>
-
-
     .plotControl {
         width: 70px;
         display: inline-block;
@@ -30,23 +28,23 @@
         margin-top: 15px;
     }
 
-        #tblDash3 th {
-            font-weight: 700;
-        }
+    #tblDash3 th {
+        font-weight: 700;
+    }
 
-        #tblDash3 th {
-            font-weight: 500;
-        }
+    #tblDash3 th {
+        font-weight: 500;
+    }
 
-        #tblDash3 th, #tblDash3 td {
-            padding: 5px;
-        }
+    #tblDash3 th, #tblDash3 td {
+        padding: 5px;
+    }
 
-            #tblDash3 td:first-child {
-                background-color: #0bb2d4;
-                color: white;
-                font-weight: 500;
-            }
+    #tblDash3 td:first-child {
+        background-color: #0bb2d4;
+        color: white;
+        font-weight: 500;
+    }
 
     .panel-title {
         font-size: 14px;
@@ -61,9 +59,9 @@
         font-size: 14px;
     }
 
-        .backToProject:hover {
-            color: #4A8B78;
-        }
+    .backToProject:hover {
+        color: #4A8B78;
+    }
 
     .projectNameContainer {
         font-weight: 900;
@@ -73,6 +71,21 @@
 
     .playControlIcon {
         cursor: pointer;
+    }
+
+    .btnSimulate {
+        width: 100%;
+        max-width: 200px;
+        height: 35px;
+        border-radius: 8px;
+        background: #4A8B78;
+        color: #fff;
+        font-size: 20px;
+        outline: none;
+        border: 0;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 5px;
     }
 </style>
 <link href="~/css/Range.css" rel="stylesheet" />
@@ -222,7 +235,7 @@
                                                     <div class="container">
                                                         <form class="range">
                                                             <div class="form-group range__slider" style="width:42.5%;">
-                                                                <input type="range" step="100" id="turbine1">
+                                                                <input type="range" step="1" id="turbine1">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -237,7 +250,7 @@
                                                     <div class="container">
                                                         <form class="range2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="turbine2">
+                                                                <input type="range" step="1" id="turbine2">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -252,7 +265,7 @@
                                                     <div class="container">
                                                         <form class="range4">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Solar1">
+                                                                <input type="range" step="1" id="Solar1">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -282,7 +295,7 @@
                                                     <div class="container">
                                                         <form class="rangeBat">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Battery1">
+                                                                <input type="range" step="1" id="Battery1">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Bat Amount</label>
@@ -311,7 +324,7 @@
                                                     <div class="container">
                                                         <form class="rangeElec">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="50" id="Electrolyzer1">
+                                                                <input type="range" step="1" id="Electrolyzer1">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Elec Amount</label>
@@ -340,7 +353,7 @@
                                                     <div class="container">
                                                         <form class="rangeGreenH2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="1000" id="GreenH2">
+                                                                <input type="range" step="1" id="GreenH2">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Green Amount</label>
@@ -369,7 +382,7 @@
                                                     <div class="container">
                                                         <form class="rangeMob1">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="10" id="Mobility1">
+                                                                <input type="range" step="1" id="Mobility1">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Mob Amount</label>
@@ -384,7 +397,7 @@
                                                     <div class="container">
                                                         <form class="rangeMob2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Mobility2">
+                                                                <input type="range" step="1" id="Mobility2">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Mob Amount</label>
@@ -398,6 +411,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <button id="simulate-button" class="btnSimulate">Simulate</button>
+                            </div>
                         </div>
                         <div class="col-xxl-9 col-lg-9">
                             <!-- Widget Statistic -->
@@ -406,26 +422,26 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="four col-md-3">
-                                                <div class="counter-box colored">
-                                                    <i class="fa fa-arrow-up"></i><span class="counter">{{statisticsList[0].capex}}</span>
+                                                <div class="counter-box">
+                                                    <span class="counter">{{statisticsList[0].capex}}</span>
                                                     <p>capex</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-line-chart"></i><span class="counter">{{statisticsList[0].taxCredit}}</span>
+                                                    <span class="counter">{{statisticsList[0].taxCredit}}</span>
                                                     <p>Local Tax Credits</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-bar-chart"></i> <span class="counter">{{statisticsList[0].carbonTax}}</span>
+                                                    <span class="counter">{{statisticsList[0].carbonTax}}</span>
                                                     <p>Carbon Tax</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-usd"></i><span class="counter">{{statisticsList[0].emissionMitgated}}</span>
+                                                    <span class="counter">{{statisticsList[0].emissionMitgated}}</span>
                                                     <p>Emissions mitigated</p>
                                                 </div>
                                             </div>
