@@ -166,9 +166,44 @@ $(document).ready(function () {
         allowClear: true
     });
 });
+
 var splittedUrl = window.location.href.split("/");
 var queryStringSubProjetID = splittedUrl[splittedUrl.length - 4];
 var currentSubProjectProperties = [];
+
+function updatePropertyValue(modelType, newValue) {
+    for (let [key, property] of Object.entries(currentSubProjectProperties)) {
+        let propertyData = JSON.parse(property.data);
+        if (propertyData.Name === modelType) {
+            switch (modelType) {
+                case "Turbines":
+                    propertyData.Power_Capacity = newValue;
+                    break;
+                case "Solar Panel":
+                    propertyData.Power_Capacity = newValue;
+                    break;
+                case "Battery":
+                    propertyData.BatCapStart = newValue;
+                    break;
+                case "Electrolyser":
+                    propertyData.ElCapStart = newValue;
+                    break;
+                case "Green H2 Storage":
+                    propertyData.Green_H2_Storage_Capacity = newValue;
+                    break;
+                case "":
+                    propertyData.Industry_H2_Demand_Capacity = newValue;
+                    break;
+                case "Mobility":
+                    propertyData.Mobility_H2_Demand_Capacity = newValue;
+                    break;
+                default:
+                    break;
+            }
+        }
+        currentSubProjectProperties[key]['data'] = JSON.stringify(propertyData);
+    }
+}
 
 
 class Slider {
@@ -202,6 +237,7 @@ class Slider {
     }
     updateSlider(newValue) {
         var mID = this.rangeElement.id;
+        updatePropertyValue(this.rangeElement.id, this.rangeElement.value);
         jQuery('#' + mID).parent().parent().parent().parent().find('.rangeTitleMin').text(addComma(this.rangeElement.value));
         this.rangeElement.style = this.generateBackground(this.rangeElement.value)
     }
@@ -238,7 +274,7 @@ function getCurrentSubProject() {
         type: "GET",
         contentType: 'application/json',
         success: function (response) {
-            let currentSubProjectProperties = JSON.parse(response.exportJSON)['drawflow']['Home']['data'];
+            currentSubProjectProperties = JSON.parse(response.exportJSON)['drawflow']['Home']['data'];
             initSlider(currentSubProjectProperties);
         },
         error: function (response) {
@@ -253,7 +289,6 @@ function getCurrentSubProject() {
 function getPropertyValue(properties, propertyName) {
     for (let [key, property] of Object.entries(properties)) {
         let propertyData = JSON.parse(property.data);
-            console.log(propertyData);
         if (propertyData.Name === propertyName) {
             return propertyData;
         }
@@ -342,6 +377,28 @@ function initSlider(properties) {
         sliderMob2.init();
     }
 }
+
+// Simulate Button Click
+jQuery(document).on("click", "#simulate-button", function () {
+    console.log(currentSubProjectProperties, 'current');
+    $.ajax({
+        url: "http://44.200.150.66/api/simulate/" + queryStringSubProjetID,
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(currentSubProjectProperties),
+        success: function (response) {
+            showPlotDash1(response);
+            alertify.success("Simulation succeed.");
+        },
+        error: function (response) {
+            alertify.error("Simulation failed.");
+        },
+        failure: function (response) {
+            alertify.error("Simulation failed.");
+        },
+    });
+});
 
 var autoPlayDash2TimeOut;
 var timeAutoPlayInterval = parseInt(jQuery('#txtInterval').val());
