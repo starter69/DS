@@ -289,7 +289,7 @@ function getCurrentSubProject() {
 function getPropertyValue(properties, propertyName) {
     for (let [key, property] of Object.entries(properties)) {
         let propertyData = JSON.parse(property.data);
-        if (propertyData.Name === propertyName) {
+        if (property.class === propertyName) {
             return propertyData;
         }
     }
@@ -302,28 +302,28 @@ function initSlider(properties) {
         cur: 1000
     }
 
-    let property = getPropertyValue(properties, 'Turbines');
+    let property = getPropertyValue(properties, 'turbine');
     var optionsTurbine = {
         min: 0,
         max: 10000,
         cur: property.Power_Capacity
     }
 
-    property = getPropertyValue(properties, 'Solar Panel');
+    property = getPropertyValue(properties, 'Solar');
     var optionsSolar = {
         min: 0,
         max: 10000,
         cur: property.Power_Capacity
     }
 
-    property = getPropertyValue(properties, 'Battery');
+    property = getPropertyValue(properties, 'battery');
     var optionsBat = {
         min: 0,
         max: 10000,
         cur: property.BatCapStart
     }
 
-    property = getPropertyValue(properties, 'Electrolyser');
+    property = getPropertyValue(properties, "electrolyzer");
     var optionsElec = {
         min: 0,
         max: 10000,
