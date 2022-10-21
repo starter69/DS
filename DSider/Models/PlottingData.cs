@@ -13,7 +13,7 @@ namespace DSider.Models
         public ObjectId _id { get; set; }
         public string subProjectID { get; set; }
         public string timestep { get; set; }
-        public string TimeUTC { get; set; }
+        public DateTime TimeUTC { get; set; }
         public double pwr_turbine_out { get; set; }
         public double pwr_turbine_avail { get; set; }
         public double pwr_solar_out { get; set; }
