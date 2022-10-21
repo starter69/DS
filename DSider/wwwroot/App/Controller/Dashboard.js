@@ -175,23 +175,23 @@ function updatePropertyValue(modelType, newValue) {
     for (let [key, property] of Object.entries(currentSubProjectProperties)) {
         let propertyData = JSON.parse(property.data);
         if (propertyData.Name === modelType) {
-            switch (modelType) {
-                case "Turbines":
+            switch (property.class) {
+                case "turbine":
                     propertyData.Power_Capacity = newValue;
                     break;
-                case "Solar Panel":
+                case "Solar":
                     propertyData.Power_Capacity = newValue;
                     break;
-                case "Battery":
+                case "battery":
                     propertyData.BatCapStart = newValue;
                     break;
-                case "Electrolyser":
+                case "electrolyzer":
                     propertyData.ElCapStart = newValue;
                     break;
-                case "Green H2 Storage":
+                case "GreenH2Storage":
                     propertyData.Green_H2_Storage_Capacity = newValue;
                     break;
-                case "":
+                case "industriese":
                     propertyData.Industry_H2_Demand_Capacity = newValue;
                     break;
                 case "Mobility":
@@ -330,21 +330,21 @@ function initSlider(properties) {
         cur: property.ElCapStart
     }
 
-    property = getPropertyValue(properties, 'Green H2 Storage');
+    property = getPropertyValue(properties, "GreenH2Storage");
     var optionsGreenH2 = {
         min: 0,
         max: 10000,
         cur: property.Green_H2_Storage_Capacity
     }
 
-    property = getPropertyValue(properties, 'Industries');
+    property = getPropertyValue(properties, "industriese");
     var optionsIndustry = {
         min: 0,
         max: 10000,
         cur: property.Industry_H2_Demand_Capacity
     }
 
-    property = getPropertyValue(properties, 'Mobility');
+    property = getPropertyValue(properties, "Mobility");
     var optionsMobility = {
         min: 0,
         max: 10000,
@@ -380,6 +380,7 @@ function initSlider(properties) {
 
 // Simulate Button Click
 jQuery(document).on("click", "#simulate-button", function () {
+    currentSubProjectProperties.from = "dashboard";
     console.log(currentSubProjectProperties, 'current');
     $.ajax({
         url: "http://44.200.150.66/api/simulate/" + queryStringSubProjetID,
