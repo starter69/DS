@@ -72,7 +72,7 @@ jQuery(document).ready(function () {
       "/" +
       getParameterByName("type");
     $.ajax({
-        url: "http://127.0.0.1/api/simulate/" + subProjectID,
+        url: "http://44.200.150.66/api/simulate/" + subProjectID,
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
@@ -81,13 +81,13 @@ jQuery(document).ready(function () {
         alertify.success("Simulation succeed.");
         setTimeout(function () {
           location.href = redirectURL;
-        }, 4000);
+        }, 1000);
       },
       error: function (response) {
         alertify.error("Simulation failed.");
         setTimeout(function () {
          location.href = redirectURL;
-        }, 4000);
+        }, 1000);
       },
       failure: function (response) {
         alertify.error("Simulation failed.");
