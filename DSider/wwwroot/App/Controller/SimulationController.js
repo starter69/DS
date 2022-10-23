@@ -73,7 +73,7 @@ jQuery(document).ready(function () {
       getParameterByName("type");
 
       modelInfo.from = "simulation";
-      console.log(JSON.stringfy(modelInfo))
+      console.log(JSON.stringify(modelInfo))
     $.ajax({
         url: "http://44.200.150.66/api/simulate/" + subProjectID,
       type: "POST",
