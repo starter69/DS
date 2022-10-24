@@ -952,6 +952,22 @@ function showPlotDash1(dataToPlot) {
         })
     }
 
+    if (chartType === 'area') {
+        seriesData.push({
+            name: 'Total Hydrogen',
+            data: response.map(a => {
+                var total = 0;
+
+                Object.keys(a).filter(key => key.includes('h2_')).forEach(h2Key => {
+                    total += a[h2Key] * 1.0;
+                })
+
+                return [new Date(a.timeUTC).getTime(), total];
+            }),
+            type: 'area'
+        })
+    }
+
     var chart = Highcharts.stockChart('containerPlotDash1', {
         tooltip: {
             pointFormat: "{series.name}: {point.y:.2f}"
