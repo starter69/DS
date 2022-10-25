@@ -381,7 +381,6 @@ function initSlider(properties) {
 // Simulate Button Click
 jQuery(document).on("click", "#simulate-button", function () {
     currentSubProjectProperties.from = "dashboard";
-    console.log(currentSubProjectProperties, 'current');
     $.ajax({
         url: "http://44.200.150.66/api/simulate/dashboard/" + queryStringSubProjetID,
         type: "POST",
@@ -389,6 +388,9 @@ jQuery(document).on("click", "#simulate-button", function () {
         dataType: "json",
         data: JSON.stringify(currentSubProjectProperties),
         success: function (response) {
+            for (let i = 0; i < response.length; i++) {
+                response[i].timeUTC = response[i].TimeUTC;
+            }
             showPlotDash1(response);
             alertify.success("Simulation succeed.");
         },
@@ -954,7 +956,7 @@ function showPlotDash1(dataToPlot) {
 
     if (chartType === 'area') {
         seriesData.push({
-            name: 'Total Hydrogen',
+            name: 'Stacked Area',
             data: response.map(a => {
                 var total = 0;
 
@@ -1023,6 +1025,7 @@ function PlottingDash1() {
         type: "GET",
         contentType: 'application/json',
         success: function (response) {
+            console.log(response);
             showPlotDash1(response);
         },
         error: function (response) {
