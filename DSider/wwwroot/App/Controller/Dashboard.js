@@ -173,7 +173,7 @@ var currentSubProjectProperties = [];
 
 function updatePropertyValue(modelType, newValue) {
     for (let [key, property] of Object.entries(currentSubProjectProperties)) {
-        let propertyData = JSON.parse(property.data);
+        let propertyData = property.data;
         if (propertyData.Name === modelType) {
             switch (property.class) {
                 case "turbine":
@@ -388,6 +388,7 @@ jQuery(document).on("click", "#simulate-button", function () {
         dataType: "json",
         data: JSON.stringify(currentSubProjectProperties),
         success: function (response) {
+            console.log("dashboard simulation response", response)
             for (let i = 0; i < response.length; i++) {
                 response[i].timeUTC = response[i].TimeUTC;
             }
