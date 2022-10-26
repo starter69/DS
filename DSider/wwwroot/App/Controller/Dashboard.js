@@ -955,19 +955,107 @@ function showPlotDash1(dataToPlot) {
     }
 
     if (chartType === 'area') {
-        seriesData.push({
-            name: 'Stacked Area',
-            data: response.map(a => {
-                var total = 0;
-
-                Object.keys(a).filter(key => key.includes('h2_')).forEach(h2Key => {
-                    total += a[h2Key] * 1.0;
-                })
-
-                return [new Date(a.timeUTC).getTime(), total];
-            }),
-            type: 'area'
-        })
+        var seriesData = [];
+        var yAxis = [];
+        var fake_Y_AxisMin = [];
+        var fake_Y_AxisMax = [];
+        for (var i = 0; i < 5; i++) {
+            var Val = '';
+            var data = [];
+            switch (i) {
+                case 0:
+                    data = response.map(a => a.h2_electrolyzer_out_re);
+                    Val = 'Direct (RE) (Kg/h)';
+                    break;
+                case 1:
+                    data = response.map(a => a.h2_electrolyzer_out_bat);
+                    Val = 'Battery (Kg/h)';
+                    break;
+                case 2:
+                    data = response.map(a => a.h2_electrolyzer_out_grid);
+                    Val = 'Gray Power (Kg/h)';
+                    break;
+                case 3:
+                    data = response.map(a => a.h2_greenstore_out);
+                    Val = 'Storage (Kg/h)';
+                    break;
+                case 4:
+                    data = response.map(a => a.h2_externalsupply_out);
+                    Val = 'External (Kg/h)';
+                    break;
+            }
+            fake_Y_AxisMin.push(findMin(data));
+            fake_Y_AxisMax.push(findMax(data));
+            seriesData.push({
+                'label': {
+                    'enabled': false
+                },
+                lineWidth: 2,
+                zoneAxis: 'x',
+                'yAxis': 0,//i,
+                'name': Val,
+                'keys': ['y', 'id'],
+                'data': data,
+                'lineWidth': 2,
+                'marker': {
+                    'enabled': false
+                },
+            });
+        }
+        yAxis.push({
+            attrName: Val,
+            'title': {
+                text: 'Hydrogen Produced (Kg/h)',//Val,
+                style: {
+                    fontSize: '14px'
+                }
+            },
+            opposite: false,// (i == 0 ? false : true),
+            min: findMin(fake_Y_AxisMin),
+            max: findMax(fake_Y_AxisMax),
+            height: '100%',
+            'lineWidth': 2,
+            labels: {
+                formatter: function () {
+                    return this.value;
+                },
+                style: { fontSize: "14px" }
+            },
+        });
+        var xAxis = response.map(a => a.timestep);
+        var chart = new Highcharts.Chart({
+            chart: {
+                type: 'area',
+                renderTo: 'containerPlotDash1',
+                zoomType: 'xy',
+            },
+            xAxis: {
+                title: {
+                    text: 'Time step (Hours)'
+                },
+                categories: xAxis,
+                labels: {
+                    rotation: 90,
+                    style: { fontSize: "14px" }
+                },
+            },
+            title: {
+                text: '',
+                align: 'center',
+            },
+            series: seriesData,
+            yAxis: yAxis,
+            plotOptions: {
+                series: {
+                    turboThreshold: 10000000,
+                    connectNulls: false,
+                    cursor: "pointer",
+                    pointInterval: undefined,
+                    pointStart: undefined,
+                }
+            },
+        });
+        return;
     }
 
     var chart = Highcharts.stockChart('containerPlotDash1', {

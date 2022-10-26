@@ -517,6 +517,14 @@
                                         <h4>Cost</h4>
                                         <div class="row mRow">
                                             <div class="col-sm-4">
+                                                LCOE
+                                            </div>
+                                            <div class="col-sm-8">
+                                                ${{statisticsList[0].lcoe}}
+                                            </div>
+                                        </div>
+                                        <div class="row mRow">
+                                            <div class="col-sm-4">
                                                 LCOH
                                             </div>
                                             <div class="col-sm-8">
@@ -528,7 +536,7 @@
                                                 Variable
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].variable}}%
+                                                {{statisticsList[0].variable}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -536,15 +544,7 @@
                                                 Period
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].period}}%
-                                            </div>
-                                        </div>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                Other
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].other}}%
+                                                {{statisticsList[0].period}}
                                             </div>
                                         </div>
                                     </div>
@@ -682,8 +682,8 @@
                                                 <th>IRR</th>
                                                 <th>Supply Reliability $</th>
                                                 <th>LCOH $</th>
-                                                <th>Variable %</th>
-                                                <th>Period %</th>
+                                                <th>Variable</th>
+                                                <th>Period</th>
                                                 <th>Other %</th>
 
                                             </tr>
