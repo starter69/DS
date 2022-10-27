@@ -173,7 +173,7 @@ var currentSubProjectProperties = [];
 
 function updatePropertyValue(modelType, newValue) {
     for (let [key, property] of Object.entries(currentSubProjectProperties)) {
-        let propertyData = property.data;
+        let propertyData = JSON.parse(property.data);
         if (propertyData.Name === modelType) {
             switch (property.class) {
                 case "turbine":
@@ -382,13 +382,12 @@ function initSlider(properties) {
 jQuery(document).on("click", "#simulate-button", function () {
     currentSubProjectProperties.from = "dashboard";
     $.ajax({
-        url: "http://44.200.150.66/api/simulate/dashboard/" + queryStringSubProjetID,
+        url: "http://localhost/api/simulate/dashboard/" + queryStringSubProjetID,
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(currentSubProjectProperties),
         success: function (response) {
-            console.log("dashboard simulation response", response)
             for (let i = 0; i < response.length; i++) {
                 response[i].timeUTC = response[i].TimeUTC;
             }
