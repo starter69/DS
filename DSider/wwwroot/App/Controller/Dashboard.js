@@ -173,7 +173,9 @@ var currentSubProjectProperties = [];
 
 function updatePropertyValue(modelType, newValue) {
     for (let [key, property] of Object.entries(currentSubProjectProperties)) {
-        let propertyData = JSON.parse(property.data);
+        let propertyData = [];
+        if (property.data)
+            propertyData = JSON.parse(property.data);
         if (propertyData.Name === modelType) {
             switch (property.class) {
                 case "turbine":
@@ -380,6 +382,9 @@ function initSlider(properties) {
 
 // Simulate Button Click
 jQuery(document).on("click", "#simulate-button", function () {
+    $('#simulate-button').html(`<i class="fa fa-spinner fa-spin"></i>Simulating`);
+    $('#simulate-button').prop('disabled', true);
+
     currentSubProjectProperties.from = "dashboard";
     $.ajax({
         url: "http://localhost/api/simulate/dashboard/" + queryStringSubProjetID,
@@ -393,12 +398,18 @@ jQuery(document).on("click", "#simulate-button", function () {
             }
             showPlotDash1(response);
             alertify.success("Simulation succeed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
         error: function (response) {
             alertify.error("Simulation failed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
         failure: function (response) {
             alertify.error("Simulation failed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
     });
 });
@@ -778,7 +789,7 @@ function showPlotDash2ByType(dataToPlot) {
                     min: findMin(data),
                     max: findMax(data),
                     height: '100%',
-                    'lineWidth': 2,
+                    'lineWidth': 1,
                     labels: {
                         formatter: function () {
                             return this.value;
@@ -802,13 +813,12 @@ function showPlotDash2ByType(dataToPlot) {
                 'label': {
                     'enabled': false
                 },
-                lineWidth: 2,
                 zoneAxis: 'x',
                 'yAxis': (foundYAxsis == -1 ? (yAxis.length - 1) : foundYAxsis),
                 'name': Val + '(' + ValSub.subProjectName + ')',
                 'keys': ['y', 'id'],
                 'data': data,
-                'lineWidth': 2,
+                'lineWidth': 1,
                 'marker': {
                     'enabled': false
                 },
@@ -906,7 +916,7 @@ function showPlotDash1(dataToPlot) {
     var chartType = jQuery("input[name='chartTypeDash1']:checked").val();
 
     if (chartType === 'line')
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 6; i++) {
         var Val = '';
         var data = [];
         switch (i) {
@@ -929,6 +939,10 @@ function showPlotDash1(dataToPlot) {
             case 4:
                 data = response.map(a => [new Date(a.timeUTC).getTime(), a.h2_electrolyzer_out])
                 Val = 'H2 Electrolyzer Out';
+                break;
+            case 5:
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_solar_avail])
+                Val = 'H2 Solor Out';
                 break;
         }
 
@@ -990,13 +1004,12 @@ function showPlotDash1(dataToPlot) {
                 'label': {
                     'enabled': false
                 },
-                lineWidth: 2,
                 zoneAxis: 'x',
                 'yAxis': 0,//i,
                 'name': Val,
                 'keys': ['y', 'id'],
                 'data': data,
-                'lineWidth': 2,
+                'lineWidth': 1,
                 'marker': {
                     'enabled': false
                 },
@@ -1014,7 +1027,7 @@ function showPlotDash1(dataToPlot) {
             min: findMin(fake_Y_AxisMin),
             max: findMax(fake_Y_AxisMax),
             height: '100%',
-            'lineWidth': 2,
+            'lineWidth': 1,
             labels: {
                 formatter: function () {
                     return this.value;
@@ -1113,7 +1126,6 @@ function PlottingDash1() {
         type: "GET",
         contentType: 'application/json',
         success: function (response) {
-            console.log(response);
             showPlotDash1(response);
         },
         error: function (response) {

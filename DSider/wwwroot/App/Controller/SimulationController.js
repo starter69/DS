@@ -80,21 +80,16 @@ jQuery(document).ready(function () {
       dataType: "json",
       data: JSON.stringify(modelInfo),
       success: function (response) {
-        alertify.success("Simulation succeed.");
-        setTimeout(function () {
-          location.href = redirectURL;
-        }, 1000);
       },
       error: function (response) {
-        alertify.error("Simulation failed.");
-        setTimeout(function () {
-         location.href = redirectURL;
-        }, 1000);
       },
       failure: function (response) {
-        alertify.error("Simulation failed.");
       },
     });
+
+    setTimeout(function () {
+        location.href = redirectURL;
+    }, 8000);
   });
   //When right click on node in drawflow
   jQuery(document).on("contextmenu", ".drawflow-node", function (e) {

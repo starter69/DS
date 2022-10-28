@@ -1,7 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    .buttonload {
+        width: 100%;
+        max-width: 200px;
+        height: 35px;
+        border-radius: 8px;
+        background: #4A8B78;
+        color: #fff;
+        font-size: 20px;
+        outline: none;
+        border: 0;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    /* Add a right margin to each icon */
+    .fa {
+        margin-left: -12px;
+        margin-right: 8px;
+    }
+ 
     .plotControl {
         width: 70px;
         display: inline-block;
@@ -122,75 +143,6 @@
         <div class="tab-content pt-20">
             <div class="tab-pane active" id="exampleTabsOne" role="tabpanel">
                 <div class="row" data-plugin="matchHeight" data-by-row="true">
-                    @*<div class="col-xxl-12 col-lg-12" id="widgetCo2LinearChart">
-                        <div class="card card-shadow card-responsive">
-                            <div class="row">
-                                <div class="col-xxl-9 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerRates1" style="height: 300px"></div>
-                                            </figure>
-                                        </div>
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerVolumes1" style="height:300px"></div>
-                                            </figure>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-3 col-lg-3">
-                                    <div>
-                                        <h3 class="text-center">Configuration</h3>
-                                        <span>Source</span>
-                                        <div>
-                                        <input type="checkbox" name="rates1All" id="radioLine2" value="all" checked onchange="checkSource()"/> All
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1B" id="radioArea2" value="b" onchange="checkSource()" /> Field B
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1A" id="radioArea2" value="a" onchange="checkSource()" /> Field A
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1C" id="radioArea2" value="c" onchange="checkSource()" /> Field C
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-9 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerCost1" style="height: 300px"></div>
-                                            </figure>
-                                        </div>
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerCost2" style="height:300px"></div>
-                                            </figure>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-3 col-lg-3">
-                                    <div>
-                                    <span>Sink</span>
-                                    <div>
-                                        <input type="checkbox" name="rates1All" id="radioLine2" value="all" checked onchange="checkSink()" /> All
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1B" id="radioArea2" value="b" onchange="checkSink()" /> Field B
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1A" id="radioArea2" value="a" onchange="checkSink()" /> Field A
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1C" id="radioArea2" value="c" onchange="checkSink()" /> Field C
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>*@
                         <div class="col-xxl-9 col-lg-9">
                             <!-- Widget Linearea Color -->
                             <div class="card card-shadow card-responsive" id="widgetLineareaColor">
@@ -266,7 +218,7 @@
                                                     <div class="container">
                                                         <form class="range4">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="1" id="Solar Panel">
+                                                                <input type="range" step="1" id="Solar">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -413,7 +365,9 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <button id="simulate-button" class="btnSimulate">Simulate</button>
+                                <button class="buttonload" id="simulate-button">
+                                    Simulate
+                                </button>
                             </div>
                         </div>
                         <div class="col-xxl-9 col-lg-9">
