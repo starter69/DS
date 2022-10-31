@@ -3,6 +3,13 @@
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    .capex-counter {
+        font-size: 32px;
+        font-weight: 700;
+        color: #666;
+        line-height: 28px;
+    }
+
     .buttonload {
         width: 100%;
         max-width: 200px;
@@ -378,7 +385,7 @@
                                         <div class="row">
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <span class="counter">{{statisticsList[0].capex}}</span>
+                                                    <span class="capex-counter">{{statisticsList[0].capex}}</span>
                                                     <p>capex</p>
                                                 </div>
                                             </div>
@@ -415,7 +422,7 @@
                                                 NPV
                                             </label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" value="{{statisticsList[0].npv}}" />
+                                                <input type="text" class="form-control" value="{{statisticsList[0].npv ? '$' + statisticsList[0].npv : ''}}" />
                                             </div>
                                         </div>
                                         <div class="row" style="padding:15px;">
@@ -474,7 +481,7 @@
                                                 LCOE
                                             </div>
                                             <div class="col-sm-8">
-                                                ${{statisticsList[0].lcoe}}
+                                                {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe : ''}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -482,7 +489,7 @@
                                                 LCOH
                                             </div>
                                             <div class="col-sm-8">
-                                                ${{statisticsList[0].lcoh}}
+                                                {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh : ''}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -490,7 +497,7 @@
                                                 Variable
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].variable}}
+                                                {{statisticsList[0].variable ? '$' + statisticsList[0].variable : ''}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -498,7 +505,7 @@
                                                 Period
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].period}}
+                                                {{statisticsList[0].period ? '$' + statisticsList[0].period : ''}}
                                             </div>
                                         </div>
                                     </div>
@@ -627,18 +634,17 @@
                                             <tr>
                                                 <th></th>
                                                 <th>Capex</th>
+                                                <th>Variable</th>
+                                                <th>Period</th>
                                                 <th>Local Tax Credits</th>
                                                 <th>
                                                     Carbon Tax
                                                 </th>
-                                                <th>Emissions mitigated</th>
+                                                <th>LCOE $</th>
+                                                <th>LCOH $</th>
                                                 <th>NPV</th>
                                                 <th>IRR</th>
-                                                <th>Supply Reliability $</th>
-                                                <th>LCOH $</th>
-                                                <th>Variable</th>
-                                                <th>Period</th>
-                                                <th>Other %</th>
+                                                <th>Emissions mitigated</th>
 
                                             </tr>
                                         </thead>
@@ -646,19 +652,17 @@
                                             <tr ng-repeat="item in statisticsList">
                                                 <td>{{item.subProject}}</td>
                                                 <td>{{item.capex}}</td>
+                                                <td>{{item.variable}}</td>
+                                                <td>{{item.period}}</td>
                                                 <td>{{item.taxCredit}}</td>
                                                 <td>
                                                     {{item.carbonTax}}
                                                 </td>
-                                                <td>{{item.emissionMitgated}}</td>
+                                                <td>{{item.lcoe}}</td>
+                                                <td>{{item.lcoh}}</td>
                                                 <td>{{item.npv}}</td>
                                                 <td>{{item.irr}}</td>
-                                                <td>{{item.supplyReliability}}</td>
-                                                <td>{{item.lcoh}}</td>
-                                                <td>{{item.variable}}</td>
-                                                <td>{{item.period}}</td>
-                                                <td>{{item.other}}</td>
-
+                                                <td>{{item.emissionMitgated}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
