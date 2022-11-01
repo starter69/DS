@@ -1,4 +1,8 @@
-﻿var Tariana = angular.module('Tariana', []);
+﻿function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+var Tariana = angular.module('Tariana', []);
 Tariana.controller("DashboardController", function ($scope) {
     jQuery('#controlContiner').hide();
     jQuery('#stopIcon').hide();
@@ -8,6 +12,7 @@ Tariana.controller("DashboardController", function ($scope) {
 
     //checkSource();
     //checkSink()
+
 
     $scope.statisticsList = [];
     //Get staistics data from web api
@@ -59,7 +64,7 @@ Tariana.controller("DashboardController", function ($scope) {
                         duration: 4000,
                         easing: 'swing',
                         step: function (now) {
-                            $(this).text(Math.ceil(now));
+                            $(this).text(numberWithCommas(Math.ceil(now)));
                         }
                     });
                 });
@@ -70,7 +75,7 @@ Tariana.controller("DashboardController", function ($scope) {
                         duration: 4000,
                         easing: 'swing',
                         step: function (now) {
-                            $(this).text('$' + Math.ceil(now));
+                            $(this).text('$' + numberWithCommas(Math.ceil(now)));
                         }
                     });
                 });
@@ -953,7 +958,7 @@ function showPlotDash1(dataToPlot) {
                 break;
             case 5:
                 data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_solar_avail])
-                Val = 'H2 Solor Out';
+                Val = 'PWR Solar Out';
                 break;
         }
 
@@ -1296,3 +1301,4 @@ function getAllSubProjects() {
 function addComma(number) {
     return number.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+ 
