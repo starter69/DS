@@ -201,10 +201,13 @@
 
                 try {
                     const user = await Amplify.Auth.signIn(username, password);
-                    createCookie('userName', user.username, 20);
-                    document.location.href = '/Home';
+                    if (user.username) {
+                        createCookie('userName', user.username, 20);
+                        document.location.href = '/Home';
+                    } else {
+                        alertify.error('Username or Password is not correct.');
+                    }
                 } catch (error) {
-                    alertify.error('Username or Password is not correct.');
                 }
             });
         });
