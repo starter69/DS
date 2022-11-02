@@ -152,6 +152,7 @@
     </script>
 
     <!-- Page -->
+    <script src="https://unpkg.com/aws-amplify@1.1.19/dist/aws-amplify.min.js"></script>
     <script src="~/assets/js/Site.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/asscrollable.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/slidepanel.min599c.js?v4.0.2"></script>
@@ -165,6 +166,49 @@
     <script src="~/App/Controller/LoginController.js?FileVersion=1"></script>
     <script src="~/App/JcookieManagment.js"></script>
     <script src="~/js/alertify.min.js"></script>
+    <script>
+        const Amplify = window['aws-amplify'];
+        Amplify.default.configure({ Auth: {
+            // REQUIRED - Amazon Cognito Identity Pool ID
+            identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo', 
+
+            // REQUIRED - Amazon Cognito Region
+            region: 'us-east-1', 
+
+            // OPTIONAL - Amazon Cognito User Pool ID
+            userPoolId: 'us-east-1_yRrXXBiWo',
+
+            // OPTIONAL - Amazon Cognito Web Client ID
+            userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu', 
+            }
+        });
+        
+        jQuery(document).ready(function () {
+            //When click on login button send data to web api
+            jQuery(document).on('click', '#btnLogin', async function () {
+                if (jQuery('#inputEmail').val() == '') {
+                    alertify.error('Username is mandatory.');
+                    jQuery('#inputEmail').focus();
+                    return;
+                }
+                if (jQuery('#inputPassword').val() == '') {
+                    alertify.error('Password is mandatory.');
+                    jQuery('#inputPassword').focus();
+                    return;
+                }
+                const username = jQuery('#inputEmail').val();
+                const password = jQuery('#inputPassword').val(); 
+
+                try {
+                    const user = await Amplify.Auth.signIn(username, password);
+                    createCookie('userName', user.username, 20);
+                    document.location.href = '/Home';
+                } catch (error) {
+                    alertify.error('Username or Password is not correct.');
+                }
+            });
+        });
+    </script>
 </body>
 
 
