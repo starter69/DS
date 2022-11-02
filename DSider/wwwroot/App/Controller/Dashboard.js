@@ -40,18 +40,24 @@ Tariana.controller("DashboardController", function ($scope) {
                 $scope.statisticsList = [];
                 jQuery(response).each(function (Index1, Val1) {
                     jQuery(Val1.mData).each(function (Index, Val) {
+                        for (let [key, property] of Object.entries(Val)) {
+                            if (Val[key] == '') {
+                                console.log(Val[key], "Val");
+                                Val[key] = 0;
+                            }
+                        }
                         $scope.statisticsList.push({
                             'subProject': Val1.subProjectName,
                             'capex': parseFloat(Val.capex),
                             'taxCredit': parseFloat(Val.taxCredit),
                             'carbonTax': parseFloat(Val.carbonTax),
                             'emissionMitgated': parseFloat(Val.emissionMitgated),
-                            'npv': parseFloat(Val.npv),
+                            'npv': numberWithCommas(parseInt(Val.npv)),
                             'irr': parseFloat(Val.irr),
                             'supplyReliability': parseFloat(Val.supplyReliability),
                             'lcoh': parseFloat(Val.lcoh),
                             'variable': parseFloat(Val.variable),
-                            'period': parseFloat(Val.period),
+                            'period': numberWithCommas(parseInt(Val.period)),
                             'other': parseFloat(Val.other),
                         });
                     })
