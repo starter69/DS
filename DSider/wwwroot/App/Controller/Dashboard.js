@@ -1307,4 +1307,3 @@ function getAllSubProjects() {
 function addComma(number) {
     return number.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
- 

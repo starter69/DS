@@ -85,24 +85,13 @@
                             <input type="checkbox" id="rememberMe" name="rememberMe">
                             <label for="rememberMe">Remember me</label>
                         </div>
-                        @*<a class="float-right" href="forgot-password.html">Forgot password?</a>*@
                     </div>
                     <button type="button" class="btn btn-primary btn-block" id="btnLogin" style="background:#4a8f7a;height:50px;font-size:18px; font-weight:500;">Sign in</button>
+                    <div style="font-size: 18px" class="text-center">If you have no account, <a style="margin: 0" href="/Account/Register">register</a> here.</div>
                 </form>
 
                 <footer class="page-copyright">
                     <p>© 2021. All RIGHT RESERVED.</p>
-                    @*<div class="social">
-                            <a class="btn btn-icon btn-round social-twitter mx-5" href="javascript:void(0)">
-                                <i class="icon bd-twitter" aria-hidden="true"></i>
-                            </a>
-                            <a class="btn btn-icon btn-round social-facebook mx-5" href="javascript:void(0)">
-                                <i class="icon bd-facebook" aria-hidden="true"></i>
-                            </a>
-                            <a class="btn btn-icon btn-round social-google-plus mx-5" href="javascript:void(0)">
-                                <i class="icon bd-google-plus" aria-hidden="true"></i>
-                            </a>
-                        </div>*@
                 </footer>
             </div>
 
@@ -163,23 +152,23 @@
 
 
     <script src="~/assets/examples/js/dashboard/v1.min599c.js?v4.0.2"></script>
-    <script src="~/App/Controller/LoginController.js?FileVersion=1"></script>
     <script src="~/App/JcookieManagment.js"></script>
     <script src="~/js/alertify.min.js"></script>
     <script>
         const Amplify = window['aws-amplify'];
-        Amplify.default.configure({ Auth: {
-            // REQUIRED - Amazon Cognito Identity Pool ID
-            identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo', 
+        Amplify.default.configure({
+            Auth: {
+                // REQUIRED - Amazon Cognito Identity Pool ID
+                identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo',
 
-            // REQUIRED - Amazon Cognito Region
-            region: 'us-east-1', 
+                // REQUIRED - Amazon Cognito Region
+                region: 'us-east-1',
 
-            // OPTIONAL - Amazon Cognito User Pool ID
-            userPoolId: 'us-east-1_yRrXXBiWo',
+                // OPTIONAL - Amazon Cognito User Pool ID
+                userPoolId: 'us-east-1_yRrXXBiWo',
 
-            // OPTIONAL - Amazon Cognito Web Client ID
-            userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu', 
+                // OPTIONAL - Amazon Cognito Web Client ID
+                userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu',
             }
         });
         
@@ -208,6 +197,7 @@
                         alertify.error('Username or Password is not correct.');
                     }
                 } catch (error) {
+                    alertify.error('Username or Password is not correct.');
                 }
             });
         });

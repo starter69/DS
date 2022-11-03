@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,11 @@ namespace DSider.Controllers.Users
     {
         private readonly IOptions<DatabaseSettings> appSettings;
         private IMongoDatabase mongoDatabase;
+        AppSettings AppSetting;
         public WebAPI_AuthenticationController(IOptions<DatabaseSettings> app)
         {
             appSettings = app;
+            AppSetting = new AppSettings(app);
 
         }
         public IMongoDatabase GetMongoDatabase()
@@ -37,7 +40,7 @@ namespace DSider.Controllers.Users
             try
             {
                 mongoDatabase = GetMongoDatabase();
-                var filterUser = Builders<users>.Filter.Where(c => c.userName.ToLower() == UserInfo.userName.ToLower() && c.password == UserInfo.password);
+                var filterUser = Builders<users>.Filter.Where(c => c.userName.ToLower() == UserInfo.userName.ToLower());
                 var collection = mongoDatabase.GetCollection<users>("users").Find(filterUser).ToList();
                 if (collection.Count > 0)
                 {
@@ -45,6 +48,13 @@ namespace DSider.Controllers.Users
                     var filter = Builders<users>.Filter.Where(p => p.userID == currentUser.userID);
                     var updatestatement = Builders<users>.Update.Set("tokenValidationTime", DateTime.Now.AddDays(5));
                     var result = mongoDatabase.GetCollection<users>("users").UpdateMany(filter, updatestatement);
+                } else
+                {
+                    currentUser.userID = ObjectId.GenerateNewId().ToString();
+                    currentUser.userName = UserInfo.userName;
+                    currentUser.tokenValidationTime = DateTime.Now.AddDays(5).ToString();
+                    mongoDatabase.GetCollection<users>("users").InsertOne(currentUser);
+                    AppSetting.saveUserLog(currentUser.userName.ToLower(), "User", "New User", currentUser.userID);
                 }
             }
             catch (Exception M)
