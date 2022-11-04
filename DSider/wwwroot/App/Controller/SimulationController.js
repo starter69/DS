@@ -72,23 +72,20 @@ jQuery(document).ready(function () {
       "/" +
       getParameterByName("type");
 
-      modelInfo.from = "simulation";
+    modelInfo.from = "simulation";
     $.ajax({
-        url: "http://44.200.150.66/api/simulate/" + subProjectID,
+      url: "http://44.200.150.66/api/simulate/" + subProjectID,
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       data: JSON.stringify(modelInfo),
-      success: function (response) {
-      },
-      error: function (response) {
-      },
-      failure: function (response) {
-      },
+      success: function (response) {},
+      error: function (response) {},
+      failure: function (response) {},
     });
 
     setTimeout(function () {
-        location.href = redirectURL;
+      location.href = redirectURL;
     }, 8000);
   });
   //When right click on node in drawflow
@@ -398,24 +395,24 @@ jQuery(document).ready(function () {
       jQuery("#latitudeFeedback").css("display", "block");
     }
   });
-    // Longitude validation
-    jQuery('#longitudeInput').change(function () {
-        var longitude = jQuery('#longitudeInput').val();
-        if (Math.abs(longitude) <= 180) {
-            jQuery('#longitudeFeedback').css('display', 'none');
-        } else {
-            jQuery('#longitudeFeedback').css('display', 'block');
-        }
-    });
-    // Latitude Validation
-    jQuery('#latitudeInput').change(function () {
-        var latitude = jQuery('#latitudeInput').val();
-        if (Math.abs(latitude) <= 90) {
-            jQuery('#latitudeFeedback').css('display', 'none');
-        } else {
-            jQuery('#latitudeFeedback').css('display', 'block');
-        }
-    });
+  // Longitude validation
+  jQuery("#longitudeInput").change(function () {
+    var longitude = jQuery("#longitudeInput").val();
+    if (Math.abs(longitude) <= 180) {
+      jQuery("#longitudeFeedback").css("display", "none");
+    } else {
+      jQuery("#longitudeFeedback").css("display", "block");
+    }
+  });
+  // Latitude Validation
+  jQuery("#latitudeInput").change(function () {
+    var latitude = jQuery("#latitudeInput").val();
+    if (Math.abs(latitude) <= 90) {
+      jQuery("#latitudeFeedback").css("display", "none");
+    } else {
+      jQuery("#latitudeFeedback").css("display", "block");
+    }
+  });
   //When click on delete icon in context menu to remove selected component
   jQuery(document).on("click", ".deleteContextMenu", function () {
     alertify.confirm("Are you sure to delete?", function (e) {
@@ -1702,21 +1699,36 @@ function showPropertyValuesByNodeID(nodeID) {
           '<input title="' +
           Val.description +
           '" type="text" style="width:75%;display:inline-block;" class="form-control propertyItem" value="' +
-            Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, '$1,') +
+          Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, "$1,") +
           '" property="' +
           Val.formulaTitle +
           '" />';
       else {
+        let disabledItem = "";
+        let disabledItemStyle = "";
+
+        if (Val.propertyName == "Load factor") {
+          disabledItem = `disabled="true"`;
+          disabledItemStyle = `background-color: rgb(230,230,230);`;
+        }
+
         htmlCode +=
           '<input title="' +
           Val.description +
-          '" type="text" class="form-control propertyItem" style="width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
-            Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, '$1,') +
+          '" type="text" class="form-control propertyItem" style="' +
+          disabledItemStyle +
+          'width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
+          Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, "$1,") +
           '" property="' +
           Val.formulaTitle +
-          '" /> ';
+          '"' +
+          disabledItem +
+          " />";
+
         htmlCode +=
-          '<input type="button" class="btn btn-primary btnBrowseDataSource" property="' +
+          '<input type="button" class="btn btn-primary btnBrowseDataSource" ' +
+          disabledItem +
+          'property="' +
           Val.formulaTitle +
           '" style="display: inline-block;width: 10%;text-align: center;padding-left: 10px;background: #8080805c;" value="..."/>';
       }
@@ -3338,116 +3350,116 @@ function changeMode(option) {
 //#endregion DraFlow
 //#region Map
 function initialize() {
-    var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
-    var myOptions = {
-        zoom: 14,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    marker = new google.maps.Marker({
-        draggable: true,
-        //position: myLatlng,
-        map: map,
-        title: "Component Location"
-    });
-    google.maps.event.addListener(marker, 'dragend', function (event) {
-        jQuery('.propertyItem[property="location"]').val(event.latLng.lat() + ', ' + event.latLng.lng());
-    });
-    google.maps.event.addListener(map, 'click', function (event) {
-        jQuery('.propertyItem[property="location"]').val(event.latLng.lat() + ', ' + event.latLng.lng());
-        marker.setPosition(event.latLng);
-    });
+  var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
+  var myOptions = {
+    zoom: 14,
+    center: myLatlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  marker = new google.maps.Marker({
+    draggable: true,
+    //position: myLatlng,
+    map: map,
+    title: "Component Location",
+  });
+  google.maps.event.addListener(marker, "dragend", function (event) {
+    jQuery('.propertyItem[property="location"]').val(
+      event.latLng.lat() + ", " + event.latLng.lng()
+    );
+  });
+  google.maps.event.addListener(map, "click", function (event) {
+    jQuery('.propertyItem[property="location"]').val(
+      event.latLng.lat() + ", " + event.latLng.lng()
+    );
+    marker.setPosition(event.latLng);
+  });
 }
 google.maps.event.addDomListener(window, "load", initialize());
 
 //#region Map All Components
 function initializeAllComponentsMap() {
-    var locations = [];
-    var myLatlng;
-    jQuery('.drawflow-node').each(function (Index, Val) {
-        var mID = jQuery(this).attr('id');
-        mID = mID.replace('node-', '');
-        var mComponent = editor.getNodeFromId(mID);
-        var icon = '';
-        if (mComponent.name == 'battery')
-            icon = 'Battery.png';
-        else if (mComponent.name == 'battery')
-            icon = 'Battery.png';
-        else if (mComponent.name == 'turbine')
-            icon = 'Turbine.png';
-        else if (mComponent.name == 'Solar')
-            icon = 'solar.png';
-        else if (mComponent.name == 'Grid')
-            icon = 'Grid.png';
-        else if (mComponent.name == 'cloud')
-            icon = 'cloud.png';
-        else if (mComponent.name == 'WaterStorage')
-            icon = 'WaterStorage.png';
-        else if (mComponent.name == 'GreenH2Storage')
-            icon = 'StorageH2.png';
-        else if (mComponent.name == 'GrayH2Storage')
-            icon = 'GrayStorageH2.png';
-        else if (mComponent.name == 'Mobility')
-            icon = 'Mobility.png';
-        else if (mComponent.name == 'industriese')
-            icon = 'industriese.png';
-        else if (mComponent.name == 'electrolyzer')
-            icon = 'electrolyzer.png';
-        else if (mComponent.name == 'electricityLB')
-            icon = 'loadBalancerElectricity.png';
-        else if (mComponent.name == 'hydrogenLB')
-            icon = 'loadBalancer.png';
-        //#region Properties
-        var mProperties = {};
-        if (typeof mComponent.data.length != 'undefined') {
-            mProperties = JSON.parse(mComponent.data);
-        }
-        var counter = 1;
-        var componentName = '';
-        for (var key in mProperties) {
-            if (key == 'Name') {
-                componentName = mProperties[key];
-            }
-            if (key == 'location') {
-                lat = mProperties[key].split(',')[0];
-                lng = mProperties[key].split(',')[1];
-                myLatlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                var valueToPush = new Array();
-                valueToPush[0] = componentName;
-                valueToPush[1] = myLatlng;
-                valueToPush[2] = counter;
-                valueToPush[3] = icon;
-                locations.push(valueToPush);
-                //
-                counter += 1;
-            }
-        }
-        //#endregion Properties
-    });
-    var map = new google.maps.Map(document.getElementById('map_canvasAllMarkers'), {
-        zoom: 13,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-    var infowindow = new google.maps.InfoWindow();
-    var marker, i;
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map,
-            icon: {
-                url: 'https://datamapping-idgimap.s3.amazonaws.com/dsidericons/' + locations[i][3],
-                scaledSize: { width: 50, height: 50 }
-            },
-        });
-
-        google.maps.event.addListener(marker, 'click', (function (marker, i) {
-            return function () {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-            }
-        })(marker, i));
+  var locations = [];
+  var myLatlng;
+  jQuery(".drawflow-node").each(function (Index, Val) {
+    var mID = jQuery(this).attr("id");
+    mID = mID.replace("node-", "");
+    var mComponent = editor.getNodeFromId(mID);
+    var icon = "";
+    if (mComponent.name == "battery") icon = "Battery.png";
+    else if (mComponent.name == "battery") icon = "Battery.png";
+    else if (mComponent.name == "turbine") icon = "Turbine.png";
+    else if (mComponent.name == "Solar") icon = "solar.png";
+    else if (mComponent.name == "Grid") icon = "Grid.png";
+    else if (mComponent.name == "cloud") icon = "cloud.png";
+    else if (mComponent.name == "WaterStorage") icon = "WaterStorage.png";
+    else if (mComponent.name == "GreenH2Storage") icon = "StorageH2.png";
+    else if (mComponent.name == "GrayH2Storage") icon = "GrayStorageH2.png";
+    else if (mComponent.name == "Mobility") icon = "Mobility.png";
+    else if (mComponent.name == "industriese") icon = "industriese.png";
+    else if (mComponent.name == "electrolyzer") icon = "electrolyzer.png";
+    else if (mComponent.name == "electricityLB")
+      icon = "loadBalancerElectricity.png";
+    else if (mComponent.name == "hydrogenLB") icon = "loadBalancer.png";
+    //#region Properties
+    var mProperties = {};
+    if (typeof mComponent.data.length != "undefined") {
+      mProperties = JSON.parse(mComponent.data);
     }
+    var counter = 1;
+    var componentName = "";
+    for (var key in mProperties) {
+      if (key == "Name") {
+        componentName = mProperties[key];
+      }
+      if (key == "location") {
+        lat = mProperties[key].split(",")[0];
+        lng = mProperties[key].split(",")[1];
+        myLatlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+        var valueToPush = new Array();
+        valueToPush[0] = componentName;
+        valueToPush[1] = myLatlng;
+        valueToPush[2] = counter;
+        valueToPush[3] = icon;
+        locations.push(valueToPush);
+        //
+        counter += 1;
+      }
+    }
+    //#endregion Properties
+  });
+  var map = new google.maps.Map(
+    document.getElementById("map_canvasAllMarkers"),
+    {
+      zoom: 13,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+    }
+  );
+  var infowindow = new google.maps.InfoWindow();
+  var marker, i;
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map: map,
+      icon: {
+        url:
+          "https://datamapping-idgimap.s3.amazonaws.com/dsidericons/" +
+          locations[i][3],
+        scaledSize: { width: 50, height: 50 },
+      },
+    });
+
+    google.maps.event.addListener(
+      marker,
+      "click",
+      (function (marker, i) {
+        return function () {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        };
+      })(marker, i)
+    );
+  }
 }
 //#endregion Map

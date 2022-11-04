@@ -12,7 +12,7 @@
     <meta name="description" content="bootstrap admin template">
     <meta name="author" content="">
 
-    <title>Login | DSider</title>
+    <title>Register | DSider</title>
 
 
     <link rel="apple-touch-icon" href="~/assets/images/apple-touch-icon.png">
@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="~/global/fonts/brand-icons/brand-icons.min599c.css?v4.0.2">
     <link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic">
 
+    <link href="~/css/alertify.core.css" rel="stylesheet" />
+    <link href="~/css/alertify.default.css" rel="stylesheet" />
 
 </head>
 <body class="animsition site-navbar-small page-login-v2 layout-full page-dark">
@@ -47,60 +49,67 @@
             background: transparent;
         }
     </style>
+    <div class="modal fade modal-slide-from-bottom" id="confirmationModal"
+        aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+        tabindex="-1"
+    >
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h3 class="modal-title">Enter verification code</h3>
+                </div>
+                <div class="modal-body">
+                    <h4>Email:</h4>
+                    <input type="text" id="verificationEmail" class="form-control" />
+                    <h4 style="margin-top: 20px">Verification code:</h4>
+                    <input type="text" id="verificationCode" class="form-control" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="confirmEmail()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Page -->
     <div class="page" data-animsition-in="fade-in" data-animsition-out="fade-out">
         <div class="page-content">
-            <div class="page-brand-info">
-                <div class="brand">
-                    <img class="brand-img" src="../assets/images/logo%402x.png" alt="...">
-                    <h2 class="brand-text font-size-40">DSider</h2>
-                </div>
-                <p class="font-size-20">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-            </div>
+            @*<div class="page-brand-info">
+                    <div class="brand">
+                        <img class="brand-img" src="../assets/images/logo%402x.png" alt="...">
+                        <h2 class="brand-text font-size-40">DSider</h2>
+                    </div>
+                    <p class="font-size-20">
+                        tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </div>*@
 
             <div class="page-login-main animation-slide-right animation-duration-1">
-                <div class="brand hidden-md-up">
-                    <img class="brand-img" src="../assets/images/logo-colored%402x.png" alt="...">
-                    <h3 class="brand-text font-size-40">Remark</h3>
+                <div class="brand">
+                    <img src="~/Images/DSiderLOGO.png" class="brand-img" />
                 </div>
-                <h3 class="font-size-24">Sign In</h3>
-
+                <h3 class="font-size-24" style="text-align:center;font-weight:900;">Register</h3>
+                <h3 style="text-align:center;font-weight:500;color:#787878">
+                    to get access to your files
+                </h3>
                 <form method="post">
                     <div class="form-group">
-                        <label class="sr-only" for="inputEmail">Email</label>
+                        <label for="inputEmail" style="font-weight:600;">Email</label>
                         <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email">
                     </div>
                     <div class="form-group">
-                        <label class="sr-only" for="inputPassword">Password</label>
+                        <label for="inputPassword" style="font-weight:600;">Password</label>
                         <input type="password" class="form-control" id="inputPassword" name="password"
                                placeholder="Password">
                     </div>
-                    <div class="form-group clearfix">
-                        <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
-                            <input type="checkbox" id="rememberMe" name="rememberMe">
-                            <label for="rememberMe">Remember me</label>
-                        </div>
-                        <a class="float-right" href="forgot-password.html">Forgot password?</a>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-block" id="btnLogin">Sign in</button>
+                    <button type="button" class="btn btn-primary btn-block" id="btnRegister" style="background:#4a8f7a;height:50px;font-size:18px; font-weight:500;">Sign up</button>
                 </form>
 
                 <footer class="page-copyright">
                     <p>© 2021. All RIGHT RESERVED.</p>
-                    <div class="social">
-                        <a class="btn btn-icon btn-round social-twitter mx-5" href="javascript:void(0)">
-                            <i class="icon bd-twitter" aria-hidden="true"></i>
-                        </a>
-                        <a class="btn btn-icon btn-round social-facebook mx-5" href="javascript:void(0)">
-                            <i class="icon bd-facebook" aria-hidden="true"></i>
-                        </a>
-                        <a class="btn btn-icon btn-round social-google-plus mx-5" href="javascript:void(0)">
-                            <i class="icon bd-google-plus" aria-hidden="true"></i>
-                        </a>
-                    </div>
                 </footer>
             </div>
 
@@ -150,6 +159,7 @@
     </script>
 
     <!-- Page -->
+    <script src="https://unpkg.com/aws-amplify@1.1.19/dist/aws-amplify.min.js"></script>
     <script src="~/assets/js/Site.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/asscrollable.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/slidepanel.min599c.js?v4.0.2"></script>
@@ -160,8 +170,88 @@
 
 
     <script src="~/assets/examples/js/dashboard/v1.min599c.js?v4.0.2"></script>
-    <script src="~/App/Controller/LoginController.js"></script>
     <script src="~/App/JcookieManagment.js"></script>
+    <script src="~/js/alertify.min.js"></script>
+    <script>
+        const Amplify = window['aws-amplify'];
+        Amplify.default.configure({ Auth: {
+            // REQUIRED - Amazon Cognito Identity Pool ID
+            identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo', 
+
+            // REQUIRED - Amazon Cognito Region
+            region: 'us-east-1', 
+
+            // OPTIONAL - Amazon Cognito User Pool ID
+            userPoolId: 'us-east-1_yRrXXBiWo',
+
+            // OPTIONAL - Amazon Cognito Web Client ID
+            userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu', 
+            }
+        });
+        
+        async function confirmEmail() {
+            const verificationCode = jQuery('#verificationCode').val();
+            const verificationEmail = jQuery('#verificationEmail').val();
+            const res = await Amplify.Auth.confirmSignUp(verificationEmail, verificationCode);
+            alertify.success("Your email was verified successfully.");
+            jQuery('#confirmationModal').modal('hide');
+
+            console.log('user add', verificationEmail)
+            $.ajax({
+                url: '/api/WebAPI_Authentication',
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify({ userName: verificationEmail }),
+                success: function (response) {
+                    if (response.userName != null) {
+                        document.location.href = '/Account/Login';
+                    }
+                }
+            });
+        }
+
+        jQuery(document).ready(function () {
+            jQuery(document).on('click', '#btnConfirm', function() {
+                jQuery('#confirmationModal').modal('show');
+            });
+
+            jQuery(document).on('click', '#btnRegister', async function () {
+                if (jQuery('#inputEmail').val() == '') {
+                    alertify.error('Username is mandatory.');
+                    jQuery('#inputEmail').focus();
+                    return;
+                }
+                if (jQuery('#inputPassword').val() == '') {
+                    alertify.error('Password is mandatory.');
+                    jQuery('#inputPassword').focus();
+                    return;
+                }
+                const username = jQuery('#inputEmail').val();
+                const password = jQuery('#inputPassword').val(); 
+
+                try {
+                    const { user } = await Amplify.Auth.signUp({
+                        username,
+                        password,
+                        attributes: {
+                            email: username
+                        },
+                        autoSignIn: { // optional - enables auto sign in after user is confirmed
+                            enabled: true,
+                        }
+                    });
+
+                    if (user.username) {
+                        jQuery('#confirmationModal').modal('show');
+                    } else {
+                        alertify.error('Password strength is not strong enough.');
+                    }
+                } catch (error) {
+                    alertify.error(error.message);
+                }
+            });
+        });
+    </script>
 </body>
 
 
