@@ -409,7 +409,7 @@ jQuery(document).on("click", "#simulate-button", function () {
 
     currentSubProjectProperties.from = "dashboard";
     $.ajax({
-        url: "http://44.200.150.66/api/simulate/dashboard/" + queryStringSubProjetID,
+        url: "http://54.163.192.99/api/simulate/dashboard/" + queryStringSubProjetID,
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
