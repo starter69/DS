@@ -1710,13 +1710,13 @@ function showPropertyValuesByNodeID(nodeID) {
         htmlCode +=
           '<input title="' +
           Val.description +
-          '" type="text" class="form-control propertyItem" style="width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
+          '" type="text" class="form-control propertyItem" style="background-color: rgb(230,230,230);width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
             Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, '$1,') +
           '" property="' +
-          Val.formulaTitle +
-          '" /> ';
+            Val.formulaTitle +
+            '" disabled="true" /> ';
         htmlCode +=
-          '<input type="button" class="btn btn-primary btnBrowseDataSource" property="' +
+          '<input type="button" class="btn btn-primary btnBrowseDataSource" disabled="true" property="' +
           Val.formulaTitle +
           '" style="display: inline-block;width: 10%;text-align: center;padding-left: 10px;background: #8080805c;" value="..."/>';
       }
