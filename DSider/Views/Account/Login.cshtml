@@ -156,19 +156,19 @@
     <script src="~/js/alertify.min.js"></script>
     <script>
         const Amplify = window['aws-amplify'];
-        Amplify.default.configure({
-            Auth: {
-                // REQUIRED - Amazon Cognito Identity Pool ID
-                identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo',
+        Amplify.default.configure({ Auth: {
+            // REQUIRED - Amazon Cognito Identity Pool ID
+            identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo', 
 
-                // REQUIRED - Amazon Cognito Region
-                region: 'us-east-1',
+            // REQUIRED - Amazon Cognito Region
+            region: 'us-east-1', 
 
-                // OPTIONAL - Amazon Cognito User Pool ID
-                userPoolId: 'us-east-1_yRrXXBiWo',
+            // OPTIONAL - Amazon Cognito User Pool ID
+            userPoolId: 'us-east-1_yRrXXBiWo',
 
-                // OPTIONAL - Amazon Cognito Web Client ID
-                userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu',
+            // OPTIONAL - Amazon Cognito Web Client ID
+            userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu', 
+            authenticationFlowType: 'USER_SRP_AUTH'
             }
         });
         
@@ -186,19 +186,36 @@
                     return;
                 }
                 const username = jQuery('#inputEmail').val();
-                const password = jQuery('#inputPassword').val(); 
+                const password = jQuery('#inputPassword').val();
 
+                document.location.href = '/Home';
+                createCookie('userName', username, 20);
+                
+                /*
                 try {
                     const user = await Amplify.Auth.signIn(username, password);
                     if (user.username) {
+                        // Returns an array of groups
+                        const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
+                        console.log(groups);
                         createCookie('userName', user.username, 20);
-                        document.location.href = '/Home';
+                        $.ajax({
+                            url: '/api/WebAPI_Authentication',
+                            type: "POST",
+                            contentType: 'application/json',
+                            data: JSON.stringify({ userName: user.username }),
+                            success: function (response) {
+                                document.location.href = '/Home';
+                            }
+                        });
                     } else {
                         alertify.error('Username or Password is not correct.');
                     }
                 } catch (error) {
                     alertify.error('Username or Password is not correct.');
                 }
+                */
+                
             });
         });
     </script>
