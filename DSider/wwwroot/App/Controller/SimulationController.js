@@ -71,28 +71,22 @@ jQuery(document).ready(function () {
       getParameterByName("folder") +
       "/" +
       getParameterByName("type");
+
+    modelInfo.from = "simulation";
     $.ajax({
-      url: "http://localhost:5000/" + subProjectID,
+      url: "http://44.200.150.66/api/simulate/" + subProjectID,
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       data: JSON.stringify(modelInfo),
-      success: function (response) {
-        alertify.success("Simulation succeed.");
-        setTimeout(function () {
-          location.href = redirectURL;
-        }, 12000);
-      },
-      error: function (response) {
-        alertify.error("Simulation failed.");
-        setTimeout(function () {
-          location.href = redirectURL;
-        }, 4000);
-      },
-      failure: function (response) {
-        alertify.error("Simulation failed.");
-      },
+      success: function (response) {},
+      error: function (response) {},
+      failure: function (response) {},
     });
+
+    setTimeout(function () {
+      location.href = redirectURL;
+    }, 8000);
   });
   //When right click on node in drawflow
   jQuery(document).on("contextmenu", ".drawflow-node", function (e) {
@@ -265,6 +259,7 @@ jQuery(document).ready(function () {
         var lng = parseFloat(
           jQuery('.propertyItem[property="location"]').val().split(",")[1]
         );
+        var parsedPosition = new google.maps.LatLng(lat, lng);
         marker.setPosition(parsedPosition);
       }
     }, 100);
@@ -376,12 +371,29 @@ jQuery(document).ready(function () {
         alertify.success("File has been downloaded.");
         fs.writeFile("test2.zip", data, { encoding: "base64" }, (err) => {
           if (err) throw err;
-          console.log("The file has been saved!");
         });
       },
       error: function (response) {},
       failure: function (response) {},
     });
+  });
+  // Longitude validation
+  jQuery("#longitudeInput").change(function () {
+    var longitude = jQuery("#longitudeInput").val();
+    if (Math.abs(longitude) <= 180) {
+      jQuery("#longitudeFeedback").css("display", "none");
+    } else {
+      jQuery("#longitudeFeedback").css("display", "block");
+    }
+  });
+  // Latitude Validation
+  jQuery("#latitudeInput").change(function () {
+    var latitude = jQuery("#latitudeInput").val();
+    if (Math.abs(latitude) <= 90) {
+      jQuery("#latitudeFeedback").css("display", "none");
+    } else {
+      jQuery("#latitudeFeedback").css("display", "block");
+    }
   });
   // Longitude validation
   jQuery("#longitudeInput").change(function () {
@@ -510,7 +522,6 @@ jQuery(document).ready(function () {
     var filteredCommets = allCompnentsComments.filter(function (el) {
       return el.nodeID === mNodeID;
     });
-    console.log(filteredCommets);
     var lastUser = "";
     var chatStatus = "";
     jQuery("#chatContent").empty();
@@ -903,20 +914,20 @@ function saveComponentDetailsModel(isBackPressed, gotoLevel) {
     error: function (response) {},
   });
 }
+
 //Save all components and propertiese of them
 function saveModel(statusType) {
   var mInfo = [];
   jQuery(".drawflow-node").each(function (Index, Val) {
     var priority = jQuery(this).find(".innerDiv").attr("priority");
     var mID = jQuery(this).attr("id");
-      mID = mID.replace("node-", "");
+    mID = mID.replace("node-", "");
     var mComponent = editor.getNodeFromId(mID);
     var nodePropertiese = [];
     var lat;
     var lng;
     //#region Properties
-      var mProperties = {};
-      console.log('>>>>>>', mComponent.data)
+    var mProperties = {};
     if (typeof mComponent.data.length != "undefined") {
       mProperties = JSON.parse(mComponent.data);
     }
@@ -990,8 +1001,7 @@ function saveModel(statusType) {
     });
   });
   jQuery("#btnSave").attr("disabled", "disabled");
-    //
-    console.log("<<<<<<<<<<<<", mInfo);
+  //
   $.ajax({
     url: "/api/WebAPI_Design/saveTemplateDesign",
     type: "POST",
@@ -1020,8 +1030,6 @@ function saveModel(statusType) {
       );
     },
   });
-
-    console.log(mInfo, 'save function');
   return mInfo;
 }
 //Sent json template and zoom level to web api
@@ -1040,17 +1048,14 @@ function saveSbProjectExportDataFlow(subProjectID, ExportData, statusType) {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function (response) {
-      if (statusType == 1) alertify.success("Model saved successfully");
-      else {
+      if (statusType != 1) {
         editor.clearModuleSelected();
         getComponentDetails(false, null);
       }
       jQuery("#btnSave").attr("disabled", false);
     },
     error: function (response) {
-      console.log(response);
-      if (statusType == 1) alertify.success("Model saved successfully");
-      else {
+      if (statusType != 1) {
         getComponentDetails(false, null);
       }
       jQuery("#btnSave").attr("disabled", false);
@@ -1213,7 +1218,6 @@ function checkPermissionSharedProject() {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function (response) {
-      console.log(response);
       if (response.length > 0) {
         if (
           response[0].permission == "Approve" &&
@@ -1654,7 +1658,7 @@ function getDataSources() {
 function showPropertyValuesByNodeID(nodeID) {
   jQuery(".dynamicProperties").remove();
   jQuery(".propertyItem").val("");
-    var componentType = $selectedNodeForContext[0].className.split(" ")[1];
+  var componentType = $selectedNodeForContext[0].className.split(" ")[1];
   if ($selectedNodeForContext.hasClass("battery")) componentType = "battery";
   else if (
     $selectedNodeForContext.hasClass("turbine") ||
@@ -1695,21 +1699,36 @@ function showPropertyValuesByNodeID(nodeID) {
           '<input title="' +
           Val.description +
           '" type="text" style="width:75%;display:inline-block;" class="form-control propertyItem" value="' +
-          Val.propertyValue +
+          Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, "$1,") +
           '" property="' +
           Val.formulaTitle +
           '" />';
       else {
+        let disabledItem = "";
+        let disabledItemStyle = "";
+
+        if (Val.propertyName == "Load factor") {
+          disabledItem = `disabled="true"`;
+          disabledItemStyle = `background-color: rgb(230,230,230);`;
+        }
+
         htmlCode +=
           '<input title="' +
           Val.description +
-          '" type="text" class="form-control propertyItem" style="width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
-          Val.propertyValue +
+          '" type="text" class="form-control propertyItem" style="' +
+          disabledItemStyle +
+          'width:75%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" value="' +
+          Val.propertyValue.replace(/(.)(?=(\d{3})+$)/g, "$1,") +
           '" property="' +
           Val.formulaTitle +
-          '" /> ';
+          '"' +
+          disabledItem +
+          " />";
+
         htmlCode +=
-          '<input type="button" class="btn btn-primary btnBrowseDataSource" property="' +
+          '<input type="button" class="btn btn-primary btnBrowseDataSource" ' +
+          disabledItem +
+          'property="' +
           Val.formulaTitle +
           '" style="display: inline-block;width: 10%;text-align: center;padding-left: 10px;background: #8080805c;" value="..."/>';
       }
@@ -3294,7 +3313,6 @@ function showpopup(e) {
   editor.precanvas.style.transform = "";
   editor.precanvas.style.left = editor.canvas_x + "px";
   editor.precanvas.style.top = editor.canvas_y + "px";
-  console.log(transform);
   //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
   //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
   editor.editor_mode = "fixed";
@@ -3330,3 +3348,118 @@ function changeMode(option) {
 }
 
 //#endregion DraFlow
+//#region Map
+function initialize() {
+  var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
+  var myOptions = {
+    zoom: 14,
+    center: myLatlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  marker = new google.maps.Marker({
+    draggable: true,
+    //position: myLatlng,
+    map: map,
+    title: "Component Location",
+  });
+  google.maps.event.addListener(marker, "dragend", function (event) {
+    jQuery('.propertyItem[property="location"]').val(
+      event.latLng.lat() + ", " + event.latLng.lng()
+    );
+  });
+  google.maps.event.addListener(map, "click", function (event) {
+    jQuery('.propertyItem[property="location"]').val(
+      event.latLng.lat() + ", " + event.latLng.lng()
+    );
+    marker.setPosition(event.latLng);
+  });
+}
+google.maps.event.addDomListener(window, "load", initialize());
+
+//#region Map All Components
+function initializeAllComponentsMap() {
+  var locations = [];
+  var myLatlng;
+  jQuery(".drawflow-node").each(function (Index, Val) {
+    var mID = jQuery(this).attr("id");
+    mID = mID.replace("node-", "");
+    var mComponent = editor.getNodeFromId(mID);
+    var icon = "";
+    if (mComponent.name == "battery") icon = "Battery.png";
+    else if (mComponent.name == "battery") icon = "Battery.png";
+    else if (mComponent.name == "turbine") icon = "Turbine.png";
+    else if (mComponent.name == "Solar") icon = "solar.png";
+    else if (mComponent.name == "Grid") icon = "Grid.png";
+    else if (mComponent.name == "cloud") icon = "cloud.png";
+    else if (mComponent.name == "WaterStorage") icon = "WaterStorage.png";
+    else if (mComponent.name == "GreenH2Storage") icon = "StorageH2.png";
+    else if (mComponent.name == "GrayH2Storage") icon = "GrayStorageH2.png";
+    else if (mComponent.name == "Mobility") icon = "Mobility.png";
+    else if (mComponent.name == "industriese") icon = "industriese.png";
+    else if (mComponent.name == "electrolyzer") icon = "electrolyzer.png";
+    else if (mComponent.name == "electricityLB")
+      icon = "loadBalancerElectricity.png";
+    else if (mComponent.name == "hydrogenLB") icon = "loadBalancer.png";
+    //#region Properties
+    var mProperties = {};
+    if (typeof mComponent.data.length != "undefined") {
+      mProperties = JSON.parse(mComponent.data);
+    }
+    var counter = 1;
+    var componentName = "";
+    for (var key in mProperties) {
+      if (key == "Name") {
+        componentName = mProperties[key];
+      }
+      if (key == "location") {
+        lat = mProperties[key].split(",")[0];
+        lng = mProperties[key].split(",")[1];
+        myLatlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+        var valueToPush = new Array();
+        valueToPush[0] = componentName;
+        valueToPush[1] = myLatlng;
+        valueToPush[2] = counter;
+        valueToPush[3] = icon;
+        locations.push(valueToPush);
+        //
+        counter += 1;
+      }
+    }
+    //#endregion Properties
+  });
+  var map = new google.maps.Map(
+    document.getElementById("map_canvasAllMarkers"),
+    {
+      zoom: 13,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+    }
+  );
+  var infowindow = new google.maps.InfoWindow();
+  var marker, i;
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map: map,
+      icon: {
+        url:
+          "https://datamapping-idgimap.s3.amazonaws.com/dsidericons/" +
+          locations[i][3],
+        scaledSize: { width: 50, height: 50 },
+      },
+    });
+
+    google.maps.event.addListener(
+      marker,
+      "click",
+      (function (marker, i) {
+        return function () {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        };
+      })(marker, i)
+    );
+  }
+}
+//#endregion Map

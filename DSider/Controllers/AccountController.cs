@@ -12,5 +12,10 @@ namespace DSider.Controllers
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }
