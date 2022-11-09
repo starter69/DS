@@ -29,13 +29,16 @@ jobs:
         cd ..
         echo $pwd
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"  
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
         aws_access_key: AKIA2NWMPB72LIDOX4RP
         aws_secret_key: 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
-        application_name: DSiderInc
-        environment_name: DSiderInc-dev
-        version_label: 1.${{ github.event.id }}
+        application_name: DSideropstest
+        environment_name: DSideropstest-dev
+        version_label: ${{ steps.date.outputs.date }}
         region: us-east-1
         deployment_package: deploy.zip
