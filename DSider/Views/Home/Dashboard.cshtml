@@ -1,9 +1,35 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    .capex-counter {
+        font-size: 32px;
+        font-weight: 700;
+        color: #666;
+        line-height: 28px;
+    }
 
+    .buttonload {
+        width: 100%;
+        max-width: 200px;
+        height: 35px;
+        border-radius: 8px;
+        background: #4A8B78;
+        color: #fff;
+        font-size: 20px;
+        outline: none;
+        border: 0;
+        cursor: pointer;
+        margin-top: 5px;
+    }
 
+    /* Add a right margin to each icon */
+    .fa {
+        margin-left: -12px;
+        margin-right: 8px;
+    }
+ 
     .plotControl {
         width: 70px;
         display: inline-block;
@@ -30,23 +56,23 @@
         margin-top: 15px;
     }
 
-        #tblDash3 th {
-            font-weight: 700;
-        }
+    #tblDash3 th {
+        font-weight: 700;
+    }
 
-        #tblDash3 th {
-            font-weight: 500;
-        }
+    #tblDash3 th {
+        font-weight: 500;
+    }
 
-        #tblDash3 th, #tblDash3 td {
-            padding: 5px;
-        }
+    #tblDash3 th, #tblDash3 td {
+        padding: 5px;
+    }
 
-            #tblDash3 td:first-child {
-                background-color: #0bb2d4;
-                color: white;
-                font-weight: 500;
-            }
+    #tblDash3 td:first-child {
+        background-color: #0bb2d4;
+        color: white;
+        font-weight: 500;
+    }
 
     .panel-title {
         font-size: 14px;
@@ -61,9 +87,9 @@
         font-size: 14px;
     }
 
-        .backToProject:hover {
-            color: #4A8B78;
-        }
+    .backToProject:hover {
+        color: #4A8B78;
+    }
 
     .projectNameContainer {
         font-weight: 900;
@@ -73,6 +99,21 @@
 
     .playControlIcon {
         cursor: pointer;
+    }
+
+    .btnSimulate {
+        width: 100%;
+        max-width: 200px;
+        height: 35px;
+        border-radius: 8px;
+        background: #4A8B78;
+        color: #fff;
+        font-size: 20px;
+        outline: none;
+        border: 0;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 5px;
     }
 </style>
 <link href="~/css/Range.css" rel="stylesheet" />
@@ -109,75 +150,6 @@
         <div class="tab-content pt-20">
             <div class="tab-pane active" id="exampleTabsOne" role="tabpanel">
                 <div class="row" data-plugin="matchHeight" data-by-row="true">
-                    @*<div class="col-xxl-12 col-lg-12" id="widgetCo2LinearChart">
-                        <div class="card card-shadow card-responsive">
-                            <div class="row">
-                                <div class="col-xxl-9 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerRates1" style="height: 300px"></div>
-                                            </figure>
-                                        </div>
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerVolumes1" style="height:300px"></div>
-                                            </figure>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-3 col-lg-3">
-                                    <div>
-                                        <h3 class="text-center">Configuration</h3>
-                                        <span>Source</span>
-                                        <div>
-                                        <input type="checkbox" name="rates1All" id="radioLine2" value="all" checked onchange="checkSource()"/> All
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1B" id="radioArea2" value="b" onchange="checkSource()" /> Field B
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1A" id="radioArea2" value="a" onchange="checkSource()" /> Field A
-                                        </div>
-                                        <div>
-                                        <input type="checkbox" name="rates1C" id="radioArea2" value="c" onchange="checkSource()" /> Field C
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-9 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerCost1" style="height: 300px"></div>
-                                            </figure>
-                                        </div>
-                                        <div class="col-xxl-6 col-lg-6">
-                                            <figure class="co2charts-figure">
-                                                <div id="containerCost2" style="height:300px"></div>
-                                            </figure>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-3 col-lg-3">
-                                    <div>
-                                    <span>Sink</span>
-                                    <div>
-                                        <input type="checkbox" name="rates1All" id="radioLine2" value="all" checked onchange="checkSink()" /> All
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1B" id="radioArea2" value="b" onchange="checkSink()" /> Field B
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1A" id="radioArea2" value="a" onchange="checkSink()" /> Field A
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="rates1C" id="radioArea2" value="c" onchange="checkSink()" /> Field C
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>*@
                         <div class="col-xxl-9 col-lg-9">
                             <!-- Widget Linearea Color -->
                             <div class="card card-shadow card-responsive" id="widgetLineareaColor">
@@ -189,6 +161,7 @@
                                                 <div class="col-lg-12 col-md-12" style="text-align:center;margin-top:10px;">
                                                     <input type="radio" name="chartTypeDash1" id="radioLine2" value="line" onchange="PlottingDash1()" /> Line Chart
                                                     <input type="radio" name="chartTypeDash1" id="radioArea2" value="hydrogen" checked onchange="PlottingDash1()" /> Total Hydrogen Chart
+                                                    <input type="radio" name="chartTypeDash1" id="radioArea2" value="area" checked onchange="PlottingDash1()" /> Stacked Area Chart
                                                 </div>
                                             </div>
                                             <div id="containerPlotDash2" style="height: 10px"></div>
@@ -210,7 +183,7 @@
                                             <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefaultOne"
                                                data-parent="#exampleAccordionDefault" aria-expanded="false"
                                                aria-controls="exampleCollapseDefaultOne">
-                                                Green Energey Capacity
+                                                Green Energy Capacity
                                             </a>
                                         </div>
                                         <div class="panel-collapse collapse" id="exampleCollapseDefaultOne" aria-labelledby="exampleHeadingDefaultOne"
@@ -222,7 +195,7 @@
                                                     <div class="container">
                                                         <form class="range">
                                                             <div class="form-group range__slider" style="width:42.5%;">
-                                                                <input type="range" step="100" id="turbine1">
+                                                                <input type="range" step="1" id="default">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -237,7 +210,7 @@
                                                     <div class="container">
                                                         <form class="range2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="turbine2">
+                                                                <input type="range" step="1" id="Turbines">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -252,7 +225,7 @@
                                                     <div class="container">
                                                         <form class="range4">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Solar1">
+                                                                <input type="range" step="1" id="Solar">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Loan Amount</label>
@@ -282,7 +255,7 @@
                                                     <div class="container">
                                                         <form class="rangeBat">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Battery1">
+                                                                <input type="range" step="1" id="Battery">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Bat Amount</label>
@@ -311,7 +284,7 @@
                                                     <div class="container">
                                                         <form class="rangeElec">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="50" id="Electrolyzer1">
+                                                                <input type="range" step="1" id="Electrolyzer">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Elec Amount</label>
@@ -340,7 +313,7 @@
                                                     <div class="container">
                                                         <form class="rangeGreenH2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="1000" id="GreenH2">
+                                                                <input type="range" step="1" id="rangeGreenH2">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Green Amount</label>
@@ -369,7 +342,7 @@
                                                     <div class="container">
                                                         <form class="rangeMob1">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="10" id="Mobility1">
+                                                                <input type="range" step="1" id="Industries">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Mob Amount</label>
@@ -384,7 +357,7 @@
                                                     <div class="container">
                                                         <form class="rangeMob2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="100" id="Mobility2">
+                                                                <input type="range" step="1" id="Mobility">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Mob Amount</label>
@@ -398,6 +371,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <button class="buttonload" id="simulate-button">
+                                    Simulate
+                                </button>
+                            </div>
                         </div>
                         <div class="col-xxl-9 col-lg-9">
                             <!-- Widget Statistic -->
@@ -406,26 +384,26 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="four col-md-3">
-                                                <div class="counter-box colored">
-                                                    <i class="fa fa-arrow-up"></i><span class="counter">{{statisticsList[0].capex}}</span>
-                                                    <p>capex</p>
+                                                <div class="counter-box">
+                                                    <span class="capex-counter">{{statisticsList[0].capex}}</span>
+                                                    <p>Capex</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-line-chart"></i><span class="counter">{{statisticsList[0].taxCredit}}</span>
+                                                    <span class="counter">{{statisticsList[0].taxCredit}}</span>
                                                     <p>Local Tax Credits</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-bar-chart"></i> <span class="counter">{{statisticsList[0].carbonTax}}</span>
+                                                    <span class="counter">{{statisticsList[0].carbonTax}}</span>
                                                     <p>Carbon Tax</p>
                                                 </div>
                                             </div>
                                             <div class="four col-md-3">
                                                 <div class="counter-box">
-                                                    <i class="fa fa-usd"></i><span class="counter">{{statisticsList[0].emissionMitgated}}</span>
+                                                    <span class="counter">{{statisticsList[0].emissionMitgated}}</span>
                                                     <p>Emissions mitigated</p>
                                                 </div>
                                             </div>
@@ -444,7 +422,7 @@
                                                 NPV
                                             </label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" value="{{statisticsList[0].npv}}" />
+                                                <input type="text" class="form-control" value="{{statisticsList[0].npv ? '$' + statisticsList[0].npv : ''}}" />
                                             </div>
                                         </div>
                                         <div class="row" style="padding:15px;">
@@ -497,13 +475,21 @@
                             <div class="card card-shadow card-responsive">
                                 <div class="card-block p-0">
                                     <div class="container" style="padding:15px;">
-                                        <h4>Cost</h4>
+                                        <h2>Cost</h2>
+                                        <div class="row mRow">
+                                            <div class="col-sm-4">
+                                                LCOE
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe : ''}}
+                                            </div>
+                                        </div>
                                         <div class="row mRow">
                                             <div class="col-sm-4">
                                                 LCOH
                                             </div>
                                             <div class="col-sm-8">
-                                                ${{statisticsList[0].lcoh}}
+                                                {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh : ''}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -511,7 +497,7 @@
                                                 Variable
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].variable}}%
+                                                {{statisticsList[0].variable ? '$' + statisticsList[0].variable : ''}}
                                             </div>
                                         </div>
                                         <div class="row mRow">
@@ -519,15 +505,7 @@
                                                 Period
                                             </div>
                                             <div class="col-sm-8">
-                                                {{statisticsList[0].period}}%
-                                            </div>
-                                        </div>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                Other
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].other}}%
+                                                {{statisticsList[0].period ? '$' + statisticsList[0].period : ''}}
                                             </div>
                                         </div>
                                     </div>
@@ -656,18 +634,17 @@
                                             <tr>
                                                 <th></th>
                                                 <th>Capex</th>
+                                                <th>Variable</th>
+                                                <th>Period</th>
                                                 <th>Local Tax Credits</th>
                                                 <th>
                                                     Carbon Tax
                                                 </th>
-                                                <th>Emissions mitigated</th>
+                                                <th>LCOE $</th>
+                                                <th>LCOH $</th>
                                                 <th>NPV</th>
                                                 <th>IRR</th>
-                                                <th>Supply Reliability $</th>
-                                                <th>LCOH $</th>
-                                                <th>Variable %</th>
-                                                <th>Period %</th>
-                                                <th>Other %</th>
+                                                <th>Emissions mitigated</th>
 
                                             </tr>
                                         </thead>
@@ -675,19 +652,17 @@
                                             <tr ng-repeat="item in statisticsList">
                                                 <td>{{item.subProject}}</td>
                                                 <td>{{item.capex}}</td>
+                                                <td>{{item.variable}}</td>
+                                                <td>{{item.period}}</td>
                                                 <td>{{item.taxCredit}}</td>
                                                 <td>
                                                     {{item.carbonTax}}
                                                 </td>
-                                                <td>{{item.emissionMitgated}}</td>
+                                                <td>{{item.lcoe}}</td>
+                                                <td>{{item.lcoh}}</td>
                                                 <td>{{item.npv}}</td>
                                                 <td>{{item.irr}}</td>
-                                                <td>{{item.supplyReliability}}</td>
-                                                <td>{{item.lcoh}}</td>
-                                                <td>{{item.variable}}</td>
-                                                <td>{{item.period}}</td>
-                                                <td>{{item.other}}</td>
-
+                                                <td>{{item.emissionMitgated}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

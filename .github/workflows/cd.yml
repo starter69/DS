@@ -2,7 +2,7 @@ name: Deploy develop on merge
 on:
   pull_request:
     branches:
-    - develop
+    - develop | production | staging | opsbranch
     #types: [closed] # check pr is closed
 
 jobs:
@@ -42,6 +42,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
         application_name: DSideropstest
         environment_name: DSideropstest-dev
-        version_label: ${{ steps.date.outputs.date }}
+        version_label: v${{ steps.date.outputs.date }}
         region: us-east-1
         deployment_package: DSider/deploy.zip

@@ -210,10 +210,12 @@ namespace DSider.Controllers
         //Get all sub projects
         [Route("getAllSubProjects")]
         [HttpGet]
-        public List<SubProjects> getAllSubProjects()
+        public List<SubProjects> getAllSubProjects(string subProjectId)
         {
             mongoDatabase = GetMongoDatabase();
             List<SubProjects> resultList = new List<SubProjects>();
+            var filterSubProject = Builders<SubProjects>.Filter.Where(p => p.id == subProjectId);
+            var collectionSub = mongoDatabase.GetCollection<SubProjects>("SubProjects").Find(filterSubProject).ToList();
             try
             {
                 string userName = Request.Cookies["userName"];
@@ -227,11 +229,12 @@ namespace DSider.Controllers
                     var subProjects = mongoDatabase.GetCollection<SubProjects>("SubProjects").Find(filterSub).ToList();
                     foreach (var item in subProjects)
                     {
-                        resultList.Add(new SubProjects()
-                        {
-                            id = item.id,
-                            name = item.name
-                        });
+                        if (item.subProject_Type == collectionSub[0].subProject_Type)
+                            resultList.Add(new SubProjects()
+                            {
+                                id = item.id,
+                                name = item.name
+                            });
                     }
 
                 }
@@ -241,6 +244,17 @@ namespace DSider.Controllers
             {
             }
             return resultList;
+        }
+
+        [Route("getCurrentSubProject")]
+        [HttpGet]
+        public SubProjects getCurrentSubProject(string subProjectId)
+        {
+            mongoDatabase = GetMongoDatabase();
+            var filterSubProject = Builders<SubProjects>.Filter.Where(p => p.id == subProjectId);
+            var subProject = mongoDatabase.GetCollection<SubProjects>("SubProjects").Find(filterSubProject).First();
+            
+            return subProject;
         }
         //Get projects and sub projects together
         [Route("getProjectAndSubProjectHierarchy")]
