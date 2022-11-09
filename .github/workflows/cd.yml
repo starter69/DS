@@ -1,6 +1,6 @@
 name: Deploy develop on merge
 on:
-  push:
+  pull_request:
     branches:
     - develop
     #types: [closed] # check pr is closed
