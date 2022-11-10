@@ -2,12 +2,12 @@ name: Deploy develop on merge
 on:
   pull_request:
     branches:
-    - develop
-    types: [closed] # check pr is closed
+    - develop | production | staging | opsbranch
+    #types: [closed] # check pr is closed
 
 jobs:
   build_zip_deploy:
-    if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
+    #if: ${{ github.event.pull_request.merged }}  # check PR is merged nad closed
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3 # fetch latest commit
@@ -18,24 +18,30 @@ jobs:
     - name: Restore dependencies
       run: |
         cd ./DSider
+        echo $pwd
         dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release -o site
+      run: |
+        cd ./DSider
+        echo $pwd
+        dotnet publish --configuration Release -o site
     - name: Zip Site
       run: |
-        cd ./site
+        cd ./DSider/site
         echo $pwd
         Compress-Archive -Path ./* -DestinationPath ../site.zip
         cd ..
-        echo $pwd
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
-        aws_access_key: AKIA2NWMPB72LIDOX4RP
-        aws_secret_key: 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
-        application_name: DSiderInc
-        environment_name: DSiderInc-dev
-        version_label: 1.${{ github.event.id }}
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+        application_name: DSideropstest
+        environment_name: DSideropstest-dev
+        version_label: v${{ steps.date.outputs.date }}
         region: us-east-1
-        deployment_package: deploy.zip
+        deployment_package: DSider/deploy.zip
