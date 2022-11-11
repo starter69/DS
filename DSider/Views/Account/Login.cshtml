@@ -188,33 +188,41 @@
                 const username = jQuery('#inputEmail').val();
                 const password = jQuery('#inputPassword').val();
 
+                /*
                 createCookie('userName', username, 20);
                 document.location.href = '/Home';
+                */
                 
-                /*
+                
                 try {
                     const user = await Amplify.Auth.signIn(username, password);
                     if (user.username) {
                         // Returns an array of groups
                         const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
-                        console.log(groups);
-                        createCookie('userName', user.username, 20);
+
+                        if (!groups) {
+                            alertify.error('Your account has not been approved yet.');
+                            return;
+                        }
+                        
                         $.ajax({
                             url: '/api/WebAPI_Authentication',
                             type: "POST",
                             contentType: 'application/json',
                             data: JSON.stringify({ userName: user.username }),
                             success: function (response) {
+                                createCookie('userName', response.userName, 20);
                                 document.location.href = '/Home';
                             }
                         });
+
                     } else {
                         alertify.error('Username or Password is not correct.');
                     }
                 } catch (error) {
                     alertify.error('Username or Password is not correct.');
                 }
-                */
+                
                 
             });
         });
