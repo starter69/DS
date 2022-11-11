@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DSider
 {
@@ -21,6 +22,8 @@ namespace DSider
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+                    webBuilder.UseIISIntegration();
                 });
     }
 }

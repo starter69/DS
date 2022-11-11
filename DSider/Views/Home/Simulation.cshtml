@@ -275,10 +275,10 @@
                                 <option value="Carbon_MitigationLevel1">Carbon Mitigation</option>
                                 <option value="Carbon_MitigationLevel2">Carbon Mitigation Level 2</option>
                                 <option value="Green_HydrogenModel">Green Hydrogen</option>
-                                <option value="realEstateLevel">Real Estate</option>
-                                <option value="FleetLevel">Fleet</option>
+                                @* <option value="realEstateLevel">Real Estate</option> *@
+                                @* <option value="FleetLevel">Fleet</option> *@
                                 <option value="RefineryLevel">Refinery</option>
-                                <option value="GeoThermalLevel">Geo Thermal</option>
+                                @* <option value="GeoThermalLevel">Geo Thermal</option> *@
                             </select>
                         </div>
                         @*@if (modelType == "Green_Hydrogen")
@@ -473,7 +473,7 @@
                         <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="WasteHeat" title="Waste Heat Recovery">
                             <img src="~/Images/GeoThermal/WasteHeat.png" class="FlowIcons" data-node="WasteHeat" />
                         </div>
-                        <hr />
+                        @* <hr />
                         <h5 style="margin-bottom:10px;">User Defined Objects</h5>
                         <div id="userDeefinedObjectContainer" style="display:inline;">
 
@@ -485,7 +485,7 @@
                         <h5 style="margin-bottom:10px;">Macro Objects</h5>
                         <div id="userMacrosContainer" style="display:inline;">
 
-                        </div>
+                        </div> *@
 
                     </div>
                 </div>
@@ -508,7 +508,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                            aria-controls="collapseTwo">
                             General Objects
                         </a>
@@ -548,7 +548,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                            aria-controls="collapseThree">
                             Data Source
                         </a>
@@ -587,7 +587,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingLibraries">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseLibraries" aria-expanded="false" aria-controls="collapseLibraries">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseLibraries">
                             Libraries
                         </a>
                     </h4>
@@ -625,7 +625,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingDashbboard">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDashbboard" aria-expanded="false" aria-controls="collapseDashbboard">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseDashbboard">
                             Dashboard
                         </a>
                     </h4>
