@@ -115,6 +115,48 @@
         cursor: pointer;
         margin-top: 5px;
     }
+
+
+    table[id^="highcharts-data-table"] {
+        display: none;
+    }
+
+    #dataTableBody table[id^="highcharts-data-table"] {
+        padding: 10px;
+        display: block;
+        min-width: 100%;
+        height: 70vh;
+        overflow: scroll;
+    }
+
+    #dataTableBody table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        background: white;
+        min-width: 100%;
+        margin-top: 10px;
+        font-family: sans-serif;
+        font-size: 0.9em;
+    }
+
+    #dataTableBody td, th, caption {
+        border: 1px solid silver;
+        padding: 0.5em;
+    }
+
+    #dataTableBody tr:nth-child(even), thead tr {
+        background: #f8f8f8;
+    }
+
+    #dataTableBody tr:hover {
+        background: #eff;
+    }
+
+    #dataTableBody caption {
+        border-bottom: none;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
 </style>
 <link href="~/css/Range.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
@@ -122,6 +164,26 @@
 <link rel="stylesheet" href="~/global/vendor/c3/c3.min599c.css?v4.0.2">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <div class="page-content container-fluid" ng-app="Tariana" ng-controller="DashboardController">
+    <div class="modal fade modal-slide-from-bottom" id="dataTableModal"
+        aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1"
+    >
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Data table</h4>
+                </div>
+                <div id="dataTableBody" class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row" style="margin-bottom:10px; background-color:white;padding:8px;">
         <div class="col-sm-12" style="text-align:center;">
             <span class="backToProject" ng-click="backToSimulation()">
@@ -272,19 +334,19 @@
                                             <a class="panel-title collapsed" data-toggle="collapse" href="#exampleCollapseDefaultThree"
                                                data-parent="#exampleAccordionDefault" aria-expanded="false"
                                                aria-controls="exampleCollapseDefaultThree">
-                                                Electrolyzer Capacity
+                                                Electrolyser Capacity
                                             </a>
                                         </div>
                                         <div class="panel-collapse collapse" id="exampleCollapseDefaultThree" aria-labelledby="exampleHeadingDefaultThree"
                                              role="tabpanel">
                                             <div class="panel-body">
                                                 <div class="scrollContainer">
-                                                    <label class="rangeTitle">Electrolyzer</label>
+                                                    <label class="rangeTitle">Electrolyser</label>
                                                     <label class="rangeTitleMin">500</label>
                                                     <div class="container">
                                                         <form class="rangeElec">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="1" id="Electrolyzer">
+                                                                <input type="range" step="1" id="Electrolyser">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Elec Amount</label>
@@ -313,7 +375,7 @@
                                                     <div class="container">
                                                         <form class="rangeGreenH2">
                                                             <div class="form-group range__slider" style="width:100%;">
-                                                                <input type="range" step="1" id="rangeGreenH2">
+                                                                <input type="range" step="1" id="Green">
                                                             </div>
                                                             <div class="form-group range__value" style="visibility:hidden; position:absolute;">
                                                                 <label>Green Amount</label>
@@ -444,68 +506,38 @@
                                     <div class="container" style="padding:15px;">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h4>Supply Reliability</h4>
+                                                <h3>Supply Reliability</h3>
                                                 <div class="mTitle">Maximum H2 shortfall</div>
                                                 <div class="mTitle">Annual cumulative H2 shortfall</div>
                                                 <div class="mTitle">Maximum Outage period</div>
                                                 <div class="mTitle">Power LF</div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <div style="text-align:center;">
-                                                    <i class="fa fa-line-chart" style="font-size:65px;color:#ecc384"></i>
+                                                <h3>Cost</h3>
+                                                <div class="row">
+                                                    <div class="col-sm-5 mTitle">LCOE</div>
+                                                    <div class="col-sm-7 mTitle">
+                                                        {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe : ''}}
+                                                    </div>
                                                 </div>
-                                                <div style="text-align:center;color:black;">
-                                                    $ {{statisticsList[0].supplyReliability}}
+                                                <div class="row">
+                                                    <div class="col-sm-5 mTitle">LCOH</div>
+                                                    <div class="col-sm-7 mTitle">
+                                                        {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh : ''}}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card card-shadow card-responsive">
-                                <div class="card-block p-0">
-                                    <div class="container" style="padding:15px;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="card card-shadow card-responsive">
-                                <div class="card-block p-0">
-                                    <div class="container" style="padding:15px;">
-                                        <h2>Cost</h2>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                LCOE
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe : ''}}
-                                            </div>
-                                        </div>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                LCOH
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh : ''}}
-                                            </div>
-                                        </div>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                Variable
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].variable ? '$' + statisticsList[0].variable : ''}}
-                                            </div>
-                                        </div>
-                                        <div class="row mRow">
-                                            <div class="col-sm-4">
-                                                Period
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{statisticsList[0].period ? '$' + statisticsList[0].period : ''}}
+                                                <div class="row">
+                                                    <div class="col-sm-5 mTitle">Variable</div>
+                                                    <div class="col-sm-7 mTitle">
+                                                        {{statisticsList[0].variable ? '$' + statisticsList[0].variable : ''}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5 mTitle">Period</div>
+                                                    <div class="col-sm-7 mTitle">
+                                                        {{statisticsList[0].period ? '$' + statisticsList[0].period : ''}}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
