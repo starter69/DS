@@ -3350,7 +3350,7 @@ function changeMode(option) {
 //#endregion DraFlow
 //#region Map
 function initialize() {
-  var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
+  var myLatlng = new google.maps.LatLng(30.249748320068758, -97.7423095703125);
   var myOptions = {
     zoom: 14,
     center: myLatlng,
