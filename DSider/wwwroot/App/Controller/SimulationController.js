@@ -1317,8 +1317,10 @@ function saveMacro() {
           value: mProperties[key],
         });
         if (key == "location") {
-          lat = mProperties[key].split(",")[0];
-          lng = mProperties[key].split(",")[1];
+          // lat = mProperties[key].split(",")[0] || 30.249748320068758;
+          // lng = mProperties[key].split(",")[1] || -97.7423095703125;
+          lat = 30.249748320068758;
+          lng = -97.7423095703125;
         }
       }
       //#endregion Properties
