@@ -49,11 +49,13 @@ jobs:
         APP_NAME: DSiderInc
     - name: Check Branch production
       if:  ${{ github.ref == 'refs/heads/production' }}
+      run: echo "Check Branch production"
       env:
         ENV_NAME: DSiderinc-prod
         APP_NAME: DSiderinc-prod
     - name: Check Branch staging
       if:  ${{ github.ref == 'refs/heads/staging' }}
+      run: echo "Check Branch staging"
       env:
         ENV_NAME: DSiderinc-stage
         APP_NAME: DSider
