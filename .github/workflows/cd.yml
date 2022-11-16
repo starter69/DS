@@ -36,7 +36,7 @@ jobs:
         cd ..
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Testing branch name format
-      run: echo "Branch  ${{ github.ref }}"
+      run:  echo ${GITHUB_REF##*/}
     - name: Check Branch opsbranch
       if:  ${{ github.ref == 'opsbranch' }}
       run: echo "Check Branch opsbranch"
