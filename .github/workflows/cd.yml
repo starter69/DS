@@ -37,24 +37,24 @@ jobs:
     - name: Check Branch develop
       env:
           BRANCH_NAME: ${{github.ref}}
+      if: (BRANCH_NAME == 'develop')
       run: |
-          if (BRANCH_NAME == 'develop') then
-            ENV_NAME= 'DSiderInc-dev'
-            APP_NAME= 'DSiderInc'
+          ENV_NAME= 'DSiderInc-dev'
+          APP_NAME= 'DSiderInc'
     - name: Check Branch production
       env:
           BRANCH_NAME: ${{github.ref}}
+      if: (BRANCH_NAME == 'production')
       run: |
-          if (BRANCH_NAME == 'production') then
-            ENV_NAME= 'DSiderinc-prod'
-            APP_NAME= 'DSiderinc-prod'
+          ENV_NAME= 'DSiderinc-prod'
+          APP_NAME= 'DSiderinc-prod'
     - name: Check Branch staging
       env:
           BRANCH_NAME: ${{github.ref}}
+      if: (BRANCH_NAME == 'staging')
       run: |
-          if (BRANCH_NAME == 'staging') then
-            ENV_NAME= 'DSiderinc-stage'
-            APP_NAME= 'DSider'
+          ENV_NAME= 'DSiderinc-stage'
+          APP_NAME= 'DSider'
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
