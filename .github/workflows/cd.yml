@@ -36,29 +36,27 @@ jobs:
         cd ..
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Check Branch opsbranch
-      run: |
-          if (${{github.ref}} == 'opsbranch') then
-            ENV_NAME= 'DSideropstest-dev'
-            APP_NAME= 'DSideropstest'
-          fi
+      if:  ${{ github.ref == 'refs/heads/opsbranch' }}
+      run: echo "Check Branch opsbranch"
+      env:
+        ENV_NAME: DSideropstest-dev
+        APP_NAME: DSideropstest
     - name: Check Branch develop
-      run: |
-          if (${{github.ref}} == 'develop') then
-            ENV_NAME= 'DSiderInc-dev'
-            APP_NAME= 'DSiderInc'
-          fi
+      if:  ${{ github.ref == 'refs/heads/develop' }}
+      run: echo "Check Branch develop"
+      env:
+        ENV_NAME: DSiderInc-dev
+        APP_NAME: DSiderInc
     - name: Check Branch production
-      run: |
-          if (${{github.ref}} == 'production') then
-            ENV_NAME= 'DSiderinc-prod'
-            APP_NAME= 'DSiderinc-prod'
-          fi
+      if:  ${{ github.ref == 'refs/heads/production' }}
+      env:
+        ENV_NAME: DSiderinc-prod
+        APP_NAME: DSiderinc-prod
     - name: Check Branch staging
-      run: |
-          if (${{github.ref}} == 'staging') then
-            ENV_NAME= 'DSiderinc-stage'
-            APP_NAME= 'DSider'
-          fi
+      if:  ${{ github.ref == 'refs/heads/staging' }}
+      env:
+        ENV_NAME: DSiderinc-stage
+        APP_NAME: DSider
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
