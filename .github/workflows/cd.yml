@@ -2,7 +2,9 @@ name: Deploy develop on merge
 on:
   pull_request:
     branches:
-    - develop | production | staging | opsbranch
+    - develop
+    - production
+    - staging 
     #types: [closed] # check pr is closed
 
 jobs:
@@ -32,6 +34,24 @@ jobs:
         Compress-Archive -Path ./* -DestinationPath ../site.zip
         cd ..
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
+    - name: Check Branch develop
+      env:
+          BRANCH_NAME: ${{GITHUB_REF_NAME}}
+      run: |
+          if (BRANCH_NAME == 'develop'); then
+            ENV_NAME= 'DSiderInc-dev'
+    - name: Check Branch production
+      env:
+          BRANCH_NAME: ${{GITHUB_REF_NAME}}
+      run: |
+          if (BRANCH_NAME == 'production'); then
+            ENV_NAME= 'DSiderinc-prod'
+    - name: Check Branch staging
+      env:
+          BRANCH_NAME: ${{GITHUB_REF_NAME}}
+      run: |
+          if (BRANCH_NAME == 'staging'); then
+            ENV_NAME= 'DSiderinc-stage'
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
@@ -41,7 +61,7 @@ jobs:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
         application_name: DSideropstest
-        environment_name: DSideropstest-dev
+        environment_name: ENV_NAME
         version_label: v${{ steps.date.outputs.date }}
         region: us-east-1
         deployment_package: DSider/deploy.zip
