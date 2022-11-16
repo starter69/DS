@@ -38,21 +38,21 @@ jobs:
       env:
           BRANCH_NAME: ${{github.ref}}
       run: |
-          if (BRANCH_NAME == 'develop'); then
+          if (BRANCH_NAME == 'develop') then
             ENV_NAME= 'DSiderInc-dev'
             APP_NAME= 'DSiderInc'
     - name: Check Branch production
       env:
           BRANCH_NAME: ${{github.ref}}
       run: |
-          if (BRANCH_NAME == 'production'); then
+          if (BRANCH_NAME == 'production') then
             ENV_NAME= 'DSiderinc-prod'
             APP_NAME= 'DSiderinc-prod'
     - name: Check Branch staging
       env:
           BRANCH_NAME: ${{github.ref}}
       run: |
-          if (BRANCH_NAME == 'staging'); then
+          if (BRANCH_NAME == 'staging') then
             ENV_NAME= 'DSiderinc-stage'
             APP_NAME= 'DSider'
     - name: Get current date
