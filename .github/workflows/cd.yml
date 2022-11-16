@@ -36,30 +36,22 @@ jobs:
         cd ..
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
     - name: Check Branch develop
-      env:
-          BRANCH_NAME: ${{github.ref}}
-      if: (BRANCH_NAME == 'develop')
+      if: ( ${{github.ref}} == 'develop')
       run: |
           ENV_NAME= 'DSiderInc-dev'
           APP_NAME= 'DSiderInc'
     - name: Check Branch production
-      env:
-          BRANCH_NAME: ${{github.ref}}
-      if: (BRANCH_NAME == 'production')
+      if: ( ${{github.ref}} == 'production')
       run: |
           ENV_NAME= 'DSiderinc-prod'
           APP_NAME= 'DSiderinc-prod'
     - name: Check Branch staging
-      env:
-          BRANCH_NAME: ${{github.ref}}
-      if: (BRANCH_NAME == 'staging')
+      if: ( ${{github.ref}} == 'staging')
       run: |
           ENV_NAME= 'DSiderinc-stage'
           APP_NAME= 'DSider'
     - name: Check Branch Opsbranch
-      env:
-          BRANCH_NAME: ${{github.ref}}
-      if: (BRANCH_NAME == 'opsbranch')
+      if: ( ${{github.ref}} == 'opsbranch')
       run: |
           ENV_NAME= 'DSideropstest-dev'
           APP_NAME= 'DSideropstest'
