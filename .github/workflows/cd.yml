@@ -39,10 +39,10 @@ jobs:
       run: echo ${{ github.base_ref }}
     - name: Check Branch opsbranch
       if:  ${{ github.base_ref == 'opsbranch' }}
-      with:
+      env:
         ENV_NAME: DSideropstest-dev
         APP_NAME: DSideropstest
-      #run: echo Check Branch opsbranch ENV_NAME APP_NAME
+      run: echo Check Branch opsbranch ENV_NAME APP_NAME
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
       run: echo "Check Branch develop"
@@ -69,8 +69,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-        application_name: APP_NAME
-        environment_name: ENV_NAME
+        application_name: $APP_NAME
+        environment_name: $ENV_NAME
         version_label: v${{ steps.date.outputs.date }}
         region: us-east-1
         deployment_package: DSider/deploy.zip
