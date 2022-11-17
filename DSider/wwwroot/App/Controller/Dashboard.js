@@ -217,7 +217,6 @@ function updatePropertyValue(modelType, newValue) {
     let propertyData = [];
     if (property.data) propertyData = JSON.parse(property.data);
     if (propertyData.Name.search(modelType) !== -1) {
-      console.log(propertyData.Name, modelType);
       switch (property.class) {
         case "turbine":
           propertyData.Power_Capacity = newValue;
