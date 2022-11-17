@@ -982,28 +982,28 @@ function showPlotDash1(dataToPlot) {
         case 0:
           data = response.map((a) => [
             new Date(a.timeUTC).getTime(),
-            Number(a.pwr_turbine_out.toFixed(2)),
+            a.pwr_turbine_out,
           ]);
           Val = "PWR Turbine Out";
           break;
         case 1:
           data = response.map((a) => [
             new Date(a.timeUTC).getTime(),
-            Number(a.pwr_elec_loadbalancer_to_electrolyzer.toFixed(2)),
+            a.pwr_elec_loadbalancer_to_electrolyzer,
           ]);
           Val = "PWR Elec Load Balancer To Electrolyzer";
           break;
         case 2:
           data = response.map((a) => [
             new Date(a.timeUTC).getTime(),
-            Number(a.pwr_battery_storage.toFixed(2)),
+            a.pwr_battery_storage,
           ]);
           Val = "PWR Battery Storage";
           break;
         case 3:
           data = response.map((a) => [
             new Date(a.timeUTC).getTime(),
-            Number(a.pwr_battery_cap.toFixed(2)),
+            a.pwr_battery_cap,
           ]);
           Val = "PWR Battery Capacity";
           break;
@@ -1017,7 +1017,7 @@ function showPlotDash1(dataToPlot) {
         case 5:
           data = response.map((a) => [
             new Date(a.timeUTC).getTime(),
-            Number(a.pwr_solar_avail.toFixed(2)),
+            a.pwr_solar_avail,
           ]);
           Val = "PWR Solar Out";
           break;
@@ -1057,31 +1057,23 @@ function showPlotDash1(dataToPlot) {
       var data = [];
       switch (i) {
         case 0:
-          data = response.map((a) =>
-            Number(a.h2_electrolyzer_out_re.toFixed(2))
-          );
+          data = response.map((a) => a.h2_electrolyzer_out_re);
           Val = "Direct (RE) (Kg/h)";
           break;
         case 1:
-          data = response.map((a) =>
-            Number(a.h2_electrolyzer_out_bat.toFixed(2))
-          );
+          data = response.map((a) => a.h2_electrolyzer_out_bat);
           Val = "Battery (Kg/h)";
           break;
         case 2:
-          data = response.map((a) =>
-            Number(a.h2_electrolyzer_out_grid.toFixed(2))
-          );
+          data = response.map((a) => a.h2_electrolyzer_out_grid);
           Val = "Gray Power (Kg/h)";
           break;
         case 3:
-          data = response.map((a) => Number(a.h2_greenstore_out.toFixed(2)));
+          response.map((a) => a.h2_greenstore_out);
           Val = "Storage (Kg/h)";
           break;
         case 4:
-          data = response.map((a) =>
-            Number(a.h2_externalsupply_out.toFixed(2))
-          );
+          data = response.map((a) => a.h2_externalsupply_out);
           Val = "External (Kg/h)";
           break;
       }
