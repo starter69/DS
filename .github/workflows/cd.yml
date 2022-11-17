@@ -40,8 +40,8 @@ jobs:
     - name: Check Branch opsbranch
       if:  ${{ github.base_ref == 'opsbranch' }}
       env:
-        ENV_NAME: DSideropstest-dev
-        APP_NAME: DSideropstest
+        ENV_NAME: "DSideropstest-dev"
+        APP_NAME: "DSideropstest"
       run: echo "Check Branch opsbranch $ENV_NAME $APP_NAME"
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
