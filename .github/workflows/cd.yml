@@ -38,7 +38,7 @@ jobs:
     - name: Testing branch name format
       run: echo ${{ github.base_ref }}
     - name: Check Branch opsbranch
-      if:  ${{ github.ref == 'opsbranch' }}
+      if:  ${{ github.base_ref == 'opsbranch' }}
       run: echo "Check Branch opsbranch"
       env:
         ENV_NAME: DSideropstest-dev
