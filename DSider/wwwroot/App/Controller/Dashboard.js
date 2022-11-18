@@ -56,6 +56,7 @@ Tariana.controller("DashboardController", function ($scope) {
               npv: numberWithCommas(parseInt(Val.npv)),
               irr: parseFloat(Val.irr),
               supplyReliability: parseFloat(Val.supplyReliability),
+              lcoe: parseFloat(Val.lcoe),
               lcoh: parseFloat(Val.lcoh),
               variable: parseFloat(Val.variable),
               period: numberWithCommas(parseInt(Val.period)),
@@ -217,7 +218,6 @@ function updatePropertyValue(modelType, newValue) {
     let propertyData = [];
     if (property.data) propertyData = JSON.parse(property.data);
     if (propertyData.Name.search(modelType) !== -1) {
-      console.log(propertyData.Name, modelType);
       switch (property.class) {
         case "turbine":
           propertyData.Power_Capacity = newValue;
@@ -907,6 +907,7 @@ function showPlotDash2ByType(dataToPlot) {
         label: {
           enabled: false,
         },
+        type: "spline",
         zoneAxis: "x",
         yAxis: foundYAxsis == -1 ? yAxis.length - 1 : foundYAxsis,
         name: Val + "(" + ValSub.subProjectName + ")",
@@ -922,10 +923,110 @@ function showPlotDash2ByType(dataToPlot) {
     });
   });
 
-  //
-  Highcharts.setOptions({
-    global: {
-      useUTC: true,
+  var chart = new Highcharts.Chart({
+    chart: {
+      renderTo: "container2",
+      zoomType: "xy",
+    },
+    exporting: {
+      enabled: true,
+      buttons: {
+        contextButton: {
+          menuItems: [
+            {
+              textKey: "printChart",
+              onclick: function () {
+                this.print();
+              },
+            },
+            {
+              separator: true,
+            },
+            {
+              textKey: "downloadPNG",
+              onclick: function () {
+                this.exportChart();
+              },
+            },
+            {
+              textKey: "downloadJPEG",
+              onclick: function () {
+                this.exportChart({
+                  type: "image/jpeg",
+                });
+              },
+            },
+            {
+              separator: true,
+            },
+            {
+              textKey: "downloadPDF",
+              onclick: function () {
+                this.exportChart({
+                  type: "application/pdf",
+                });
+              },
+            },
+            {
+              textKey: "downloadSVG",
+              onclick: function () {
+                this.exportChart({
+                  type: "image/svg+xml",
+                });
+              },
+            },
+            {
+              separator: true,
+            },
+            {
+              textKey: "downloadCSV",
+              onclick: function () {
+                this.downloadCSV();
+              },
+            },
+            {
+              textKey: "downloadXLS",
+              onclick: function () {
+                this.downloadXLS();
+              },
+            },
+            {
+              textKey: "viewData",
+              onclick: function () {
+                this.viewData();
+                jQuery("#dataTableModal").modal("show");
+                const dataTable = jQuery(".highcharts-data-table").html();
+                jQuery("#dataTableBody").html(dataTable);
+              },
+            },
+          ],
+        },
+      },
+    },
+    xAxis: {
+      title: {
+        text: "Time step (Hours)",
+      },
+      categories: xAxis,
+      labels: {
+        rotation: 90,
+        style: { fontSize: "14px" },
+      },
+    },
+    title: {
+      text: "",
+      align: "center",
+    },
+    series: seriesData,
+    yAxis: yAxis,
+    plotOptions: {
+      series: {
+        turboThreshold: 10000000,
+        connectNulls: false,
+        cursor: "pointer",
+        pointInterval: undefined,
+        pointStart: undefined,
+      },
     },
   });
 
@@ -951,7 +1052,7 @@ function Plotting() {
   });
   jQuery("#hiddenCurrentDatePlotting").val("");
   jQuery(".plotControl").attr("disabled", "disabled");
-  //
+
   $.ajax({
     url: "/api/WebAPI_PlottingData/getPlottingData",
     type: "POST",
@@ -959,7 +1060,7 @@ function Plotting() {
     data: JSON.stringify(mSubProjects),
     success: function (response) {
       allDataPlot2 = response;
-      //showPlotDash2ByType(response);
+      showPlotDash2ByType(response);
       jQuery(".plotControl").removeAttr("disabled");
       jQuery(".activeplotControl").trigger("click");
     },
