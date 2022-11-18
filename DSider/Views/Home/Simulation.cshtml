@@ -275,10 +275,10 @@
                                 <option value="Carbon_MitigationLevel1">Carbon Mitigation</option>
                                 <option value="Carbon_MitigationLevel2">Carbon Mitigation Level 2</option>
                                 <option value="Green_HydrogenModel">Green Hydrogen</option>
-                                <option value="realEstateLevel">Real Estate</option>
-                                <option value="FleetLevel">Fleet</option>
+                                @* <option value="realEstateLevel">Real Estate</option> *@
+                                @* <option value="FleetLevel">Fleet</option> *@
                                 <option value="RefineryLevel">Refinery</option>
-                                <option value="GeoThermalLevel">Geo Thermal</option>
+                                @* <option value="GeoThermalLevel">Geo Thermal</option> *@
                             </select>
                         </div>
                         @*@if (modelType == "Green_Hydrogen")
@@ -473,7 +473,7 @@
                         <div class="drag-drawflow GeoThermalLevel" draggable="true" ondragstart="drag(event)" data-node="WasteHeat" title="Waste Heat Recovery">
                             <img src="~/Images/GeoThermal/WasteHeat.png" class="FlowIcons" data-node="WasteHeat" />
                         </div>
-                        <hr />
+                        @* <hr />
                         <h5 style="margin-bottom:10px;">User Defined Objects</h5>
                         <div id="userDeefinedObjectContainer" style="display:inline;">
 
@@ -485,7 +485,7 @@
                         <h5 style="margin-bottom:10px;">Macro Objects</h5>
                         <div id="userMacrosContainer" style="display:inline;">
 
-                        </div>
+                        </div> *@
 
                     </div>
                 </div>
@@ -508,7 +508,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                            aria-controls="collapseTwo">
                             General Objects
                         </a>
@@ -548,7 +548,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                            aria-controls="collapseThree">
                             Data Source
                         </a>
@@ -587,7 +587,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingLibraries">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseLibraries" aria-expanded="false" aria-controls="collapseLibraries">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseLibraries">
                             Libraries
                         </a>
                     </h4>
@@ -625,7 +625,7 @@
             <div class="panel">
                 <div class="panel-heading" role="tab" id="headingDashbboard">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDashbboard" aria-expanded="false" aria-controls="collapseDashbboard">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseDashbboard">
                             Dashboard
                         </a>
                     </h4>
@@ -766,23 +766,13 @@
                 </tr>
                 <tr>
                     <td class="font-weight-bold">
-                        Longitude
+                        Location
                     </td>
                     <td>
-                        <input type="text" class="form-control propertyItem" id="longitudeInput" property="longitude" style="width:85%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" />
-                        <span id="longitudeFeedback" class="text-danger" style="display: none; font-size: 14px">Longitude should be between -180.0 and 180.0 inclusive.</span>
+                        <input type="text" class="form-control propertyItem" property="location" disabled style="width:85%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" />
+                        <i class="fas fa-map-marker" style="cursor:pointer; color:#d50404; font-size:25px;" id="locationIcon" title="Component Location"></i>
                     </td>
                 </tr>
-                <tr>
-                    <td class="font-weight-bold">
-                        Latitude
-                    </td>
-                    <td>
-                        <input type="text" class="form-control propertyItem" id="latitudeInput" property="latitude" style="width:85%;display:inline-block; margin-right:5px;font-size:10px; padding:5px;" />
-                        <span id="latitudeFeedback" class="text-danger" style="display: none; font-size: 14px">Latitude should be between -90.0 and 90.0 inclusive.</span>
-                    </td>
-                </tr>
-
             </table>
             <h2 class="outputTitle"><span>Output Properties</span></h2>
             <table class="table tab-content table-bordered" id="properyTableOutput">
@@ -830,6 +820,26 @@ the result to the user
             </div>
         </div> <!-- cd-panel__content -->
     </div> <!-- cd-panel__container -->
+    <div class="modal fade modal-slide-from-bottom" id="locationModal"
+         aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Add location</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="map_canvas" style="width: 100%; height: 250px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade modal-slide-from-bottom" id="selectDataSourceForPropertyModal"
      aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog"
@@ -1148,7 +1158,7 @@ the result to the user
                             <div class="panel-body">
                                 <section class="swing">
                                     <ul id="inputList">
-                                        <li class="show"><span>input<span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
+                                        <li class="show"><span>input</span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
                                         <li>
                                     </ul>
                                 </section>
@@ -1169,7 +1179,7 @@ the result to the user
                             <div class="panel-body">
                                 <section class="swing">
                                     <ul id="outputList">
-                                        <li class="show"><span>output<span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
+                                        <li class="show"><span>output</span><a href="#" class="deleteFromMacroList" style="float:right"><i class="far fa-trash-alt"></i></a>
                                         <li>
                                     </ul>
                                 </section>
@@ -1218,6 +1228,7 @@ the result to the user
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTPfnjsCiPyWOyyYqOsoPnqEUh8sc9OZY"></script>
 <script src="~/DrawFlow/dist/drawflow.min.js?FileVersion=1"></script>
 <script src="~/js/Accordion.js"></script>
 <script src="~/App/Controller/SimulationController.js?FileVersion=5.1"></script>

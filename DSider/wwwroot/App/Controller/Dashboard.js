@@ -1,4 +1,8 @@
-﻿var Tariana = angular.module('Tariana', []);
+﻿function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+var Tariana = angular.module('Tariana', []);
 Tariana.controller("DashboardController", function ($scope) {
     jQuery('#controlContiner').hide();
     jQuery('#stopIcon').hide();
@@ -8,6 +12,7 @@ Tariana.controller("DashboardController", function ($scope) {
 
     //checkSource();
     //checkSink()
+
 
     $scope.statisticsList = [];
     //Get staistics data from web api
@@ -35,18 +40,24 @@ Tariana.controller("DashboardController", function ($scope) {
                 $scope.statisticsList = [];
                 jQuery(response).each(function (Index1, Val1) {
                     jQuery(Val1.mData).each(function (Index, Val) {
+                        for (let [key, property] of Object.entries(Val)) {
+                            if (Val[key] == '') {
+                                console.log(Val[key], "Val");
+                                Val[key] = 0;
+                            }
+                        }
                         $scope.statisticsList.push({
                             'subProject': Val1.subProjectName,
                             'capex': parseFloat(Val.capex),
                             'taxCredit': parseFloat(Val.taxCredit),
                             'carbonTax': parseFloat(Val.carbonTax),
                             'emissionMitgated': parseFloat(Val.emissionMitgated),
-                            'npv': parseFloat(Val.npv),
+                            'npv': numberWithCommas(parseInt(Val.npv)),
                             'irr': parseFloat(Val.irr),
                             'supplyReliability': parseFloat(Val.supplyReliability),
                             'lcoh': parseFloat(Val.lcoh),
                             'variable': parseFloat(Val.variable),
-                            'period': parseFloat(Val.period),
+                            'period': numberWithCommas(parseInt(Val.period)),
                             'other': parseFloat(Val.other),
                         });
                     })
@@ -59,7 +70,18 @@ Tariana.controller("DashboardController", function ($scope) {
                         duration: 4000,
                         easing: 'swing',
                         step: function (now) {
-                            $(this).text(Math.ceil(now));
+                            $(this).text(numberWithCommas(Math.ceil(now)));
+                        }
+                    });
+                });
+                $('.capex-counter').each(function () {
+                    $(this).prop('Counter', 0).animate({
+                        Counter: $(this).text()
+                    }, {
+                        duration: 4000,
+                        easing: 'swing',
+                        step: function (now) {
+                            $(this).text('$' + numberWithCommas(Math.ceil(now)));
                         }
                     });
                 });
@@ -173,25 +195,27 @@ var currentSubProjectProperties = [];
 
 function updatePropertyValue(modelType, newValue) {
     for (let [key, property] of Object.entries(currentSubProjectProperties)) {
-        let propertyData = JSON.parse(property.data);
+        let propertyData = [];
+        if (property.data)
+            propertyData = JSON.parse(property.data);
         if (propertyData.Name === modelType) {
-            switch (modelType) {
-                case "Turbines":
+            switch (property.class) {
+                case "turbine":
                     propertyData.Power_Capacity = newValue;
                     break;
-                case "Solar Panel":
+                case "Solar":
                     propertyData.Power_Capacity = newValue;
                     break;
-                case "Battery":
+                case "battery":
                     propertyData.BatCapStart = newValue;
                     break;
-                case "Electrolyser":
+                case "electrolyzer":
                     propertyData.ElCapStart = newValue;
                     break;
-                case "Green H2 Storage":
+                case "GreenH2Storage":
                     propertyData.Green_H2_Storage_Capacity = newValue;
                     break;
-                case "":
+                case "industriese":
                     propertyData.Industry_H2_Demand_Capacity = newValue;
                     break;
                 case "Mobility":
@@ -289,7 +313,7 @@ function getCurrentSubProject() {
 function getPropertyValue(properties, propertyName) {
     for (let [key, property] of Object.entries(properties)) {
         let propertyData = JSON.parse(property.data);
-        if (propertyData.Name === propertyName) {
+        if (property.class === propertyName) {
             return propertyData;
         }
     }
@@ -302,49 +326,49 @@ function initSlider(properties) {
         cur: 1000
     }
 
-    let property = getPropertyValue(properties, 'Turbines');
+    let property = getPropertyValue(properties, 'turbine');
     var optionsTurbine = {
         min: 0,
         max: 10000,
         cur: property.Power_Capacity
     }
 
-    property = getPropertyValue(properties, 'Solar Panel');
+    property = getPropertyValue(properties, 'Solar');
     var optionsSolar = {
         min: 0,
         max: 10000,
         cur: property.Power_Capacity
     }
 
-    property = getPropertyValue(properties, 'Battery');
+    property = getPropertyValue(properties, 'battery');
     var optionsBat = {
         min: 0,
         max: 10000,
         cur: property.BatCapStart
     }
 
-    property = getPropertyValue(properties, 'Electrolyser');
+    property = getPropertyValue(properties, "electrolyzer");
     var optionsElec = {
         min: 0,
         max: 10000,
         cur: property.ElCapStart
     }
 
-    property = getPropertyValue(properties, 'Green H2 Storage');
+    property = getPropertyValue(properties, "GreenH2Storage");
     var optionsGreenH2 = {
         min: 0,
         max: 10000,
         cur: property.Green_H2_Storage_Capacity
     }
 
-    property = getPropertyValue(properties, 'Industries');
+    property = getPropertyValue(properties, "industriese");
     var optionsIndustry = {
         min: 0,
         max: 10000,
         cur: property.Industry_H2_Demand_Capacity
     }
 
-    property = getPropertyValue(properties, 'Mobility');
+    property = getPropertyValue(properties, "Mobility");
     var optionsMobility = {
         min: 0,
         max: 10000,
@@ -380,22 +404,34 @@ function initSlider(properties) {
 
 // Simulate Button Click
 jQuery(document).on("click", "#simulate-button", function () {
-    console.log(currentSubProjectProperties, 'current');
+    $('#simulate-button').html(`<i class="fa fa-spinner fa-spin"></i>Simulating`);
+    $('#simulate-button').prop('disabled', true);
+
+    currentSubProjectProperties.from = "dashboard";
     $.ajax({
-        url: "http://44.200.150.66/api/simulate/" + queryStringSubProjetID,
+        url: "http://44.200.150.66/api/simulate/dashboard/" + queryStringSubProjetID,
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(currentSubProjectProperties),
         success: function (response) {
+            for (let i = 0; i < response.length; i++) {
+                response[i].timeUTC = response[i].TimeUTC;
+            }
             showPlotDash1(response);
             alertify.success("Simulation succeed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
         error: function (response) {
             alertify.error("Simulation failed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
         failure: function (response) {
             alertify.error("Simulation failed.");
+            $('#simulate-button').html(`Simulate`);
+            $('#simulate-button').prop('disabled', false);
         },
     });
 });
@@ -775,7 +811,7 @@ function showPlotDash2ByType(dataToPlot) {
                     min: findMin(data),
                     max: findMax(data),
                     height: '100%',
-                    'lineWidth': 2,
+                    'lineWidth': 1,
                     labels: {
                         formatter: function () {
                             return this.value;
@@ -799,13 +835,12 @@ function showPlotDash2ByType(dataToPlot) {
                 'label': {
                     'enabled': false
                 },
-                lineWidth: 2,
                 zoneAxis: 'x',
                 'yAxis': (foundYAxsis == -1 ? (yAxis.length - 1) : foundYAxsis),
                 'name': Val + '(' + ValSub.subProjectName + ')',
                 'keys': ['y', 'id'],
                 'data': data,
-                'lineWidth': 2,
+                'lineWidth': 1,
                 'marker': {
                     'enabled': false
                 },
@@ -903,7 +938,7 @@ function showPlotDash1(dataToPlot) {
     var chartType = jQuery("input[name='chartTypeDash1']:checked").val();
 
     if (chartType === 'line')
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 6; i++) {
         var Val = '';
         var data = [];
         switch (i) {
@@ -927,6 +962,10 @@ function showPlotDash1(dataToPlot) {
                 data = response.map(a => [new Date(a.timeUTC).getTime(), a.h2_electrolyzer_out])
                 Val = 'H2 Electrolyzer Out';
                 break;
+            case 5:
+                data = response.map(a => [new Date(a.timeUTC).getTime(), a.pwr_solar_avail])
+                Val = 'PWR Solar Out';
+                break;
         }
 
         seriesData.push({
@@ -949,6 +988,109 @@ function showPlotDash1(dataToPlot) {
                 return [new Date(a.timeUTC).getTime(), total];
             })
         })
+    }
+
+    if (chartType === 'area') {
+        var seriesData = [];
+        var yAxis = [];
+        var fake_Y_AxisMin = [];
+        var fake_Y_AxisMax = [];
+        for (var i = 0; i < 5; i++) {
+            var Val = '';
+            var data = [];
+            switch (i) {
+                case 0:
+                    data = response.map(a => a.h2_electrolyzer_out_re);
+                    Val = 'Direct (RE) (Kg/h)';
+                    break;
+                case 1:
+                    data = response.map(a => a.h2_electrolyzer_out_bat);
+                    Val = 'Battery (Kg/h)';
+                    break;
+                case 2:
+                    data = response.map(a => a.h2_electrolyzer_out_grid);
+                    Val = 'Gray Power (Kg/h)';
+                    break;
+                case 3:
+                    data = response.map(a => a.h2_greenstore_out);
+                    Val = 'Storage (Kg/h)';
+                    break;
+                case 4:
+                    data = response.map(a => a.h2_externalsupply_out);
+                    Val = 'External (Kg/h)';
+                    break;
+            }
+            fake_Y_AxisMin.push(findMin(data));
+            fake_Y_AxisMax.push(findMax(data));
+            seriesData.push({
+                'label': {
+                    'enabled': false
+                },
+                zoneAxis: 'x',
+                'yAxis': 0,//i,
+                'name': Val,
+                'keys': ['y', 'id'],
+                'data': data,
+                'lineWidth': 1,
+                'marker': {
+                    'enabled': false
+                },
+            });
+        }
+        yAxis.push({
+            attrName: Val,
+            'title': {
+                text: 'Hydrogen Produced (Kg/h)',//Val,
+                style: {
+                    fontSize: '14px'
+                }
+            },
+            opposite: false,// (i == 0 ? false : true),
+            min: findMin(fake_Y_AxisMin),
+            max: findMax(fake_Y_AxisMax),
+            height: '100%',
+            'lineWidth': 1,
+            labels: {
+                formatter: function () {
+                    return this.value;
+                },
+                style: { fontSize: "14px" }
+            },
+        });
+        var xAxis = response.map(a => a.timestep);
+        var chart = new Highcharts.Chart({
+            chart: {
+                type: 'area',
+                renderTo: 'containerPlotDash1',
+                zoomType: 'xy',
+            },
+            xAxis: {
+                title: {
+                    text: 'Time step (Hours)'
+                },
+                categories: xAxis,
+                labels: {
+                    rotation: 90,
+                    style: { fontSize: "14px" }
+                },
+            },
+            title: {
+                text: '',
+                align: 'center',
+            },
+            series: seriesData,
+            yAxis: yAxis,
+            plotOptions: {
+                series: {
+                    turboThreshold: 10000000,
+                    connectNulls: false,
+                    cursor: "pointer",
+                    pointInterval: undefined,
+                    pointStart: undefined,
+                }
+            },
+        });
+        return;
     }
 
     var chart = Highcharts.stockChart('containerPlotDash1', {

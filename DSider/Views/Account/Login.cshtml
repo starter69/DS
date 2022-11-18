@@ -85,24 +85,13 @@
                             <input type="checkbox" id="rememberMe" name="rememberMe">
                             <label for="rememberMe">Remember me</label>
                         </div>
-                        @*<a class="float-right" href="forgot-password.html">Forgot password?</a>*@
                     </div>
                     <button type="button" class="btn btn-primary btn-block" id="btnLogin" style="background:#4a8f7a;height:50px;font-size:18px; font-weight:500;">Sign in</button>
+                    <div style="font-size: 18px" class="text-center">If you have no account, <a style="margin: 0" href="/Account/Register">register</a> here.</div>
                 </form>
 
                 <footer class="page-copyright">
                     <p>© 2021. All RIGHT RESERVED.</p>
-                    @*<div class="social">
-                            <a class="btn btn-icon btn-round social-twitter mx-5" href="javascript:void(0)">
-                                <i class="icon bd-twitter" aria-hidden="true"></i>
-                            </a>
-                            <a class="btn btn-icon btn-round social-facebook mx-5" href="javascript:void(0)">
-                                <i class="icon bd-facebook" aria-hidden="true"></i>
-                            </a>
-                            <a class="btn btn-icon btn-round social-google-plus mx-5" href="javascript:void(0)">
-                                <i class="icon bd-google-plus" aria-hidden="true"></i>
-                            </a>
-                        </div>*@
                 </footer>
             </div>
 
@@ -152,6 +141,7 @@
     </script>
 
     <!-- Page -->
+    <script src="https://unpkg.com/aws-amplify@1.1.19/dist/aws-amplify.min.js"></script>
     <script src="~/assets/js/Site.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/asscrollable.min599c.js?v4.0.2"></script>
     <script src="~/global/js/Plugin/slidepanel.min599c.js?v4.0.2"></script>
@@ -162,9 +152,73 @@
 
 
     <script src="~/assets/examples/js/dashboard/v1.min599c.js?v4.0.2"></script>
-    <script src="~/App/Controller/LoginController.js?FileVersion=1"></script>
     <script src="~/App/JcookieManagment.js"></script>
     <script src="~/js/alertify.min.js"></script>
+    <script>
+        const Amplify = window['aws-amplify'];
+        Amplify.default.configure({ Auth: {
+            // REQUIRED - Amazon Cognito Identity Pool ID
+            identityPoolId: 'arn:aws:cognito-idp:us-east-1:716614602740:userpool/us-east-1_yRrXXBiWo', 
+
+            // REQUIRED - Amazon Cognito Region
+            region: 'us-east-1', 
+
+            // OPTIONAL - Amazon Cognito User Pool ID
+            userPoolId: 'us-east-1_yRrXXBiWo',
+
+            // OPTIONAL - Amazon Cognito Web Client ID
+            userPoolWebClientId: '41tglo43aj89flh2b3hijqcfhu', 
+            authenticationFlowType: 'USER_SRP_AUTH'
+            }
+        });
+        
+        jQuery(document).ready(function () {
+            //When click on login button send data to web api
+            jQuery(document).on('click', '#btnLogin', async function () {
+                if (jQuery('#inputEmail').val() == '') {
+                    alertify.error('Username is mandatory.');
+                    jQuery('#inputEmail').focus();
+                    return;
+                }
+                if (jQuery('#inputPassword').val() == '') {
+                    alertify.error('Password is mandatory.');
+                    jQuery('#inputPassword').focus();
+                    return;
+                }
+                const username = jQuery('#inputEmail').val();
+                const password = jQuery('#inputPassword').val();
+
+                createCookie('userName', username, 20);
+                document.location.href = '/Home';
+                
+                /*
+                try {
+                    const user = await Amplify.Auth.signIn(username, password);
+                    if (user.username) {
+                        // Returns an array of groups
+                        const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
+                        console.log(groups);
+                        createCookie('userName', user.username, 20);
+                        $.ajax({
+                            url: '/api/WebAPI_Authentication',
+                            type: "POST",
+                            contentType: 'application/json',
+                            data: JSON.stringify({ userName: user.username }),
+                            success: function (response) {
+                                document.location.href = '/Home';
+                            }
+                        });
+                    } else {
+                        alertify.error('Username or Password is not correct.');
+                    }
+                } catch (error) {
+                    alertify.error('Username or Password is not correct.');
+                }
+                */
+                
+            });
+        });
+    </script>
 </body>
 
 

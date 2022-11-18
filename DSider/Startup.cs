@@ -52,9 +52,9 @@ namespace DSider
             .AddOpenIdConnect(options =>
             {
                 options.ResponseType = "code";
-                options.MetadataAddress = "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_MlmldxYuh/.well-known/openid-configuration";
+                options.MetadataAddress = "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_yRrXXBiWo/.well-known/openid-configuration";
                 options.ClientId = "41tglo43aj89flh2b3hijqcfhu";
-                options.ClientSecret = "18rjdld2hr59ca20115r7008iiacis9cco3fujsij50mlaln4t8";
+                options.ClientSecret = "";
 
             });
         }

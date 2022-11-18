@@ -45,6 +45,11 @@ namespace DSider.Controllers
             else
                 return Redirect("~/Account/Login");
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
         //Green hydrogen dashboard page Controller
         public IActionResult Dashboard()
         {
