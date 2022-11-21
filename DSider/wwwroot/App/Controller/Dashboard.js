@@ -1075,7 +1075,7 @@ function showPlotDash1(dataToPlot) {
 
   var chartType = jQuery("input[name='chartTypeDash1']:checked").val();
 
-  if (chartType === "line")
+  if (chartType === "line" || chartType === "area")
     for (var i = 0; i < 6; i++) {
       var Val = "";
       var data = [];
@@ -1127,7 +1127,7 @@ function showPlotDash1(dataToPlot) {
       seriesData.push({
         name: Val,
         data: data,
-        type: "spline",
+        type: chartType === "area" ? "area" : "spline",
       });
     }
 
@@ -1146,184 +1146,6 @@ function showPlotDash1(dataToPlot) {
         return [new Date(a.timeUTC).getTime(), Number(total.toFixed(2))];
       }),
     });
-  }
-
-  if (chartType === "area") {
-    var seriesData = [];
-    var yAxis = [];
-    var fake_Y_AxisMin = [];
-    var fake_Y_AxisMax = [];
-    for (var i = 0; i < 5; i++) {
-      var Val = "";
-      var data = [];
-      switch (i) {
-        case 0:
-          data = response.map((a) => a.h2_electrolyzer_out_re);
-          Val = "Direct (RE) (Kg/h)";
-          break;
-        case 1:
-          data = response.map((a) => a.h2_electrolyzer_out_bat);
-          Val = "Battery (Kg/h)";
-          break;
-        case 2:
-          data = response.map((a) => a.h2_electrolyzer_out_grid);
-          Val = "Gray Power (Kg/h)";
-          break;
-        case 3:
-          response.map((a) => a.h2_greenstore_out);
-          Val = "Storage (Kg/h)";
-          break;
-        case 4:
-          data = response.map((a) => a.h2_externalsupply_out);
-          Val = "External (Kg/h)";
-          break;
-      }
-      fake_Y_AxisMin.push(findMin(data));
-      fake_Y_AxisMax.push(findMax(data));
-      seriesData.push({
-        label: {
-          enabled: false,
-        },
-        zoneAxis: "x",
-        yAxis: 0, //i,
-        name: Val,
-        keys: ["y", "id"],
-        data: data,
-        lineWidth: 1,
-        marker: {
-          enabled: false,
-        },
-      });
-    }
-    yAxis.push({
-      attrName: Val,
-      title: {
-        text: "Hydrogen Produced (Kg/h)", //Val,
-        style: {
-          fontSize: "14px",
-        },
-      },
-      opposite: false, // (i == 0 ? false : true),
-      min: findMin(fake_Y_AxisMin),
-      max: findMax(fake_Y_AxisMax),
-      height: "100%",
-      lineWidth: 1,
-      labels: {
-        formatter: function () {
-          return this.value;
-        },
-        style: { fontSize: "14px" },
-      },
-    });
-    var xAxis = response.map((a) => a.timestep);
-    var chart = new Highcharts.Chart({
-      chart: {
-        type: "area",
-        renderTo: "containerPlotDash1",
-        zoomType: "xy",
-      },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: [
-              {
-                textKey: "printChart",
-                onclick: function () {
-                  this.print();
-                },
-              },
-              {
-                separator: true,
-              },
-              {
-                textKey: "downloadPNG",
-                onclick: function () {
-                  this.exportChart();
-                },
-              },
-              {
-                textKey: "downloadJPEG",
-                onclick: function () {
-                  this.exportChart({
-                    type: "image/jpeg",
-                  });
-                },
-              },
-              {
-                separator: true,
-              },
-              {
-                textKey: "downloadPDF",
-                onclick: function () {
-                  this.exportChart({
-                    type: "application/pdf",
-                  });
-                },
-              },
-              {
-                textKey: "downloadSVG",
-                onclick: function () {
-                  this.exportChart({
-                    type: "image/svg+xml",
-                  });
-                },
-              },
-              {
-                separator: true,
-              },
-              {
-                textKey: "downloadCSV",
-                onclick: function () {
-                  this.downloadCSV();
-                },
-              },
-              {
-                textKey: "downloadXLS",
-                onclick: function () {
-                  this.downloadXLS();
-                },
-              },
-              {
-                textKey: "viewData",
-                onclick: function () {
-                  this.viewData();
-                  jQuery("#dataTableModal").modal("show");
-                  const dataTable = jQuery(".highcharts-data-table").html();
-                  jQuery("#dataTableBody").html(dataTable);
-                },
-              },
-            ],
-          },
-        },
-      },
-      xAxis: {
-        title: {
-          text: "Time step (Hours)",
-        },
-        categories: xAxis,
-        labels: {
-          rotation: 90,
-          style: { fontSize: "14px" },
-        },
-      },
-      title: {
-        text: "",
-        align: "center",
-      },
-      series: seriesData,
-      yAxis: yAxis,
-      plotOptions: {
-        series: {
-          turboThreshold: 10000000,
-          connectNulls: false,
-          cursor: "pointer",
-          pointInterval: undefined,
-          pointStart: undefined,
-        },
-      },
-    });
-    return;
   }
 
   var chart = Highcharts.stockChart("containerPlotDash1", {
