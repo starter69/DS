@@ -63,8 +63,11 @@
                 </div>*@
 
             <div class="page-login-main animation-slide-right animation-duration-1">
-                <div class="brand">
-                    <img src="~/Images/DSiderLOGO.png" class="brand-img" />
+                <div class="brand" style="margin-bottom: 80px;">
+                    <a href="https://www.dsider.app/">
+                        <img src="~/Images/DSiderLOGO.png" width="200" />
+                    </a>
+                    <p style="padding-left: 110px; font-size: 18px; color: rgb(20, 130, 180); font-weight: bold">© Enterprise NetZero planning</p>
                 </div>
                 <h3 class="font-size-24" style="text-align:center;font-weight:900;">Log In</h3>
                 <h3 style="text-align:center;font-weight:500;color:#787878">
@@ -188,33 +191,41 @@
                 const username = jQuery('#inputEmail').val();
                 const password = jQuery('#inputPassword').val();
 
+                /*
                 createCookie('userName', username, 20);
                 document.location.href = '/Home';
+                */
                 
-                /*
+                
                 try {
                     const user = await Amplify.Auth.signIn(username, password);
                     if (user.username) {
                         // Returns an array of groups
                         const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
-                        console.log(groups);
-                        createCookie('userName', user.username, 20);
+
+                        if (!groups) {
+                            alertify.error('Your account has not been approved yet.');
+                            return;
+                        }
+                        
                         $.ajax({
                             url: '/api/WebAPI_Authentication',
                             type: "POST",
                             contentType: 'application/json',
                             data: JSON.stringify({ userName: user.username }),
                             success: function (response) {
+                                createCookie('userName', response.userName, 20);
                                 document.location.href = '/Home';
                             }
                         });
+
                     } else {
                         alertify.error('Username or Password is not correct.');
                     }
                 } catch (error) {
                     alertify.error('Username or Password is not correct.');
                 }
-                */
+                
                 
             });
         });

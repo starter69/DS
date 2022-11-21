@@ -24,8 +24,7 @@ namespace DSider.Controllers
         {
             DataTable csvDataTable = new DataTable();
             Cache.CacheController CacheCon = new Cache.CacheController(memoryCache);
-            try
-            {
+            try {
                 //Check Cache
                 //if Exists in Cache return from Cache Else Get csv from S3
                 if (memoryCache.TryGetValue(dataSourceNameSubProjectCacheKey, out DataTable csvFileContent))
@@ -45,7 +44,6 @@ namespace DSider.Controllers
 
                     StreamReader sr = new StreamReader(response.ResponseStream);
                     //
-                    int counter = 0;
                     var schema = new TypedCsvSchema();
                     //
                     //csvDataTable.Columns.Add("DateTime");

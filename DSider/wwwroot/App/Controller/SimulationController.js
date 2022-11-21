@@ -74,7 +74,11 @@ jQuery(document).ready(function () {
 
     modelInfo.from = "simulation";
     $.ajax({
+<<<<<<< HEAD
       url: "http://127.0.0.1:4567/api/simulate/" + subProjectID,
+=======
+      url: "http://54.163.192.99/api/simulate/" + subProjectID,
+>>>>>>> aa65c3bf6ea6ce79c7f1ac286a83bc0abe902644
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
@@ -1317,8 +1321,10 @@ function saveMacro() {
           value: mProperties[key],
         });
         if (key == "location") {
-          lat = mProperties[key].split(",")[0];
-          lng = mProperties[key].split(",")[1];
+          // lat = mProperties[key].split(",")[0] || 30.249748320068758;
+          // lng = mProperties[key].split(",")[1] || -97.7423095703125;
+          lat = 30.249748320068758;
+          lng = -97.7423095703125;
         }
       }
       //#endregion Properties
@@ -3350,7 +3356,7 @@ function changeMode(option) {
 //#endregion DraFlow
 //#region Map
 function initialize() {
-  var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
+  var myLatlng = new google.maps.LatLng(30.249748320068758, -97.7423095703125);
   var myOptions = {
     zoom: 14,
     center: myLatlng,
