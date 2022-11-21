@@ -21,7 +21,6 @@ namespace DSider.Models
         public string supplyReliability { get; set; }
         public string lcoe { get; set; }
         public string lcoh { get; set; }
-        public string lcoe { get; set; }
         public string variable { get; set; }
         public string period { get; set; }
         public string other { get; set; }
