@@ -43,8 +43,7 @@ jobs:
         echo "ENV_NAME=DSideropstest-dev" >> $GITHUB_ENV
         #echo  "::set-output name=ENV_NAME::$(env_name)"
     - name: Testing variables 
-      run: |
-        echo  "The variable is ${{ env.ENV_NAME }}"
+      run: echo  "The variable is ${{ env.ENV_NAME }}"
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
       run: echo "Check Branch develop"
