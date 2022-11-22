@@ -34,35 +34,27 @@ jobs:
         Compress-Archive -Path ./* -DestinationPath ../site.zip
         cd ..
         Compress-Archive -Path "site.zip", "aws-windows-deployment-manifest.json" -DestinationPath "deploy.zip"
-    - name: Testing branch name format
-      run: echo ${{ github.base_ref }}
     - name: Check Branch opsbranch
-      id: vars
       if:  ${{ github.base_ref == 'opsbranch' }}
       run: |
         echo "ENV_NAME=DSideropstest-dev" >> $GITHUB_ENV
         echo "APP_NAME=DSideropstest" >> $GITHUB_ENV
       shell: bash
-    - name: Testing variables 
-      run: |
-        echo  "The variable is ${{ env.ENV_NAME }}"
-        echo  "The variable is ${{ env.APP_NAME }}"
-      shell: bash
     - name: Check Branch develop
-      if:  ${{ github.ref == 'develop' }}
-      run: echo "Check Branch develop"
-      env:
-        ENV_NAME: DSiderInc-dev
-        APP_NAME: DSiderInc
+      if:  ${{ github.base_ref == 'develop' }}
+      run: |
+        echo "ENV_NAME=DSiderInc-dev" >> $GITHUB_ENV
+        echo "APP_NAME=DSiderInc" >> $GITHUB_ENV
+      shell: bash
     - name: Check Branch staging
-      if:  ${{ github.ref == 'refs/heads/staging' }}
-      run: echo "Check Branch staging"
-      env:
-        ENV_NAME: DSiderinc-stage
-        APP_NAME: DSider
+      if:  ${{ github.base_ref == 'staging' }}
+      run: |
+        echo "ENV_NAME=DSiderinc-stage" >> $GITHUB_ENV
+        echo "APP_NAME=DSider" >> $GITHUB_ENV
+      shell: bash
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
+      run: echo "::set-output name=date::$(date +'%Y%m%dT%H%M%S')"
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
