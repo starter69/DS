@@ -44,8 +44,8 @@ jobs:
         echo "app_name=DSideropstest" >> $GITHUB_OUTPUT
     - name: Testing variables 
       run: |
-        echo  ${{ steps.var_opsbranch.outputs.env_name }}
-        echo "${{ app_name }}"
+        echo  "${{ steps.var_opsbranch.outputs.env_name }}"
+        echo  "${{ steps.var_opsbranch.outputs.app_name }}"
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
       run: echo "Check Branch develop"
