@@ -37,13 +37,14 @@ jobs:
     - name: Testing branch name format
       run: echo ${{ github.base_ref }}
     - name: Check Branch opsbranch
+      id: var_opsbranch      
       if:  ${{ github.base_ref == 'opsbranch' }}
       run: |
-        echo "env_name=DSideropstest-dev" >> $GITHUB_ENV
-        echo "app_name=DSideropstest" >> $GITHUB_ENV
+        echo "env_name=DSideropstest-dev" >> $GITHUB_OUTPUT
+        echo "app_name=DSideropstest" >> $GITHUB_OUTPUT
     - name: Testing variables 
       run: |
-        echo "${{ env_name }}"
+        echo  ${{ steps.var_opsbranch.outputs.env_name }}
         echo "${{ app_name }}"
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
