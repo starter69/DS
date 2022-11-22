@@ -41,9 +41,13 @@ jobs:
       if:  ${{ github.base_ref == 'opsbranch' }}
       run: |
         echo "ENV_NAME=DSideropstest-dev" >> $GITHUB_ENV
-        #echo  "::set-output name=ENV_NAME::$(env_name)"
+        echo "APP_NAME=DSideropstest" >> $GITHUB_ENV
+      shell: bash
     - name: Testing variables 
-      run: echo  "The variable is ${{ env.ENV_NAME }}"
+      run: |
+        echo  "The variable is ${{ env.ENV_NAME }}"
+        echo  "The variable is ${{ env.APP_NAME }}"
+      shell: bash
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
       run: echo "Check Branch develop"
@@ -64,8 +68,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-        application_name: ${{ env.app_name }}
-        environment_name: ${{ env.env_name }}
+        application_name: ${{ env.APP_NAME }}
+        environment_name: ${{ env.ENV_NAME }}
         version_label: v${{ steps.date.outputs.date }}
         region: us-east-1
         deployment_package: DSider/deploy.zip
