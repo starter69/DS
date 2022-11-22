@@ -43,7 +43,7 @@ jobs:
         echo "app_name=DSideropstest" >> $GITHUB_ENV
     - name: Testing variables 
       run: |
-        echo "${{ env.env_name }}"
+        echo ${{ env.env_name }}
         echo "${{ env.app_name }}"
     - name: Check Branch develop
       if:  ${{ github.ref == 'develop' }}
