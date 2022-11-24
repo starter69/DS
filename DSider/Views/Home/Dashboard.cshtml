@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     .capex-counter {
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 700;
         color: #666;
         line-height: 28px;
@@ -484,7 +484,7 @@
                                                 NPV
                                             </label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" value="{{statisticsList[0].npv ? '$' + statisticsList[0].npv : ''}}" />
+                                                <input type="text" class="form-control font-weight-bold" value="{{statisticsList[0].npv ? '$' + statisticsList[0].npv : ''}}" />
                                             </div>
                                         </div>
                                         <div class="row" style="padding:15px;">
@@ -492,7 +492,7 @@
                                                 IRR
                                             </label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" value="{{statisticsList[0].irr}}" />
+                                                <input type="text" class="form-control font-weight-bold" value="{{statisticsList[0].irr.toFixed(2)}}" />
                                             </div>
                                         </div>
                                     </div>
@@ -517,19 +517,25 @@
                                                 <div class="row">
                                                     <div class="col-sm-5 mTitle">LCOE</div>
                                                     <div class="col-sm-7 mTitle">
-                                                        {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe : ''}}
+                                                        {{statisticsList[0].lcoe ? '$' + statisticsList[0].lcoe.toFixed(2) : ''}}
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-5 mTitle">LCOH</div>
                                                     <div class="col-sm-7 mTitle">
-                                                        {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh : ''}}
+                                                        {{statisticsList[0].lcoh ? '$' + statisticsList[0].lcoh.toFixed(2) : ''}}
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-5 mTitle">Variable</div>
                                                     <div class="col-sm-7 mTitle">
-                                                        {{statisticsList[0].variable ? '$' + statisticsList[0].variable : ''}}
+                                                        {{
+                                                            statisticsList[0].variable
+                                                                ? '$' + statisticsList[0].variable.toLocaleString(
+                                                                    'en-US',
+                                                                    { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                                                : ''
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -672,8 +678,8 @@
                                                 <th>
                                                     Carbon Tax
                                                 </th>
-                                                <th>LCOE $</th>
-                                                <th>LCOH $</th>
+                                                <th>LCOE</th>
+                                                <th>LCOH</th>
                                                 <th>NPV</th>
                                                 <th>IRR</th>
                                                 <th>Emissions mitigated</th>
@@ -683,17 +689,24 @@
                                         <tbody>
                                             <tr ng-repeat="item in statisticsList">
                                                 <td>{{item.subProject}}</td>
-                                                <td>{{item.capex}}</td>
-                                                <td>{{item.variable}}</td>
-                                                <td>{{item.period}}</td>
-                                                <td>{{item.taxCredit}}</td>
-                                                <td>
-                                                    {{item.carbonTax}}
+                                                <td>${{item.capex.toLocaleString()}}
                                                 </td>
-                                                <td>{{item.lcoe}}</td>
-                                                <td>{{item.lcoh}}</td>
-                                                <td>{{item.npv}}</td>
-                                                <td>{{item.irr}}</td>
+                                                <td>${{item.variable.toLocaleString
+                                                        (
+                                                            'en-US',
+                                                            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                                                        )
+                                                    }}
+                                                </td>
+                                                <td>${{item.period}}</td>
+                                                <td>${{item.taxCredit}}</td>
+                                                <td>
+                                                    ${{item.carbonTax}}
+                                                </td>
+                                                <td>${{item.lcoe.toFixed(2)}}</td>
+                                                <td>${{item.lcoh.toFixed(2)}}</td>
+                                                <td>${{item.npv}}</td>
+                                                <td>{{item.irr.toFixed(2)}}</td>
                                                 <td>{{item.emissionMitgated}}</td>
                                             </tr>
                                         </tbody>
