@@ -74,7 +74,7 @@ jQuery(document).ready(function () {
 
     modelInfo.from = "simulation";
     $.ajax({
-      url: "http://54.163.192.99/api/simulate/" + subProjectID,
+      url: "http://44.200.150.66/api/simulate/" + subProjectID,
       type: "POST",
       contentType: "application/json; charset=utf-8",
       dataType: "json",
