@@ -1,5 +1,5 @@
 # [DSider](https://www.dsider.app/)
-Simplify NetZero decision-making with our plug-and-play models.
+DSider is environmental project which simplify NetZero decision-making with our plug-and-play models.
 
 ## Frontend
 Angular + DrawFlow + jQuery
